@@ -1,0 +1,22 @@
+propel:
+  database:
+      connections:
+          slowshop:
+              adapter: mysql
+              classname: Propel\Runtime\Connection\ConnectionWrapper
+              dsn: "mysql:host=localhost;dbname=slowshop"
+              user: malatesta
+              password: $0bs0l3t0$#
+              attributes:
+              settings:
+                  charset: utf8
+  runtime:
+      defaultConnection: slowshop
+      connections:
+          - slowshop
+  generator:
+      defaultConnection: slowshop
+      connections:
+          - slowshop
+      schema:
+          autoPackage: true
