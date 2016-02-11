@@ -25,6 +25,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildProductQuery orderByProductName($order = Criteria::ASC) Order by the product_name column
  * @method     ChildProductQuery orderByProductDescription($order = Criteria::ASC) Order by the product_description column
  * @method     ChildProductQuery orderByCategoryId($order = Criteria::ASC) Order by the category_id column
+ * @method     ChildProductQuery orderByProviderId($order = Criteria::ASC) Order by the provider_id column
  * @method     ChildProductQuery orderByUnitId($order = Criteria::ASC) Order by the unit_id column
  * @method     ChildProductQuery orderByProductRange($order = Criteria::ASC) Order by the product_range column
  * @method     ChildProductQuery orderByProductPrice($order = Criteria::ASC) Order by the product_price column
@@ -38,6 +39,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildProductQuery groupByProductName() Group by the product_name column
  * @method     ChildProductQuery groupByProductDescription() Group by the product_description column
  * @method     ChildProductQuery groupByCategoryId() Group by the category_id column
+ * @method     ChildProductQuery groupByProviderId() Group by the provider_id column
  * @method     ChildProductQuery groupByUnitId() Group by the unit_id column
  * @method     ChildProductQuery groupByProductRange() Group by the product_range column
  * @method     ChildProductQuery groupByProductPrice() Group by the product_price column
@@ -63,6 +65,16 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildProductQuery leftJoinWithCategory() Adds a LEFT JOIN clause and with to the query using the Category relation
  * @method     ChildProductQuery rightJoinWithCategory() Adds a RIGHT JOIN clause and with to the query using the Category relation
  * @method     ChildProductQuery innerJoinWithCategory() Adds a INNER JOIN clause and with to the query using the Category relation
+ *
+ * @method     ChildProductQuery leftJoinProvider($relationAlias = null) Adds a LEFT JOIN clause to the query using the Provider relation
+ * @method     ChildProductQuery rightJoinProvider($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Provider relation
+ * @method     ChildProductQuery innerJoinProvider($relationAlias = null) Adds a INNER JOIN clause to the query using the Provider relation
+ *
+ * @method     ChildProductQuery joinWithProvider($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Provider relation
+ *
+ * @method     ChildProductQuery leftJoinWithProvider() Adds a LEFT JOIN clause and with to the query using the Provider relation
+ * @method     ChildProductQuery rightJoinWithProvider() Adds a RIGHT JOIN clause and with to the query using the Provider relation
+ * @method     ChildProductQuery innerJoinWithProvider() Adds a INNER JOIN clause and with to the query using the Provider relation
  *
  * @method     ChildProductQuery leftJoinUnit($relationAlias = null) Adds a LEFT JOIN clause to the query using the Unit relation
  * @method     ChildProductQuery rightJoinUnit($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Unit relation
@@ -104,7 +116,37 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildProductQuery rightJoinWithOrderProduct() Adds a RIGHT JOIN clause and with to the query using the OrderProduct relation
  * @method     ChildProductQuery innerJoinWithOrderProduct() Adds a INNER JOIN clause and with to the query using the OrderProduct relation
  *
- * @method     \App\Propel\CategoryQuery|\App\Propel\UnitQuery|\App\Propel\FileQuery|\App\Propel\ResourceQuery|\App\Propel\OrderProductQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     ChildProductQuery leftJoinProductHighlighted($relationAlias = null) Adds a LEFT JOIN clause to the query using the ProductHighlighted relation
+ * @method     ChildProductQuery rightJoinProductHighlighted($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ProductHighlighted relation
+ * @method     ChildProductQuery innerJoinProductHighlighted($relationAlias = null) Adds a INNER JOIN clause to the query using the ProductHighlighted relation
+ *
+ * @method     ChildProductQuery joinWithProductHighlighted($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the ProductHighlighted relation
+ *
+ * @method     ChildProductQuery leftJoinWithProductHighlighted() Adds a LEFT JOIN clause and with to the query using the ProductHighlighted relation
+ * @method     ChildProductQuery rightJoinWithProductHighlighted() Adds a RIGHT JOIN clause and with to the query using the ProductHighlighted relation
+ * @method     ChildProductQuery innerJoinWithProductHighlighted() Adds a INNER JOIN clause and with to the query using the ProductHighlighted relation
+ *
+ * @method     ChildProductQuery leftJoinProductVariationType($relationAlias = null) Adds a LEFT JOIN clause to the query using the ProductVariationType relation
+ * @method     ChildProductQuery rightJoinProductVariationType($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ProductVariationType relation
+ * @method     ChildProductQuery innerJoinProductVariationType($relationAlias = null) Adds a INNER JOIN clause to the query using the ProductVariationType relation
+ *
+ * @method     ChildProductQuery joinWithProductVariationType($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the ProductVariationType relation
+ *
+ * @method     ChildProductQuery leftJoinWithProductVariationType() Adds a LEFT JOIN clause and with to the query using the ProductVariationType relation
+ * @method     ChildProductQuery rightJoinWithProductVariationType() Adds a RIGHT JOIN clause and with to the query using the ProductVariationType relation
+ * @method     ChildProductQuery innerJoinWithProductVariationType() Adds a INNER JOIN clause and with to the query using the ProductVariationType relation
+ *
+ * @method     ChildProductQuery leftJoinWishlistProduct($relationAlias = null) Adds a LEFT JOIN clause to the query using the WishlistProduct relation
+ * @method     ChildProductQuery rightJoinWishlistProduct($relationAlias = null) Adds a RIGHT JOIN clause to the query using the WishlistProduct relation
+ * @method     ChildProductQuery innerJoinWishlistProduct($relationAlias = null) Adds a INNER JOIN clause to the query using the WishlistProduct relation
+ *
+ * @method     ChildProductQuery joinWithWishlistProduct($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the WishlistProduct relation
+ *
+ * @method     ChildProductQuery leftJoinWithWishlistProduct() Adds a LEFT JOIN clause and with to the query using the WishlistProduct relation
+ * @method     ChildProductQuery rightJoinWithWishlistProduct() Adds a RIGHT JOIN clause and with to the query using the WishlistProduct relation
+ * @method     ChildProductQuery innerJoinWithWishlistProduct() Adds a INNER JOIN clause and with to the query using the WishlistProduct relation
+ *
+ * @method     \App\Propel\CategoryQuery|\App\Propel\ProviderQuery|\App\Propel\UnitQuery|\App\Propel\FileQuery|\App\Propel\ResourceQuery|\App\Propel\OrderProductQuery|\App\Propel\ProductHighlightedQuery|\App\Propel\ProductVariationTypeQuery|\App\Propel\WishlistProductQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildProduct findOne(ConnectionInterface $con = null) Return the first ChildProduct matching the query
  * @method     ChildProduct findOneOrCreate(ConnectionInterface $con = null) Return the first ChildProduct matching the query, or a new ChildProduct object populated from the query conditions when no match is found
@@ -114,6 +156,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildProduct findOneByProductName(string $product_name) Return the first ChildProduct filtered by the product_name column
  * @method     ChildProduct findOneByProductDescription(string $product_description) Return the first ChildProduct filtered by the product_description column
  * @method     ChildProduct findOneByCategoryId(int $category_id) Return the first ChildProduct filtered by the category_id column
+ * @method     ChildProduct findOneByProviderId(int $provider_id) Return the first ChildProduct filtered by the provider_id column
  * @method     ChildProduct findOneByUnitId(int $unit_id) Return the first ChildProduct filtered by the unit_id column
  * @method     ChildProduct findOneByProductRange(string $product_range) Return the first ChildProduct filtered by the product_range column
  * @method     ChildProduct findOneByProductPrice(string $product_price) Return the first ChildProduct filtered by the product_price column
@@ -130,6 +173,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildProduct requireOneByProductName(string $product_name) Return the first ChildProduct filtered by the product_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildProduct requireOneByProductDescription(string $product_description) Return the first ChildProduct filtered by the product_description column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildProduct requireOneByCategoryId(int $category_id) Return the first ChildProduct filtered by the category_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildProduct requireOneByProviderId(int $provider_id) Return the first ChildProduct filtered by the provider_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildProduct requireOneByUnitId(int $unit_id) Return the first ChildProduct filtered by the unit_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildProduct requireOneByProductRange(string $product_range) Return the first ChildProduct filtered by the product_range column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildProduct requireOneByProductPrice(string $product_price) Return the first ChildProduct filtered by the product_price column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -144,6 +188,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildProduct[]|ObjectCollection findByProductName(string $product_name) Return ChildProduct objects filtered by the product_name column
  * @method     ChildProduct[]|ObjectCollection findByProductDescription(string $product_description) Return ChildProduct objects filtered by the product_description column
  * @method     ChildProduct[]|ObjectCollection findByCategoryId(int $category_id) Return ChildProduct objects filtered by the category_id column
+ * @method     ChildProduct[]|ObjectCollection findByProviderId(int $provider_id) Return ChildProduct objects filtered by the provider_id column
  * @method     ChildProduct[]|ObjectCollection findByUnitId(int $unit_id) Return ChildProduct objects filtered by the unit_id column
  * @method     ChildProduct[]|ObjectCollection findByProductRange(string $product_range) Return ChildProduct objects filtered by the product_range column
  * @method     ChildProduct[]|ObjectCollection findByProductPrice(string $product_price) Return ChildProduct objects filtered by the product_price column
@@ -161,6 +206,12 @@ abstract class ProductQuery extends ModelCriteria
 
     protected $delegatedFields = [
         'ResourceTypeId' => 'Resource',
+        'SocialViews' => 'Resource',
+        'SocialLikes' => 'Resource',
+        'SocialDislikes' => 'Resource',
+        'SocialComments' => 'Resource',
+        'SocialFavourites' => 'Resource',
+        'SocialRecommendations' => 'Resource',
     ];
 
 protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
@@ -250,7 +301,7 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT product_id, resource_id, product_name, product_description, category_id, unit_id, product_range, product_price, product_is_active, product_pic, created_at, updated_at FROM product WHERE product_id = :p0';
+        $sql = 'SELECT product_id, resource_id, product_name, product_description, category_id, provider_id, unit_id, product_range, product_price, product_is_active, product_pic, created_at, updated_at FROM product WHERE product_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -523,6 +574,49 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
         }
 
         return $this->addUsingAlias(ProductTableMap::COL_CATEGORY_ID, $categoryId, $comparison);
+    }
+
+    /**
+     * Filter the query on the provider_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByProviderId(1234); // WHERE provider_id = 1234
+     * $query->filterByProviderId(array(12, 34)); // WHERE provider_id IN (12, 34)
+     * $query->filterByProviderId(array('min' => 12)); // WHERE provider_id > 12
+     * </code>
+     *
+     * @see       filterByProvider()
+     *
+     * @param     mixed $providerId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildProductQuery The current query, for fluid interface
+     */
+    public function filterByProviderId($providerId = null, $comparison = null)
+    {
+        if (is_array($providerId)) {
+            $useMinMax = false;
+            if (isset($providerId['min'])) {
+                $this->addUsingAlias(ProductTableMap::COL_PROVIDER_ID, $providerId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($providerId['max'])) {
+                $this->addUsingAlias(ProductTableMap::COL_PROVIDER_ID, $providerId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(ProductTableMap::COL_PROVIDER_ID, $providerId, $comparison);
     }
 
     /**
@@ -886,6 +980,83 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
     }
 
     /**
+     * Filter the query by a related \App\Propel\Provider object
+     *
+     * @param \App\Propel\Provider|ObjectCollection $provider The related object(s) to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildProductQuery The current query, for fluid interface
+     */
+    public function filterByProvider($provider, $comparison = null)
+    {
+        if ($provider instanceof \App\Propel\Provider) {
+            return $this
+                ->addUsingAlias(ProductTableMap::COL_PROVIDER_ID, $provider->getProviderId(), $comparison);
+        } elseif ($provider instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(ProductTableMap::COL_PROVIDER_ID, $provider->toKeyValue('PrimaryKey', 'ProviderId'), $comparison);
+        } else {
+            throw new PropelException('filterByProvider() only accepts arguments of type \App\Propel\Provider or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Provider relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildProductQuery The current query, for fluid interface
+     */
+    public function joinProvider($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Provider');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Provider');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Provider relation Provider object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \App\Propel\ProviderQuery A secondary query class using the current class as primary query
+     */
+    public function useProviderQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinProvider($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Provider', '\App\Propel\ProviderQuery');
+    }
+
+    /**
      * Filter the query by a related \App\Propel\Unit object
      *
      * @param \App\Propel\Unit|ObjectCollection $unit The related object(s) to use as filter
@@ -1190,6 +1361,225 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
     }
 
     /**
+     * Filter the query by a related \App\Propel\ProductHighlighted object
+     *
+     * @param \App\Propel\ProductHighlighted|ObjectCollection $productHighlighted the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildProductQuery The current query, for fluid interface
+     */
+    public function filterByProductHighlighted($productHighlighted, $comparison = null)
+    {
+        if ($productHighlighted instanceof \App\Propel\ProductHighlighted) {
+            return $this
+                ->addUsingAlias(ProductTableMap::COL_PRODUCT_ID, $productHighlighted->getProductId(), $comparison);
+        } elseif ($productHighlighted instanceof ObjectCollection) {
+            return $this
+                ->useProductHighlightedQuery()
+                ->filterByPrimaryKeys($productHighlighted->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByProductHighlighted() only accepts arguments of type \App\Propel\ProductHighlighted or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the ProductHighlighted relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildProductQuery The current query, for fluid interface
+     */
+    public function joinProductHighlighted($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('ProductHighlighted');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'ProductHighlighted');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the ProductHighlighted relation ProductHighlighted object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \App\Propel\ProductHighlightedQuery A secondary query class using the current class as primary query
+     */
+    public function useProductHighlightedQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinProductHighlighted($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'ProductHighlighted', '\App\Propel\ProductHighlightedQuery');
+    }
+
+    /**
+     * Filter the query by a related \App\Propel\ProductVariationType object
+     *
+     * @param \App\Propel\ProductVariationType|ObjectCollection $productVariationType the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildProductQuery The current query, for fluid interface
+     */
+    public function filterByProductVariationType($productVariationType, $comparison = null)
+    {
+        if ($productVariationType instanceof \App\Propel\ProductVariationType) {
+            return $this
+                ->addUsingAlias(ProductTableMap::COL_PRODUCT_ID, $productVariationType->getProductId(), $comparison);
+        } elseif ($productVariationType instanceof ObjectCollection) {
+            return $this
+                ->useProductVariationTypeQuery()
+                ->filterByPrimaryKeys($productVariationType->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByProductVariationType() only accepts arguments of type \App\Propel\ProductVariationType or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the ProductVariationType relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildProductQuery The current query, for fluid interface
+     */
+    public function joinProductVariationType($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('ProductVariationType');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'ProductVariationType');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the ProductVariationType relation ProductVariationType object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \App\Propel\ProductVariationTypeQuery A secondary query class using the current class as primary query
+     */
+    public function useProductVariationTypeQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinProductVariationType($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'ProductVariationType', '\App\Propel\ProductVariationTypeQuery');
+    }
+
+    /**
+     * Filter the query by a related \App\Propel\WishlistProduct object
+     *
+     * @param \App\Propel\WishlistProduct|ObjectCollection $wishlistProduct the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildProductQuery The current query, for fluid interface
+     */
+    public function filterByWishlistProduct($wishlistProduct, $comparison = null)
+    {
+        if ($wishlistProduct instanceof \App\Propel\WishlistProduct) {
+            return $this
+                ->addUsingAlias(ProductTableMap::COL_PRODUCT_ID, $wishlistProduct->getProductId(), $comparison);
+        } elseif ($wishlistProduct instanceof ObjectCollection) {
+            return $this
+                ->useWishlistProductQuery()
+                ->filterByPrimaryKeys($wishlistProduct->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByWishlistProduct() only accepts arguments of type \App\Propel\WishlistProduct or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the WishlistProduct relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildProductQuery The current query, for fluid interface
+     */
+    public function joinWishlistProduct($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('WishlistProduct');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'WishlistProduct');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the WishlistProduct relation WishlistProduct object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \App\Propel\WishlistProductQuery A secondary query class using the current class as primary query
+     */
+    public function useWishlistProductQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinWishlistProduct($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'WishlistProduct', '\App\Propel\WishlistProductQuery');
+    }
+
+    /**
      * Exclude object from result
      *
      * @param   ChildProduct $product Object to remove from the list of results
@@ -1307,6 +1697,252 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
     public function orderByResourceTypeId($order = Criteria::ASC)
     {
         return $this->useResourceQuery()->orderByResourceTypeId($order)->endUse();
+    }
+    /**
+    * Filter the query by social_views column
+    *
+    * Example usage:
+    * <code>
+        * $query->filterBySocialViews(1234); // WHERE social_views = 1234
+        * $query->filterBySocialViews(array(12, 34)); // WHERE social_views IN (12, 34)
+        * $query->filterBySocialViews(array('min' => 12)); // WHERE social_views > 12
+        * </code>
+    *
+    * @param     mixed $value The value to use as filter.
+    *              Use scalar values for equality.
+    *              Use array values for in_array() equivalent.
+    *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+    * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+    *
+    * @return $this|ChildProductQuery The current query, for fluid interface
+    */
+    public function filterBySocialViews($value = null, $comparison = null)
+    {
+        return $this->useResourceQuery()->filterBySocialViews($value, $comparison)->endUse();
+    }
+
+    /**
+    * Adds an ORDER BY clause to the query
+    * Usability layer on top of Criteria::addAscendingOrderByColumn() and Criteria::addDescendingOrderByColumn()
+    * Infers $column and $order from $columnName and some optional arguments
+    * Examples:
+    *   $c->orderBy('Book.CreatedAt')
+    *    => $c->addAscendingOrderByColumn(BookTableMap::CREATED_AT)
+    *   $c->orderBy('Book.CategoryId', 'desc')
+    *    => $c->addDescendingOrderByColumn(BookTableMap::CATEGORY_ID)
+    *
+    * @param string $order      The sorting order. Criteria::ASC by default, also accepts Criteria::DESC
+    *
+    * @return $this|ModelCriteria The current object, for fluid interface
+    */
+    public function orderBySocialViews($order = Criteria::ASC)
+    {
+        return $this->useResourceQuery()->orderBySocialViews($order)->endUse();
+    }
+    /**
+    * Filter the query by social_likes column
+    *
+    * Example usage:
+    * <code>
+        * $query->filterBySocialLikes(1234); // WHERE social_likes = 1234
+        * $query->filterBySocialLikes(array(12, 34)); // WHERE social_likes IN (12, 34)
+        * $query->filterBySocialLikes(array('min' => 12)); // WHERE social_likes > 12
+        * </code>
+    *
+    * @param     mixed $value The value to use as filter.
+    *              Use scalar values for equality.
+    *              Use array values for in_array() equivalent.
+    *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+    * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+    *
+    * @return $this|ChildProductQuery The current query, for fluid interface
+    */
+    public function filterBySocialLikes($value = null, $comparison = null)
+    {
+        return $this->useResourceQuery()->filterBySocialLikes($value, $comparison)->endUse();
+    }
+
+    /**
+    * Adds an ORDER BY clause to the query
+    * Usability layer on top of Criteria::addAscendingOrderByColumn() and Criteria::addDescendingOrderByColumn()
+    * Infers $column and $order from $columnName and some optional arguments
+    * Examples:
+    *   $c->orderBy('Book.CreatedAt')
+    *    => $c->addAscendingOrderByColumn(BookTableMap::CREATED_AT)
+    *   $c->orderBy('Book.CategoryId', 'desc')
+    *    => $c->addDescendingOrderByColumn(BookTableMap::CATEGORY_ID)
+    *
+    * @param string $order      The sorting order. Criteria::ASC by default, also accepts Criteria::DESC
+    *
+    * @return $this|ModelCriteria The current object, for fluid interface
+    */
+    public function orderBySocialLikes($order = Criteria::ASC)
+    {
+        return $this->useResourceQuery()->orderBySocialLikes($order)->endUse();
+    }
+    /**
+    * Filter the query by social_dislikes column
+    *
+    * Example usage:
+    * <code>
+        * $query->filterBySocialDislikes(1234); // WHERE social_dislikes = 1234
+        * $query->filterBySocialDislikes(array(12, 34)); // WHERE social_dislikes IN (12, 34)
+        * $query->filterBySocialDislikes(array('min' => 12)); // WHERE social_dislikes > 12
+        * </code>
+    *
+    * @param     mixed $value The value to use as filter.
+    *              Use scalar values for equality.
+    *              Use array values for in_array() equivalent.
+    *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+    * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+    *
+    * @return $this|ChildProductQuery The current query, for fluid interface
+    */
+    public function filterBySocialDislikes($value = null, $comparison = null)
+    {
+        return $this->useResourceQuery()->filterBySocialDislikes($value, $comparison)->endUse();
+    }
+
+    /**
+    * Adds an ORDER BY clause to the query
+    * Usability layer on top of Criteria::addAscendingOrderByColumn() and Criteria::addDescendingOrderByColumn()
+    * Infers $column and $order from $columnName and some optional arguments
+    * Examples:
+    *   $c->orderBy('Book.CreatedAt')
+    *    => $c->addAscendingOrderByColumn(BookTableMap::CREATED_AT)
+    *   $c->orderBy('Book.CategoryId', 'desc')
+    *    => $c->addDescendingOrderByColumn(BookTableMap::CATEGORY_ID)
+    *
+    * @param string $order      The sorting order. Criteria::ASC by default, also accepts Criteria::DESC
+    *
+    * @return $this|ModelCriteria The current object, for fluid interface
+    */
+    public function orderBySocialDislikes($order = Criteria::ASC)
+    {
+        return $this->useResourceQuery()->orderBySocialDislikes($order)->endUse();
+    }
+    /**
+    * Filter the query by social_comments column
+    *
+    * Example usage:
+    * <code>
+        * $query->filterBySocialComments(1234); // WHERE social_comments = 1234
+        * $query->filterBySocialComments(array(12, 34)); // WHERE social_comments IN (12, 34)
+        * $query->filterBySocialComments(array('min' => 12)); // WHERE social_comments > 12
+        * </code>
+    *
+    * @param     mixed $value The value to use as filter.
+    *              Use scalar values for equality.
+    *              Use array values for in_array() equivalent.
+    *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+    * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+    *
+    * @return $this|ChildProductQuery The current query, for fluid interface
+    */
+    public function filterBySocialComments($value = null, $comparison = null)
+    {
+        return $this->useResourceQuery()->filterBySocialComments($value, $comparison)->endUse();
+    }
+
+    /**
+    * Adds an ORDER BY clause to the query
+    * Usability layer on top of Criteria::addAscendingOrderByColumn() and Criteria::addDescendingOrderByColumn()
+    * Infers $column and $order from $columnName and some optional arguments
+    * Examples:
+    *   $c->orderBy('Book.CreatedAt')
+    *    => $c->addAscendingOrderByColumn(BookTableMap::CREATED_AT)
+    *   $c->orderBy('Book.CategoryId', 'desc')
+    *    => $c->addDescendingOrderByColumn(BookTableMap::CATEGORY_ID)
+    *
+    * @param string $order      The sorting order. Criteria::ASC by default, also accepts Criteria::DESC
+    *
+    * @return $this|ModelCriteria The current object, for fluid interface
+    */
+    public function orderBySocialComments($order = Criteria::ASC)
+    {
+        return $this->useResourceQuery()->orderBySocialComments($order)->endUse();
+    }
+    /**
+    * Filter the query by social_favourites column
+    *
+    * Example usage:
+    * <code>
+        * $query->filterBySocialFavourites(1234); // WHERE social_favourites = 1234
+        * $query->filterBySocialFavourites(array(12, 34)); // WHERE social_favourites IN (12, 34)
+        * $query->filterBySocialFavourites(array('min' => 12)); // WHERE social_favourites > 12
+        * </code>
+    *
+    * @param     mixed $value The value to use as filter.
+    *              Use scalar values for equality.
+    *              Use array values for in_array() equivalent.
+    *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+    * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+    *
+    * @return $this|ChildProductQuery The current query, for fluid interface
+    */
+    public function filterBySocialFavourites($value = null, $comparison = null)
+    {
+        return $this->useResourceQuery()->filterBySocialFavourites($value, $comparison)->endUse();
+    }
+
+    /**
+    * Adds an ORDER BY clause to the query
+    * Usability layer on top of Criteria::addAscendingOrderByColumn() and Criteria::addDescendingOrderByColumn()
+    * Infers $column and $order from $columnName and some optional arguments
+    * Examples:
+    *   $c->orderBy('Book.CreatedAt')
+    *    => $c->addAscendingOrderByColumn(BookTableMap::CREATED_AT)
+    *   $c->orderBy('Book.CategoryId', 'desc')
+    *    => $c->addDescendingOrderByColumn(BookTableMap::CATEGORY_ID)
+    *
+    * @param string $order      The sorting order. Criteria::ASC by default, also accepts Criteria::DESC
+    *
+    * @return $this|ModelCriteria The current object, for fluid interface
+    */
+    public function orderBySocialFavourites($order = Criteria::ASC)
+    {
+        return $this->useResourceQuery()->orderBySocialFavourites($order)->endUse();
+    }
+    /**
+    * Filter the query by social_recommendations column
+    *
+    * Example usage:
+    * <code>
+        * $query->filterBySocialRecommendations(1234); // WHERE social_recommendations = 1234
+        * $query->filterBySocialRecommendations(array(12, 34)); // WHERE social_recommendations IN (12, 34)
+        * $query->filterBySocialRecommendations(array('min' => 12)); // WHERE social_recommendations > 12
+        * </code>
+    *
+    * @param     mixed $value The value to use as filter.
+    *              Use scalar values for equality.
+    *              Use array values for in_array() equivalent.
+    *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+    * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+    *
+    * @return $this|ChildProductQuery The current query, for fluid interface
+    */
+    public function filterBySocialRecommendations($value = null, $comparison = null)
+    {
+        return $this->useResourceQuery()->filterBySocialRecommendations($value, $comparison)->endUse();
+    }
+
+    /**
+    * Adds an ORDER BY clause to the query
+    * Usability layer on top of Criteria::addAscendingOrderByColumn() and Criteria::addDescendingOrderByColumn()
+    * Infers $column and $order from $columnName and some optional arguments
+    * Examples:
+    *   $c->orderBy('Book.CreatedAt')
+    *    => $c->addAscendingOrderByColumn(BookTableMap::CREATED_AT)
+    *   $c->orderBy('Book.CategoryId', 'desc')
+    *    => $c->addDescendingOrderByColumn(BookTableMap::CATEGORY_ID)
+    *
+    * @param string $order      The sorting order. Criteria::ASC by default, also accepts Criteria::DESC
+    *
+    * @return $this|ModelCriteria The current object, for fluid interface
+    */
+    public function orderBySocialRecommendations($order = Criteria::ASC)
+    {
+        return $this->useResourceQuery()->orderBySocialRecommendations($order)->endUse();
     }
 
     /**

@@ -145,7 +145,7 @@ class DeliveryTypeTableMap extends TableMap
         $this->setPackage('App.Propel');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('delivery_type_id', 'DeliveryTypeId', 'SMALLINT', true, 8, null);
+        $this->addPrimaryKey('delivery_type_id', 'DeliveryTypeId', 'SMALLINT', true, 5, null);
         $this->addColumn('delivery_type_code', 'DeliveryTypeCode', 'VARCHAR', true, 45, null);
         $this->addColumn('delivery_type_is_active', 'DeliveryTypeIsActive', 'BOOLEAN', true, 1, null);
     } // initialize()

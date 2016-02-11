@@ -147,7 +147,7 @@ class DeliveryTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('delivery_id', 'DeliveryId', 'INTEGER', true, 10, null);
-        $this->addForeignKey('delivery_type_id', 'DeliveryTypeId', 'SMALLINT', 'delivery_type', 'delivery_type_id', true, 8, null);
+        $this->addForeignKey('delivery_type_id', 'DeliveryTypeId', 'SMALLINT', 'delivery_type', 'delivery_type_id', true, 5, null);
         $this->addColumn('delivery_date', 'DeliveryDate', 'TIMESTAMP', false, null, null);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);

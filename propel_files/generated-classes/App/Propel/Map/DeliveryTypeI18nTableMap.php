@@ -136,7 +136,7 @@ class DeliveryTypeI18nTableMap extends TableMap
         $this->setPackage('App.Propel');
         $this->setUseIdGenerator(false);
         // columns
-        $this->addForeignPrimaryKey('delivery_type_id', 'DeliveryTypeId', 'SMALLINT' , 'delivery_type', 'delivery_type_id', true, 8, null);
+        $this->addForeignPrimaryKey('delivery_type_id', 'DeliveryTypeId', 'SMALLINT' , 'delivery_type', 'delivery_type_id', true, 5, null);
         $this->addPrimaryKey('locale', 'Locale', 'VARCHAR', true, 5, 'en_US');
         $this->addColumn('delivery_type_name', 'DeliveryTypeName', 'VARCHAR', true, 60, null);
     } // initialize()

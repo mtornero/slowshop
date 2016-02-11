@@ -59,7 +59,7 @@ class ProductTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 12;
+    const NUM_COLUMNS = 13;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class ProductTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 12;
+    const NUM_HYDRATE_COLUMNS = 13;
 
     /**
      * the column name for the product_id field
@@ -95,6 +95,11 @@ class ProductTableMap extends TableMap
      * the column name for the category_id field
      */
     const COL_CATEGORY_ID = 'product.category_id';
+
+    /**
+     * the column name for the provider_id field
+     */
+    const COL_PROVIDER_ID = 'product.provider_id';
 
     /**
      * the column name for the unit_id field
@@ -143,11 +148,11 @@ class ProductTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('ProductId', 'ResourceId', 'ProductName', 'ProductDescription', 'CategoryId', 'UnitId', 'ProductRange', 'ProductPrice', 'ProductIsActive', 'ProductPic', 'CreatedAt', 'UpdatedAt', ),
-        self::TYPE_CAMELNAME     => array('productId', 'resourceId', 'productName', 'productDescription', 'categoryId', 'unitId', 'productRange', 'productPrice', 'productIsActive', 'productPic', 'createdAt', 'updatedAt', ),
-        self::TYPE_COLNAME       => array(ProductTableMap::COL_PRODUCT_ID, ProductTableMap::COL_RESOURCE_ID, ProductTableMap::COL_PRODUCT_NAME, ProductTableMap::COL_PRODUCT_DESCRIPTION, ProductTableMap::COL_CATEGORY_ID, ProductTableMap::COL_UNIT_ID, ProductTableMap::COL_PRODUCT_RANGE, ProductTableMap::COL_PRODUCT_PRICE, ProductTableMap::COL_PRODUCT_IS_ACTIVE, ProductTableMap::COL_PRODUCT_PIC, ProductTableMap::COL_CREATED_AT, ProductTableMap::COL_UPDATED_AT, ),
-        self::TYPE_FIELDNAME     => array('product_id', 'resource_id', 'product_name', 'product_description', 'category_id', 'unit_id', 'product_range', 'product_price', 'product_is_active', 'product_pic', 'created_at', 'updated_at', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
+        self::TYPE_PHPNAME       => array('ProductId', 'ResourceId', 'ProductName', 'ProductDescription', 'CategoryId', 'ProviderId', 'UnitId', 'ProductRange', 'ProductPrice', 'ProductIsActive', 'ProductPic', 'CreatedAt', 'UpdatedAt', ),
+        self::TYPE_CAMELNAME     => array('productId', 'resourceId', 'productName', 'productDescription', 'categoryId', 'providerId', 'unitId', 'productRange', 'productPrice', 'productIsActive', 'productPic', 'createdAt', 'updatedAt', ),
+        self::TYPE_COLNAME       => array(ProductTableMap::COL_PRODUCT_ID, ProductTableMap::COL_RESOURCE_ID, ProductTableMap::COL_PRODUCT_NAME, ProductTableMap::COL_PRODUCT_DESCRIPTION, ProductTableMap::COL_CATEGORY_ID, ProductTableMap::COL_PROVIDER_ID, ProductTableMap::COL_UNIT_ID, ProductTableMap::COL_PRODUCT_RANGE, ProductTableMap::COL_PRODUCT_PRICE, ProductTableMap::COL_PRODUCT_IS_ACTIVE, ProductTableMap::COL_PRODUCT_PIC, ProductTableMap::COL_CREATED_AT, ProductTableMap::COL_UPDATED_AT, ),
+        self::TYPE_FIELDNAME     => array('product_id', 'resource_id', 'product_name', 'product_description', 'category_id', 'provider_id', 'unit_id', 'product_range', 'product_price', 'product_is_active', 'product_pic', 'created_at', 'updated_at', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
     );
 
     /**
@@ -157,11 +162,11 @@ class ProductTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('ProductId' => 0, 'ResourceId' => 1, 'ProductName' => 2, 'ProductDescription' => 3, 'CategoryId' => 4, 'UnitId' => 5, 'ProductRange' => 6, 'ProductPrice' => 7, 'ProductIsActive' => 8, 'ProductPic' => 9, 'CreatedAt' => 10, 'UpdatedAt' => 11, ),
-        self::TYPE_CAMELNAME     => array('productId' => 0, 'resourceId' => 1, 'productName' => 2, 'productDescription' => 3, 'categoryId' => 4, 'unitId' => 5, 'productRange' => 6, 'productPrice' => 7, 'productIsActive' => 8, 'productPic' => 9, 'createdAt' => 10, 'updatedAt' => 11, ),
-        self::TYPE_COLNAME       => array(ProductTableMap::COL_PRODUCT_ID => 0, ProductTableMap::COL_RESOURCE_ID => 1, ProductTableMap::COL_PRODUCT_NAME => 2, ProductTableMap::COL_PRODUCT_DESCRIPTION => 3, ProductTableMap::COL_CATEGORY_ID => 4, ProductTableMap::COL_UNIT_ID => 5, ProductTableMap::COL_PRODUCT_RANGE => 6, ProductTableMap::COL_PRODUCT_PRICE => 7, ProductTableMap::COL_PRODUCT_IS_ACTIVE => 8, ProductTableMap::COL_PRODUCT_PIC => 9, ProductTableMap::COL_CREATED_AT => 10, ProductTableMap::COL_UPDATED_AT => 11, ),
-        self::TYPE_FIELDNAME     => array('product_id' => 0, 'resource_id' => 1, 'product_name' => 2, 'product_description' => 3, 'category_id' => 4, 'unit_id' => 5, 'product_range' => 6, 'product_price' => 7, 'product_is_active' => 8, 'product_pic' => 9, 'created_at' => 10, 'updated_at' => 11, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
+        self::TYPE_PHPNAME       => array('ProductId' => 0, 'ResourceId' => 1, 'ProductName' => 2, 'ProductDescription' => 3, 'CategoryId' => 4, 'ProviderId' => 5, 'UnitId' => 6, 'ProductRange' => 7, 'ProductPrice' => 8, 'ProductIsActive' => 9, 'ProductPic' => 10, 'CreatedAt' => 11, 'UpdatedAt' => 12, ),
+        self::TYPE_CAMELNAME     => array('productId' => 0, 'resourceId' => 1, 'productName' => 2, 'productDescription' => 3, 'categoryId' => 4, 'providerId' => 5, 'unitId' => 6, 'productRange' => 7, 'productPrice' => 8, 'productIsActive' => 9, 'productPic' => 10, 'createdAt' => 11, 'updatedAt' => 12, ),
+        self::TYPE_COLNAME       => array(ProductTableMap::COL_PRODUCT_ID => 0, ProductTableMap::COL_RESOURCE_ID => 1, ProductTableMap::COL_PRODUCT_NAME => 2, ProductTableMap::COL_PRODUCT_DESCRIPTION => 3, ProductTableMap::COL_CATEGORY_ID => 4, ProductTableMap::COL_PROVIDER_ID => 5, ProductTableMap::COL_UNIT_ID => 6, ProductTableMap::COL_PRODUCT_RANGE => 7, ProductTableMap::COL_PRODUCT_PRICE => 8, ProductTableMap::COL_PRODUCT_IS_ACTIVE => 9, ProductTableMap::COL_PRODUCT_PIC => 10, ProductTableMap::COL_CREATED_AT => 11, ProductTableMap::COL_UPDATED_AT => 12, ),
+        self::TYPE_FIELDNAME     => array('product_id' => 0, 'resource_id' => 1, 'product_name' => 2, 'product_description' => 3, 'category_id' => 4, 'provider_id' => 5, 'unit_id' => 6, 'product_range' => 7, 'product_price' => 8, 'product_is_active' => 9, 'product_pic' => 10, 'created_at' => 11, 'updated_at' => 12, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
     );
 
     /**
@@ -186,6 +191,7 @@ class ProductTableMap extends TableMap
         $this->addColumn('product_name', 'ProductName', 'VARCHAR', true, 60, null);
         $this->addColumn('product_description', 'ProductDescription', 'VARCHAR', false, 250, null);
         $this->addForeignKey('category_id', 'CategoryId', 'INTEGER', 'category', 'category_id', true, 10, null);
+        $this->addForeignKey('provider_id', 'ProviderId', 'INTEGER', 'provider', 'provider_id', false, 10, null);
         $this->addForeignKey('unit_id', 'UnitId', 'TINYINT', 'unit', 'unit_id', true, 3, null);
         $this->addColumn('product_range', 'ProductRange', 'VARCHAR', false, 45, null);
         $this->addColumn('product_price', 'ProductPrice', 'DECIMAL', true, 10, null);
@@ -205,6 +211,13 @@ class ProductTableMap extends TableMap
   array (
     0 => ':category_id',
     1 => ':category_id',
+  ),
+), null, 'CASCADE', null, false);
+        $this->addRelation('Provider', '\\App\\Propel\\Provider', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':provider_id',
+    1 => ':provider_id',
   ),
 ), null, 'CASCADE', null, false);
         $this->addRelation('Unit', '\\App\\Propel\\Unit', RelationMap::MANY_TO_ONE, array (
@@ -235,6 +248,27 @@ class ProductTableMap extends TableMap
     1 => ':product_id',
   ),
 ), null, 'CASCADE', 'OrderProducts', false);
+        $this->addRelation('ProductHighlighted', '\\App\\Propel\\ProductHighlighted', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':product_id',
+    1 => ':product_id',
+  ),
+), null, 'CASCADE', 'ProductHighlighteds', false);
+        $this->addRelation('ProductVariationType', '\\App\\Propel\\ProductVariationType', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':product_id',
+    1 => ':product_id',
+  ),
+), null, 'CASCADE', 'ProductVariationTypes', false);
+        $this->addRelation('WishlistProduct', '\\App\\Propel\\WishlistProduct', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':product_id',
+    1 => ':product_id',
+  ),
+), null, 'CASCADE', 'WishlistProducts', false);
     } // buildRelations()
 
     /**
@@ -397,6 +431,7 @@ class ProductTableMap extends TableMap
             $criteria->addSelectColumn(ProductTableMap::COL_PRODUCT_NAME);
             $criteria->addSelectColumn(ProductTableMap::COL_PRODUCT_DESCRIPTION);
             $criteria->addSelectColumn(ProductTableMap::COL_CATEGORY_ID);
+            $criteria->addSelectColumn(ProductTableMap::COL_PROVIDER_ID);
             $criteria->addSelectColumn(ProductTableMap::COL_UNIT_ID);
             $criteria->addSelectColumn(ProductTableMap::COL_PRODUCT_RANGE);
             $criteria->addSelectColumn(ProductTableMap::COL_PRODUCT_PRICE);
@@ -410,6 +445,7 @@ class ProductTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.product_name');
             $criteria->addSelectColumn($alias . '.product_description');
             $criteria->addSelectColumn($alias . '.category_id');
+            $criteria->addSelectColumn($alias . '.provider_id');
             $criteria->addSelectColumn($alias . '.unit_id');
             $criteria->addSelectColumn($alias . '.product_range');
             $criteria->addSelectColumn($alias . '.product_price');

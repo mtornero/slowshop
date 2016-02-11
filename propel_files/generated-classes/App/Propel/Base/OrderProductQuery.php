@@ -23,6 +23,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildOrderProductQuery orderByOrderProductId($order = Criteria::ASC) Order by the order_product_id column
  * @method     ChildOrderProductQuery orderByOrderId($order = Criteria::ASC) Order by the order_id column
  * @method     ChildOrderProductQuery orderByProductId($order = Criteria::ASC) Order by the product_id column
+ * @method     ChildOrderProductQuery orderByProductVariationId($order = Criteria::ASC) Order by the product_variation_id column
  * @method     ChildOrderProductQuery orderByProductQuantity($order = Criteria::ASC) Order by the product_quantity column
  * @method     ChildOrderProductQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method     ChildOrderProductQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
@@ -30,6 +31,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildOrderProductQuery groupByOrderProductId() Group by the order_product_id column
  * @method     ChildOrderProductQuery groupByOrderId() Group by the order_id column
  * @method     ChildOrderProductQuery groupByProductId() Group by the product_id column
+ * @method     ChildOrderProductQuery groupByProductVariationId() Group by the product_variation_id column
  * @method     ChildOrderProductQuery groupByProductQuantity() Group by the product_quantity column
  * @method     ChildOrderProductQuery groupByCreatedAt() Group by the created_at column
  * @method     ChildOrderProductQuery groupByUpdatedAt() Group by the updated_at column
@@ -62,7 +64,17 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildOrderProductQuery rightJoinWithProduct() Adds a RIGHT JOIN clause and with to the query using the Product relation
  * @method     ChildOrderProductQuery innerJoinWithProduct() Adds a INNER JOIN clause and with to the query using the Product relation
  *
- * @method     \App\Propel\OrderQuery|\App\Propel\ProductQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     ChildOrderProductQuery leftJoinProductVariation($relationAlias = null) Adds a LEFT JOIN clause to the query using the ProductVariation relation
+ * @method     ChildOrderProductQuery rightJoinProductVariation($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ProductVariation relation
+ * @method     ChildOrderProductQuery innerJoinProductVariation($relationAlias = null) Adds a INNER JOIN clause to the query using the ProductVariation relation
+ *
+ * @method     ChildOrderProductQuery joinWithProductVariation($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the ProductVariation relation
+ *
+ * @method     ChildOrderProductQuery leftJoinWithProductVariation() Adds a LEFT JOIN clause and with to the query using the ProductVariation relation
+ * @method     ChildOrderProductQuery rightJoinWithProductVariation() Adds a RIGHT JOIN clause and with to the query using the ProductVariation relation
+ * @method     ChildOrderProductQuery innerJoinWithProductVariation() Adds a INNER JOIN clause and with to the query using the ProductVariation relation
+ *
+ * @method     \App\Propel\OrderQuery|\App\Propel\ProductQuery|\App\Propel\ProductVariationQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildOrderProduct findOne(ConnectionInterface $con = null) Return the first ChildOrderProduct matching the query
  * @method     ChildOrderProduct findOneOrCreate(ConnectionInterface $con = null) Return the first ChildOrderProduct matching the query, or a new ChildOrderProduct object populated from the query conditions when no match is found
@@ -70,6 +82,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildOrderProduct findOneByOrderProductId(int $order_product_id) Return the first ChildOrderProduct filtered by the order_product_id column
  * @method     ChildOrderProduct findOneByOrderId(int $order_id) Return the first ChildOrderProduct filtered by the order_id column
  * @method     ChildOrderProduct findOneByProductId(int $product_id) Return the first ChildOrderProduct filtered by the product_id column
+ * @method     ChildOrderProduct findOneByProductVariationId(int $product_variation_id) Return the first ChildOrderProduct filtered by the product_variation_id column
  * @method     ChildOrderProduct findOneByProductQuantity(int $product_quantity) Return the first ChildOrderProduct filtered by the product_quantity column
  * @method     ChildOrderProduct findOneByCreatedAt(string $created_at) Return the first ChildOrderProduct filtered by the created_at column
  * @method     ChildOrderProduct findOneByUpdatedAt(string $updated_at) Return the first ChildOrderProduct filtered by the updated_at column *
@@ -80,6 +93,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildOrderProduct requireOneByOrderProductId(int $order_product_id) Return the first ChildOrderProduct filtered by the order_product_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildOrderProduct requireOneByOrderId(int $order_id) Return the first ChildOrderProduct filtered by the order_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildOrderProduct requireOneByProductId(int $product_id) Return the first ChildOrderProduct filtered by the product_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildOrderProduct requireOneByProductVariationId(int $product_variation_id) Return the first ChildOrderProduct filtered by the product_variation_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildOrderProduct requireOneByProductQuantity(int $product_quantity) Return the first ChildOrderProduct filtered by the product_quantity column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildOrderProduct requireOneByCreatedAt(string $created_at) Return the first ChildOrderProduct filtered by the created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildOrderProduct requireOneByUpdatedAt(string $updated_at) Return the first ChildOrderProduct filtered by the updated_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -88,6 +102,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildOrderProduct[]|ObjectCollection findByOrderProductId(int $order_product_id) Return ChildOrderProduct objects filtered by the order_product_id column
  * @method     ChildOrderProduct[]|ObjectCollection findByOrderId(int $order_id) Return ChildOrderProduct objects filtered by the order_id column
  * @method     ChildOrderProduct[]|ObjectCollection findByProductId(int $product_id) Return ChildOrderProduct objects filtered by the product_id column
+ * @method     ChildOrderProduct[]|ObjectCollection findByProductVariationId(int $product_variation_id) Return ChildOrderProduct objects filtered by the product_variation_id column
  * @method     ChildOrderProduct[]|ObjectCollection findByProductQuantity(int $product_quantity) Return ChildOrderProduct objects filtered by the product_quantity column
  * @method     ChildOrderProduct[]|ObjectCollection findByCreatedAt(string $created_at) Return ChildOrderProduct objects filtered by the created_at column
  * @method     ChildOrderProduct[]|ObjectCollection findByUpdatedAt(string $updated_at) Return ChildOrderProduct objects filtered by the updated_at column
@@ -183,7 +198,7 @@ abstract class OrderProductQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT order_product_id, order_id, product_id, product_quantity, created_at, updated_at FROM order_product WHERE order_product_id = :p0';
+        $sql = 'SELECT order_product_id, order_id, product_id, product_variation_id, product_quantity, created_at, updated_at FROM order_product WHERE order_product_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -398,6 +413,49 @@ abstract class OrderProductQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(OrderProductTableMap::COL_PRODUCT_ID, $productId, $comparison);
+    }
+
+    /**
+     * Filter the query on the product_variation_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByProductVariationId(1234); // WHERE product_variation_id = 1234
+     * $query->filterByProductVariationId(array(12, 34)); // WHERE product_variation_id IN (12, 34)
+     * $query->filterByProductVariationId(array('min' => 12)); // WHERE product_variation_id > 12
+     * </code>
+     *
+     * @see       filterByProductVariation()
+     *
+     * @param     mixed $productVariationId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildOrderProductQuery The current query, for fluid interface
+     */
+    public function filterByProductVariationId($productVariationId = null, $comparison = null)
+    {
+        if (is_array($productVariationId)) {
+            $useMinMax = false;
+            if (isset($productVariationId['min'])) {
+                $this->addUsingAlias(OrderProductTableMap::COL_PRODUCT_VARIATION_ID, $productVariationId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($productVariationId['max'])) {
+                $this->addUsingAlias(OrderProductTableMap::COL_PRODUCT_VARIATION_ID, $productVariationId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(OrderProductTableMap::COL_PRODUCT_VARIATION_ID, $productVariationId, $comparison);
     }
 
     /**
@@ -679,6 +737,83 @@ abstract class OrderProductQuery extends ModelCriteria
         return $this
             ->joinProduct($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Product', '\App\Propel\ProductQuery');
+    }
+
+    /**
+     * Filter the query by a related \App\Propel\ProductVariation object
+     *
+     * @param \App\Propel\ProductVariation|ObjectCollection $productVariation The related object(s) to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildOrderProductQuery The current query, for fluid interface
+     */
+    public function filterByProductVariation($productVariation, $comparison = null)
+    {
+        if ($productVariation instanceof \App\Propel\ProductVariation) {
+            return $this
+                ->addUsingAlias(OrderProductTableMap::COL_PRODUCT_VARIATION_ID, $productVariation->getProductVariationId(), $comparison);
+        } elseif ($productVariation instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(OrderProductTableMap::COL_PRODUCT_VARIATION_ID, $productVariation->toKeyValue('PrimaryKey', 'ProductVariationId'), $comparison);
+        } else {
+            throw new PropelException('filterByProductVariation() only accepts arguments of type \App\Propel\ProductVariation or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the ProductVariation relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildOrderProductQuery The current query, for fluid interface
+     */
+    public function joinProductVariation($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('ProductVariation');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'ProductVariation');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the ProductVariation relation ProductVariation object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \App\Propel\ProductVariationQuery A secondary query class using the current class as primary query
+     */
+    public function useProductVariationQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinProductVariation($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'ProductVariation', '\App\Propel\ProductVariationQuery');
     }
 
     /**

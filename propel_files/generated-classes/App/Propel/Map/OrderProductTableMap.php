@@ -59,7 +59,7 @@ class OrderProductTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 6;
+    const NUM_COLUMNS = 7;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class OrderProductTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 6;
+    const NUM_HYDRATE_COLUMNS = 7;
 
     /**
      * the column name for the order_product_id field
@@ -85,6 +85,11 @@ class OrderProductTableMap extends TableMap
      * the column name for the product_id field
      */
     const COL_PRODUCT_ID = 'order_product.product_id';
+
+    /**
+     * the column name for the product_variation_id field
+     */
+    const COL_PRODUCT_VARIATION_ID = 'order_product.product_variation_id';
 
     /**
      * the column name for the product_quantity field
@@ -113,11 +118,11 @@ class OrderProductTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('OrderProductId', 'OrderId', 'ProductId', 'ProductQuantity', 'CreatedAt', 'UpdatedAt', ),
-        self::TYPE_CAMELNAME     => array('orderProductId', 'orderId', 'productId', 'productQuantity', 'createdAt', 'updatedAt', ),
-        self::TYPE_COLNAME       => array(OrderProductTableMap::COL_ORDER_PRODUCT_ID, OrderProductTableMap::COL_ORDER_ID, OrderProductTableMap::COL_PRODUCT_ID, OrderProductTableMap::COL_PRODUCT_QUANTITY, OrderProductTableMap::COL_CREATED_AT, OrderProductTableMap::COL_UPDATED_AT, ),
-        self::TYPE_FIELDNAME     => array('order_product_id', 'order_id', 'product_id', 'product_quantity', 'created_at', 'updated_at', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
+        self::TYPE_PHPNAME       => array('OrderProductId', 'OrderId', 'ProductId', 'ProductVariationId', 'ProductQuantity', 'CreatedAt', 'UpdatedAt', ),
+        self::TYPE_CAMELNAME     => array('orderProductId', 'orderId', 'productId', 'productVariationId', 'productQuantity', 'createdAt', 'updatedAt', ),
+        self::TYPE_COLNAME       => array(OrderProductTableMap::COL_ORDER_PRODUCT_ID, OrderProductTableMap::COL_ORDER_ID, OrderProductTableMap::COL_PRODUCT_ID, OrderProductTableMap::COL_PRODUCT_VARIATION_ID, OrderProductTableMap::COL_PRODUCT_QUANTITY, OrderProductTableMap::COL_CREATED_AT, OrderProductTableMap::COL_UPDATED_AT, ),
+        self::TYPE_FIELDNAME     => array('order_product_id', 'order_id', 'product_id', 'product_variation_id', 'product_quantity', 'created_at', 'updated_at', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
     );
 
     /**
@@ -127,11 +132,11 @@ class OrderProductTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('OrderProductId' => 0, 'OrderId' => 1, 'ProductId' => 2, 'ProductQuantity' => 3, 'CreatedAt' => 4, 'UpdatedAt' => 5, ),
-        self::TYPE_CAMELNAME     => array('orderProductId' => 0, 'orderId' => 1, 'productId' => 2, 'productQuantity' => 3, 'createdAt' => 4, 'updatedAt' => 5, ),
-        self::TYPE_COLNAME       => array(OrderProductTableMap::COL_ORDER_PRODUCT_ID => 0, OrderProductTableMap::COL_ORDER_ID => 1, OrderProductTableMap::COL_PRODUCT_ID => 2, OrderProductTableMap::COL_PRODUCT_QUANTITY => 3, OrderProductTableMap::COL_CREATED_AT => 4, OrderProductTableMap::COL_UPDATED_AT => 5, ),
-        self::TYPE_FIELDNAME     => array('order_product_id' => 0, 'order_id' => 1, 'product_id' => 2, 'product_quantity' => 3, 'created_at' => 4, 'updated_at' => 5, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
+        self::TYPE_PHPNAME       => array('OrderProductId' => 0, 'OrderId' => 1, 'ProductId' => 2, 'ProductVariationId' => 3, 'ProductQuantity' => 4, 'CreatedAt' => 5, 'UpdatedAt' => 6, ),
+        self::TYPE_CAMELNAME     => array('orderProductId' => 0, 'orderId' => 1, 'productId' => 2, 'productVariationId' => 3, 'productQuantity' => 4, 'createdAt' => 5, 'updatedAt' => 6, ),
+        self::TYPE_COLNAME       => array(OrderProductTableMap::COL_ORDER_PRODUCT_ID => 0, OrderProductTableMap::COL_ORDER_ID => 1, OrderProductTableMap::COL_PRODUCT_ID => 2, OrderProductTableMap::COL_PRODUCT_VARIATION_ID => 3, OrderProductTableMap::COL_PRODUCT_QUANTITY => 4, OrderProductTableMap::COL_CREATED_AT => 5, OrderProductTableMap::COL_UPDATED_AT => 6, ),
+        self::TYPE_FIELDNAME     => array('order_product_id' => 0, 'order_id' => 1, 'product_id' => 2, 'product_variation_id' => 3, 'product_quantity' => 4, 'created_at' => 5, 'updated_at' => 6, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
     );
 
     /**
@@ -154,6 +159,7 @@ class OrderProductTableMap extends TableMap
         $this->addPrimaryKey('order_product_id', 'OrderProductId', 'INTEGER', true, 10, null);
         $this->addForeignKey('order_id', 'OrderId', 'INTEGER', 'order', 'order_id', true, 10, null);
         $this->addForeignKey('product_id', 'ProductId', 'INTEGER', 'product', 'product_id', true, 10, null);
+        $this->addForeignKey('product_variation_id', 'ProductVariationId', 'INTEGER', 'product_variation', 'product_variation_id', false, 10, null);
         $this->addColumn('product_quantity', 'ProductQuantity', 'INTEGER', true, null, null);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
@@ -176,6 +182,13 @@ class OrderProductTableMap extends TableMap
   array (
     0 => ':product_id',
     1 => ':product_id',
+  ),
+), null, 'CASCADE', null, false);
+        $this->addRelation('ProductVariation', '\\App\\Propel\\ProductVariation', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':product_variation_id',
+    1 => ':product_variation_id',
   ),
 ), null, 'CASCADE', null, false);
     } // buildRelations()
@@ -337,6 +350,7 @@ class OrderProductTableMap extends TableMap
             $criteria->addSelectColumn(OrderProductTableMap::COL_ORDER_PRODUCT_ID);
             $criteria->addSelectColumn(OrderProductTableMap::COL_ORDER_ID);
             $criteria->addSelectColumn(OrderProductTableMap::COL_PRODUCT_ID);
+            $criteria->addSelectColumn(OrderProductTableMap::COL_PRODUCT_VARIATION_ID);
             $criteria->addSelectColumn(OrderProductTableMap::COL_PRODUCT_QUANTITY);
             $criteria->addSelectColumn(OrderProductTableMap::COL_CREATED_AT);
             $criteria->addSelectColumn(OrderProductTableMap::COL_UPDATED_AT);
@@ -344,6 +358,7 @@ class OrderProductTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.order_product_id');
             $criteria->addSelectColumn($alias . '.order_id');
             $criteria->addSelectColumn($alias . '.product_id');
+            $criteria->addSelectColumn($alias . '.product_variation_id');
             $criteria->addSelectColumn($alias . '.product_quantity');
             $criteria->addSelectColumn($alias . '.created_at');
             $criteria->addSelectColumn($alias . '.updated_at');

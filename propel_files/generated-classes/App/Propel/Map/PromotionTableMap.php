@@ -59,7 +59,7 @@ class PromotionTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 11;
+    const NUM_COLUMNS = 12;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class PromotionTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 11;
+    const NUM_HYDRATE_COLUMNS = 12;
 
     /**
      * the column name for the promotion_id field
@@ -95,6 +95,11 @@ class PromotionTableMap extends TableMap
      * the column name for the promotion_gift field
      */
     const COL_PROMOTION_GIFT = 'promotion.promotion_gift';
+
+    /**
+     * the column name for the promotion_description field
+     */
+    const COL_PROMOTION_DESCRIPTION = 'promotion.promotion_description';
 
     /**
      * the column name for the promotion_starting_point field
@@ -138,11 +143,11 @@ class PromotionTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('PromotionId', 'ResourceId', 'PromotionTypeId', 'PromotionValue', 'PromotionGift', 'PromotionStartingPoint', 'PromotionStartingDate', 'PromotionEndingDate', 'PromotionIsActive', 'CreatedAt', 'UpdatedAt', ),
-        self::TYPE_CAMELNAME     => array('promotionId', 'resourceId', 'promotionTypeId', 'promotionValue', 'promotionGift', 'promotionStartingPoint', 'promotionStartingDate', 'promotionEndingDate', 'promotionIsActive', 'createdAt', 'updatedAt', ),
-        self::TYPE_COLNAME       => array(PromotionTableMap::COL_PROMOTION_ID, PromotionTableMap::COL_RESOURCE_ID, PromotionTableMap::COL_PROMOTION_TYPE_ID, PromotionTableMap::COL_PROMOTION_VALUE, PromotionTableMap::COL_PROMOTION_GIFT, PromotionTableMap::COL_PROMOTION_STARTING_POINT, PromotionTableMap::COL_PROMOTION_STARTING_DATE, PromotionTableMap::COL_PROMOTION_ENDING_DATE, PromotionTableMap::COL_PROMOTION_IS_ACTIVE, PromotionTableMap::COL_CREATED_AT, PromotionTableMap::COL_UPDATED_AT, ),
-        self::TYPE_FIELDNAME     => array('promotion_id', 'resource_id', 'promotion_type_id', 'promotion_value', 'promotion_gift', 'promotion_starting_point', 'promotion_starting_date', 'promotion_ending_date', 'promotion_is_active', 'created_at', 'updated_at', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
+        self::TYPE_PHPNAME       => array('PromotionId', 'ResourceId', 'PromotionTypeId', 'PromotionValue', 'PromotionGift', 'PromotionDescription', 'PromotionStartingPoint', 'PromotionStartingDate', 'PromotionEndingDate', 'PromotionIsActive', 'CreatedAt', 'UpdatedAt', ),
+        self::TYPE_CAMELNAME     => array('promotionId', 'resourceId', 'promotionTypeId', 'promotionValue', 'promotionGift', 'promotionDescription', 'promotionStartingPoint', 'promotionStartingDate', 'promotionEndingDate', 'promotionIsActive', 'createdAt', 'updatedAt', ),
+        self::TYPE_COLNAME       => array(PromotionTableMap::COL_PROMOTION_ID, PromotionTableMap::COL_RESOURCE_ID, PromotionTableMap::COL_PROMOTION_TYPE_ID, PromotionTableMap::COL_PROMOTION_VALUE, PromotionTableMap::COL_PROMOTION_GIFT, PromotionTableMap::COL_PROMOTION_DESCRIPTION, PromotionTableMap::COL_PROMOTION_STARTING_POINT, PromotionTableMap::COL_PROMOTION_STARTING_DATE, PromotionTableMap::COL_PROMOTION_ENDING_DATE, PromotionTableMap::COL_PROMOTION_IS_ACTIVE, PromotionTableMap::COL_CREATED_AT, PromotionTableMap::COL_UPDATED_AT, ),
+        self::TYPE_FIELDNAME     => array('promotion_id', 'resource_id', 'promotion_type_id', 'promotion_value', 'promotion_gift', 'promotion_description', 'promotion_starting_point', 'promotion_starting_date', 'promotion_ending_date', 'promotion_is_active', 'created_at', 'updated_at', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
     );
 
     /**
@@ -152,11 +157,11 @@ class PromotionTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('PromotionId' => 0, 'ResourceId' => 1, 'PromotionTypeId' => 2, 'PromotionValue' => 3, 'PromotionGift' => 4, 'PromotionStartingPoint' => 5, 'PromotionStartingDate' => 6, 'PromotionEndingDate' => 7, 'PromotionIsActive' => 8, 'CreatedAt' => 9, 'UpdatedAt' => 10, ),
-        self::TYPE_CAMELNAME     => array('promotionId' => 0, 'resourceId' => 1, 'promotionTypeId' => 2, 'promotionValue' => 3, 'promotionGift' => 4, 'promotionStartingPoint' => 5, 'promotionStartingDate' => 6, 'promotionEndingDate' => 7, 'promotionIsActive' => 8, 'createdAt' => 9, 'updatedAt' => 10, ),
-        self::TYPE_COLNAME       => array(PromotionTableMap::COL_PROMOTION_ID => 0, PromotionTableMap::COL_RESOURCE_ID => 1, PromotionTableMap::COL_PROMOTION_TYPE_ID => 2, PromotionTableMap::COL_PROMOTION_VALUE => 3, PromotionTableMap::COL_PROMOTION_GIFT => 4, PromotionTableMap::COL_PROMOTION_STARTING_POINT => 5, PromotionTableMap::COL_PROMOTION_STARTING_DATE => 6, PromotionTableMap::COL_PROMOTION_ENDING_DATE => 7, PromotionTableMap::COL_PROMOTION_IS_ACTIVE => 8, PromotionTableMap::COL_CREATED_AT => 9, PromotionTableMap::COL_UPDATED_AT => 10, ),
-        self::TYPE_FIELDNAME     => array('promotion_id' => 0, 'resource_id' => 1, 'promotion_type_id' => 2, 'promotion_value' => 3, 'promotion_gift' => 4, 'promotion_starting_point' => 5, 'promotion_starting_date' => 6, 'promotion_ending_date' => 7, 'promotion_is_active' => 8, 'created_at' => 9, 'updated_at' => 10, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
+        self::TYPE_PHPNAME       => array('PromotionId' => 0, 'ResourceId' => 1, 'PromotionTypeId' => 2, 'PromotionValue' => 3, 'PromotionGift' => 4, 'PromotionDescription' => 5, 'PromotionStartingPoint' => 6, 'PromotionStartingDate' => 7, 'PromotionEndingDate' => 8, 'PromotionIsActive' => 9, 'CreatedAt' => 10, 'UpdatedAt' => 11, ),
+        self::TYPE_CAMELNAME     => array('promotionId' => 0, 'resourceId' => 1, 'promotionTypeId' => 2, 'promotionValue' => 3, 'promotionGift' => 4, 'promotionDescription' => 5, 'promotionStartingPoint' => 6, 'promotionStartingDate' => 7, 'promotionEndingDate' => 8, 'promotionIsActive' => 9, 'createdAt' => 10, 'updatedAt' => 11, ),
+        self::TYPE_COLNAME       => array(PromotionTableMap::COL_PROMOTION_ID => 0, PromotionTableMap::COL_RESOURCE_ID => 1, PromotionTableMap::COL_PROMOTION_TYPE_ID => 2, PromotionTableMap::COL_PROMOTION_VALUE => 3, PromotionTableMap::COL_PROMOTION_GIFT => 4, PromotionTableMap::COL_PROMOTION_DESCRIPTION => 5, PromotionTableMap::COL_PROMOTION_STARTING_POINT => 6, PromotionTableMap::COL_PROMOTION_STARTING_DATE => 7, PromotionTableMap::COL_PROMOTION_ENDING_DATE => 8, PromotionTableMap::COL_PROMOTION_IS_ACTIVE => 9, PromotionTableMap::COL_CREATED_AT => 10, PromotionTableMap::COL_UPDATED_AT => 11, ),
+        self::TYPE_FIELDNAME     => array('promotion_id' => 0, 'resource_id' => 1, 'promotion_type_id' => 2, 'promotion_value' => 3, 'promotion_gift' => 4, 'promotion_description' => 5, 'promotion_starting_point' => 6, 'promotion_starting_date' => 7, 'promotion_ending_date' => 8, 'promotion_is_active' => 9, 'created_at' => 10, 'updated_at' => 11, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
     );
 
     /**
@@ -181,6 +186,7 @@ class PromotionTableMap extends TableMap
         $this->addForeignKey('promotion_type_id', 'PromotionTypeId', 'SMALLINT', 'promotion_type', 'promotion_type_id', true, 5, null);
         $this->addColumn('promotion_value', 'PromotionValue', 'DECIMAL', false, 10, null);
         $this->addColumn('promotion_gift', 'PromotionGift', 'INTEGER', false, 10, null);
+        $this->addColumn('promotion_description', 'PromotionDescription', 'LONGVARCHAR', false, null, null);
         $this->addColumn('promotion_starting_point', 'PromotionStartingPoint', 'INTEGER', false, null, null);
         $this->addColumn('promotion_starting_date', 'PromotionStartingDate', 'DATE', false, null, null);
         $this->addColumn('promotion_ending_date', 'PromotionEndingDate', 'DATE', false, null, null);
@@ -370,6 +376,7 @@ class PromotionTableMap extends TableMap
             $criteria->addSelectColumn(PromotionTableMap::COL_PROMOTION_TYPE_ID);
             $criteria->addSelectColumn(PromotionTableMap::COL_PROMOTION_VALUE);
             $criteria->addSelectColumn(PromotionTableMap::COL_PROMOTION_GIFT);
+            $criteria->addSelectColumn(PromotionTableMap::COL_PROMOTION_DESCRIPTION);
             $criteria->addSelectColumn(PromotionTableMap::COL_PROMOTION_STARTING_POINT);
             $criteria->addSelectColumn(PromotionTableMap::COL_PROMOTION_STARTING_DATE);
             $criteria->addSelectColumn(PromotionTableMap::COL_PROMOTION_ENDING_DATE);
@@ -382,6 +389,7 @@ class PromotionTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.promotion_type_id');
             $criteria->addSelectColumn($alias . '.promotion_value');
             $criteria->addSelectColumn($alias . '.promotion_gift');
+            $criteria->addSelectColumn($alias . '.promotion_description');
             $criteria->addSelectColumn($alias . '.promotion_starting_point');
             $criteria->addSelectColumn($alias . '.promotion_starting_date');
             $criteria->addSelectColumn($alias . '.promotion_ending_date');

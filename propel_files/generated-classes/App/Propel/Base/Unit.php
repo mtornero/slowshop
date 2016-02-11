@@ -1325,6 +1325,31 @@ abstract class Unit implements ActiveRecordInterface
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildProduct[] List of ChildProduct objects
      */
+    public function getProductsJoinProvider(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildProductQuery::create(null, $criteria);
+        $query->joinWith('Provider', $joinBehavior);
+
+        return $this->getProducts($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Unit is new, it will return
+     * an empty collection; or if this Unit has previously
+     * been saved, it will retrieve related Products from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Unit.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildProduct[] List of ChildProduct objects
+     */
     public function getProductsJoinFile(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildProductQuery::create(null, $criteria);

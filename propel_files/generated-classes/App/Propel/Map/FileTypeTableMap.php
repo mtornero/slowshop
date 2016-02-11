@@ -140,7 +140,7 @@ class FileTypeTableMap extends TableMap
         $this->setPackage('App.Propel');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('file_type_id', 'FileTypeId', 'SMALLINT', true, 8, null);
+        $this->addPrimaryKey('file_type_id', 'FileTypeId', 'SMALLINT', true, 5, null);
         $this->addColumn('file_type_code', 'FileTypeCode', 'VARCHAR', true, 45, null);
     } // initialize()
 

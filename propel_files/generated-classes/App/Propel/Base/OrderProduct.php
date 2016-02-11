@@ -11,6 +11,8 @@ use App\Propel\OrderProductQuery as ChildOrderProductQuery;
 use App\Propel\OrderQuery as ChildOrderQuery;
 use App\Propel\Product as ChildProduct;
 use App\Propel\ProductQuery as ChildProductQuery;
+use App\Propel\ProductVariation as ChildProductVariation;
+use App\Propel\ProductVariationQuery as ChildProductVariationQuery;
 use App\Propel\Map\OrderProductTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
@@ -88,6 +90,13 @@ abstract class OrderProduct implements ActiveRecordInterface
     protected $product_id;
 
     /**
+     * The value for the product_variation_id field.
+     *
+     * @var        int
+     */
+    protected $product_variation_id;
+
+    /**
      * The value for the product_quantity field.
      *
      * @var        int
@@ -117,6 +126,11 @@ abstract class OrderProduct implements ActiveRecordInterface
      * @var        ChildProduct
      */
     protected $aProduct;
+
+    /**
+     * @var        ChildProductVariation
+     */
+    protected $aProductVariation;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -382,6 +396,16 @@ abstract class OrderProduct implements ActiveRecordInterface
     }
 
     /**
+     * Get the [product_variation_id] column value.
+     *
+     * @return int
+     */
+    public function getProductVariationId()
+    {
+        return $this->product_variation_id;
+    }
+
+    /**
      * Get the [product_quantity] column value.
      *
      * @return int
@@ -500,6 +524,30 @@ abstract class OrderProduct implements ActiveRecordInterface
     } // setProductId()
 
     /**
+     * Set the value of [product_variation_id] column.
+     *
+     * @param int $v new value
+     * @return $this|\App\Propel\OrderProduct The current object (for fluent API support)
+     */
+    public function setProductVariationId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->product_variation_id !== $v) {
+            $this->product_variation_id = $v;
+            $this->modifiedColumns[OrderProductTableMap::COL_PRODUCT_VARIATION_ID] = true;
+        }
+
+        if ($this->aProductVariation !== null && $this->aProductVariation->getProductVariationId() !== $v) {
+            $this->aProductVariation = null;
+        }
+
+        return $this;
+    } // setProductVariationId()
+
+    /**
      * Set the value of [product_quantity] column.
      *
      * @param int $v new value
@@ -604,16 +652,19 @@ abstract class OrderProduct implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : OrderProductTableMap::translateFieldName('ProductId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->product_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : OrderProductTableMap::translateFieldName('ProductQuantity', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : OrderProductTableMap::translateFieldName('ProductVariationId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->product_variation_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : OrderProductTableMap::translateFieldName('ProductQuantity', TableMap::TYPE_PHPNAME, $indexType)];
             $this->product_quantity = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : OrderProductTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : OrderProductTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : OrderProductTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : OrderProductTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -626,7 +677,7 @@ abstract class OrderProduct implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 6; // 6 = OrderProductTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 7; // 7 = OrderProductTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\App\\Propel\\OrderProduct'), 0, $e);
@@ -653,6 +704,9 @@ abstract class OrderProduct implements ActiveRecordInterface
         }
         if ($this->aProduct !== null && $this->product_id !== $this->aProduct->getProductId()) {
             $this->aProduct = null;
+        }
+        if ($this->aProductVariation !== null && $this->product_variation_id !== $this->aProductVariation->getProductVariationId()) {
+            $this->aProductVariation = null;
         }
     } // ensureConsistency
 
@@ -695,6 +749,7 @@ abstract class OrderProduct implements ActiveRecordInterface
 
             $this->aOrder = null;
             $this->aProduct = null;
+            $this->aProductVariation = null;
         } // if (deep)
     }
 
@@ -825,6 +880,13 @@ abstract class OrderProduct implements ActiveRecordInterface
                 $this->setProduct($this->aProduct);
             }
 
+            if ($this->aProductVariation !== null) {
+                if ($this->aProductVariation->isModified() || $this->aProductVariation->isNew()) {
+                    $affectedRows += $this->aProductVariation->save($con);
+                }
+                $this->setProductVariation($this->aProductVariation);
+            }
+
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -871,6 +933,9 @@ abstract class OrderProduct implements ActiveRecordInterface
         if ($this->isColumnModified(OrderProductTableMap::COL_PRODUCT_ID)) {
             $modifiedColumns[':p' . $index++]  = 'product_id';
         }
+        if ($this->isColumnModified(OrderProductTableMap::COL_PRODUCT_VARIATION_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'product_variation_id';
+        }
         if ($this->isColumnModified(OrderProductTableMap::COL_PRODUCT_QUANTITY)) {
             $modifiedColumns[':p' . $index++]  = 'product_quantity';
         }
@@ -899,6 +964,9 @@ abstract class OrderProduct implements ActiveRecordInterface
                         break;
                     case 'product_id':
                         $stmt->bindValue($identifier, $this->product_id, PDO::PARAM_INT);
+                        break;
+                    case 'product_variation_id':
+                        $stmt->bindValue($identifier, $this->product_variation_id, PDO::PARAM_INT);
                         break;
                     case 'product_quantity':
                         $stmt->bindValue($identifier, $this->product_quantity, PDO::PARAM_INT);
@@ -981,12 +1049,15 @@ abstract class OrderProduct implements ActiveRecordInterface
                 return $this->getProductId();
                 break;
             case 3:
-                return $this->getProductQuantity();
+                return $this->getProductVariationId();
                 break;
             case 4:
-                return $this->getCreatedAt();
+                return $this->getProductQuantity();
                 break;
             case 5:
+                return $this->getCreatedAt();
+                break;
+            case 6:
                 return $this->getUpdatedAt();
                 break;
             default:
@@ -1022,16 +1093,17 @@ abstract class OrderProduct implements ActiveRecordInterface
             $keys[0] => $this->getOrderProductId(),
             $keys[1] => $this->getOrderId(),
             $keys[2] => $this->getProductId(),
-            $keys[3] => $this->getProductQuantity(),
-            $keys[4] => $this->getCreatedAt(),
-            $keys[5] => $this->getUpdatedAt(),
+            $keys[3] => $this->getProductVariationId(),
+            $keys[4] => $this->getProductQuantity(),
+            $keys[5] => $this->getCreatedAt(),
+            $keys[6] => $this->getUpdatedAt(),
         );
-        if ($result[$keys[4]] instanceof \DateTime) {
-            $result[$keys[4]] = $result[$keys[4]]->format('c');
-        }
-
         if ($result[$keys[5]] instanceof \DateTime) {
             $result[$keys[5]] = $result[$keys[5]]->format('c');
+        }
+
+        if ($result[$keys[6]] instanceof \DateTime) {
+            $result[$keys[6]] = $result[$keys[6]]->format('c');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1069,6 +1141,21 @@ abstract class OrderProduct implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->aProduct->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aProductVariation) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'productVariation';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'product_variation';
+                        break;
+                    default:
+                        $key = 'ProductVariation';
+                }
+
+                $result[$key] = $this->aProductVariation->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
 
@@ -1114,12 +1201,15 @@ abstract class OrderProduct implements ActiveRecordInterface
                 $this->setProductId($value);
                 break;
             case 3:
-                $this->setProductQuantity($value);
+                $this->setProductVariationId($value);
                 break;
             case 4:
-                $this->setCreatedAt($value);
+                $this->setProductQuantity($value);
                 break;
             case 5:
+                $this->setCreatedAt($value);
+                break;
+            case 6:
                 $this->setUpdatedAt($value);
                 break;
         } // switch()
@@ -1158,13 +1248,16 @@ abstract class OrderProduct implements ActiveRecordInterface
             $this->setProductId($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setProductQuantity($arr[$keys[3]]);
+            $this->setProductVariationId($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setCreatedAt($arr[$keys[4]]);
+            $this->setProductQuantity($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setUpdatedAt($arr[$keys[5]]);
+            $this->setCreatedAt($arr[$keys[5]]);
+        }
+        if (array_key_exists($keys[6], $arr)) {
+            $this->setUpdatedAt($arr[$keys[6]]);
         }
     }
 
@@ -1215,6 +1308,9 @@ abstract class OrderProduct implements ActiveRecordInterface
         }
         if ($this->isColumnModified(OrderProductTableMap::COL_PRODUCT_ID)) {
             $criteria->add(OrderProductTableMap::COL_PRODUCT_ID, $this->product_id);
+        }
+        if ($this->isColumnModified(OrderProductTableMap::COL_PRODUCT_VARIATION_ID)) {
+            $criteria->add(OrderProductTableMap::COL_PRODUCT_VARIATION_ID, $this->product_variation_id);
         }
         if ($this->isColumnModified(OrderProductTableMap::COL_PRODUCT_QUANTITY)) {
             $criteria->add(OrderProductTableMap::COL_PRODUCT_QUANTITY, $this->product_quantity);
@@ -1313,6 +1409,7 @@ abstract class OrderProduct implements ActiveRecordInterface
     {
         $copyObj->setOrderId($this->getOrderId());
         $copyObj->setProductId($this->getProductId());
+        $copyObj->setProductVariationId($this->getProductVariationId());
         $copyObj->setProductQuantity($this->getProductQuantity());
         $copyObj->setCreatedAt($this->getCreatedAt());
         $copyObj->setUpdatedAt($this->getUpdatedAt());
@@ -1447,6 +1544,57 @@ abstract class OrderProduct implements ActiveRecordInterface
     }
 
     /**
+     * Declares an association between this object and a ChildProductVariation object.
+     *
+     * @param  ChildProductVariation $v
+     * @return $this|\App\Propel\OrderProduct The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setProductVariation(ChildProductVariation $v = null)
+    {
+        if ($v === null) {
+            $this->setProductVariationId(NULL);
+        } else {
+            $this->setProductVariationId($v->getProductVariationId());
+        }
+
+        $this->aProductVariation = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildProductVariation object, it will not be re-added.
+        if ($v !== null) {
+            $v->addOrderProduct($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildProductVariation object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildProductVariation The associated ChildProductVariation object.
+     * @throws PropelException
+     */
+    public function getProductVariation(ConnectionInterface $con = null)
+    {
+        if ($this->aProductVariation === null && ($this->product_variation_id !== null)) {
+            $this->aProductVariation = ChildProductVariationQuery::create()->findPk($this->product_variation_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aProductVariation->addOrderProducts($this);
+             */
+        }
+
+        return $this->aProductVariation;
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
@@ -1459,9 +1607,13 @@ abstract class OrderProduct implements ActiveRecordInterface
         if (null !== $this->aProduct) {
             $this->aProduct->removeOrderProduct($this);
         }
+        if (null !== $this->aProductVariation) {
+            $this->aProductVariation->removeOrderProduct($this);
+        }
         $this->order_product_id = null;
         $this->order_id = null;
         $this->product_id = null;
+        $this->product_variation_id = null;
         $this->product_quantity = null;
         $this->created_at = null;
         $this->updated_at = null;
@@ -1487,6 +1639,7 @@ abstract class OrderProduct implements ActiveRecordInterface
 
         $this->aOrder = null;
         $this->aProduct = null;
+        $this->aProductVariation = null;
     }
 
     /**

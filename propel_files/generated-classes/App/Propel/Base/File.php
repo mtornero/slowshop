@@ -11,15 +11,24 @@ use App\Propel\File as ChildFile;
 use App\Propel\FileQuery as ChildFileQuery;
 use App\Propel\FileType as ChildFileType;
 use App\Propel\FileTypeQuery as ChildFileTypeQuery;
+use App\Propel\News as ChildNews;
+use App\Propel\NewsQuery as ChildNewsQuery;
+use App\Propel\PeriodicPlan as ChildPeriodicPlan;
+use App\Propel\PeriodicPlanQuery as ChildPeriodicPlanQuery;
 use App\Propel\Product as ChildProduct;
 use App\Propel\ProductQuery as ChildProductQuery;
+use App\Propel\Provider as ChildProvider;
+use App\Propel\ProviderQuery as ChildProviderQuery;
 use App\Propel\ResourceFile as ChildResourceFile;
 use App\Propel\ResourceFileQuery as ChildResourceFileQuery;
 use App\Propel\User as ChildUser;
 use App\Propel\UserQuery as ChildUserQuery;
 use App\Propel\Map\CategoryTableMap;
 use App\Propel\Map\FileTableMap;
+use App\Propel\Map\NewsTableMap;
+use App\Propel\Map\PeriodicPlanTableMap;
 use App\Propel\Map\ProductTableMap;
+use App\Propel\Map\ProviderTableMap;
 use App\Propel\Map\ResourceFileTableMap;
 use App\Propel\Map\UserTableMap;
 use Propel\Runtime\Propel;
@@ -124,10 +133,28 @@ abstract class File implements ActiveRecordInterface
     protected $collCategoriesPartial;
 
     /**
+     * @var        ObjectCollection|ChildNews[] Collection to store aggregation of ChildNews objects.
+     */
+    protected $collNews;
+    protected $collNewsPartial;
+
+    /**
+     * @var        ObjectCollection|ChildPeriodicPlan[] Collection to store aggregation of ChildPeriodicPlan objects.
+     */
+    protected $collPeriodicPlans;
+    protected $collPeriodicPlansPartial;
+
+    /**
      * @var        ObjectCollection|ChildProduct[] Collection to store aggregation of ChildProduct objects.
      */
     protected $collProducts;
     protected $collProductsPartial;
+
+    /**
+     * @var        ObjectCollection|ChildProvider[] Collection to store aggregation of ChildProvider objects.
+     */
+    protected $collProviders;
+    protected $collProvidersPartial;
 
     /**
      * @var        ObjectCollection|ChildResourceFile[] Collection to store aggregation of ChildResourceFile objects.
@@ -157,9 +184,27 @@ abstract class File implements ActiveRecordInterface
 
     /**
      * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildNews[]
+     */
+    protected $newsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildPeriodicPlan[]
+     */
+    protected $periodicPlansScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildProduct[]
      */
     protected $productsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildProvider[]
+     */
+    protected $providersScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -703,7 +748,13 @@ abstract class File implements ActiveRecordInterface
             $this->aFileType = null;
             $this->collCategories = null;
 
+            $this->collNews = null;
+
+            $this->collPeriodicPlans = null;
+
             $this->collProducts = null;
+
+            $this->collProviders = null;
 
             $this->collResourceFiles = null;
 
@@ -861,6 +912,42 @@ abstract class File implements ActiveRecordInterface
                 }
             }
 
+            if ($this->newsScheduledForDeletion !== null) {
+                if (!$this->newsScheduledForDeletion->isEmpty()) {
+                    foreach ($this->newsScheduledForDeletion as $news) {
+                        // need to save related object because we set the relation to null
+                        $news->save($con);
+                    }
+                    $this->newsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collNews !== null) {
+                foreach ($this->collNews as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->periodicPlansScheduledForDeletion !== null) {
+                if (!$this->periodicPlansScheduledForDeletion->isEmpty()) {
+                    foreach ($this->periodicPlansScheduledForDeletion as $periodicPlan) {
+                        // need to save related object because we set the relation to null
+                        $periodicPlan->save($con);
+                    }
+                    $this->periodicPlansScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collPeriodicPlans !== null) {
+                foreach ($this->collPeriodicPlans as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
             if ($this->productsScheduledForDeletion !== null) {
                 if (!$this->productsScheduledForDeletion->isEmpty()) {
                     foreach ($this->productsScheduledForDeletion as $product) {
@@ -873,6 +960,24 @@ abstract class File implements ActiveRecordInterface
 
             if ($this->collProducts !== null) {
                 foreach ($this->collProducts as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->providersScheduledForDeletion !== null) {
+                if (!$this->providersScheduledForDeletion->isEmpty()) {
+                    foreach ($this->providersScheduledForDeletion as $provider) {
+                        // need to save related object because we set the relation to null
+                        $provider->save($con);
+                    }
+                    $this->providersScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collProviders !== null) {
+                foreach ($this->collProviders as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1138,6 +1243,36 @@ abstract class File implements ActiveRecordInterface
 
                 $result[$key] = $this->collCategories->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
+            if (null !== $this->collNews) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'news';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'news';
+                        break;
+                    default:
+                        $key = 'News';
+                }
+
+                $result[$key] = $this->collNews->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collPeriodicPlans) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'periodicPlans';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'periodic_plans';
+                        break;
+                    default:
+                        $key = 'PeriodicPlans';
+                }
+
+                $result[$key] = $this->collPeriodicPlans->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
             if (null !== $this->collProducts) {
 
                 switch ($keyType) {
@@ -1152,6 +1287,21 @@ abstract class File implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->collProducts->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collProviders) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'providers';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'providers';
+                        break;
+                    default:
+                        $key = 'Providers';
+                }
+
+                $result[$key] = $this->collProviders->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collResourceFiles) {
 
@@ -1431,9 +1581,27 @@ abstract class File implements ActiveRecordInterface
                 }
             }
 
+            foreach ($this->getNews() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addNews($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getPeriodicPlans() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addPeriodicPlan($relObj->copy($deepCopy));
+                }
+            }
+
             foreach ($this->getProducts() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addProduct($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getProviders() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addProvider($relObj->copy($deepCopy));
                 }
             }
 
@@ -1544,8 +1712,17 @@ abstract class File implements ActiveRecordInterface
         if ('Category' == $relationName) {
             return $this->initCategories();
         }
+        if ('News' == $relationName) {
+            return $this->initNews();
+        }
+        if ('PeriodicPlan' == $relationName) {
+            return $this->initPeriodicPlans();
+        }
         if ('Product' == $relationName) {
             return $this->initProducts();
+        }
+        if ('Provider' == $relationName) {
+            return $this->initProviders();
         }
         if ('ResourceFile' == $relationName) {
             return $this->initResourceFiles();
@@ -1803,6 +1980,556 @@ abstract class File implements ActiveRecordInterface
         $query->joinWith('Resource', $joinBehavior);
 
         return $this->getCategories($query, $con);
+    }
+
+    /**
+     * Clears out the collNews collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addNews()
+     */
+    public function clearNews()
+    {
+        $this->collNews = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collNews collection loaded partially.
+     */
+    public function resetPartialNews($v = true)
+    {
+        $this->collNewsPartial = $v;
+    }
+
+    /**
+     * Initializes the collNews collection.
+     *
+     * By default this just sets the collNews collection to an empty array (like clearcollNews());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initNews($overrideExisting = true)
+    {
+        if (null !== $this->collNews && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = NewsTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collNews = new $collectionClassName;
+        $this->collNews->setModel('\App\Propel\News');
+    }
+
+    /**
+     * Gets an array of ChildNews objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildFile is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildNews[] List of ChildNews objects
+     * @throws PropelException
+     */
+    public function getNews(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collNewsPartial && !$this->isNew();
+        if (null === $this->collNews || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collNews) {
+                // return empty collection
+                $this->initNews();
+            } else {
+                $collNews = ChildNewsQuery::create(null, $criteria)
+                    ->filterByFile($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collNewsPartial && count($collNews)) {
+                        $this->initNews(false);
+
+                        foreach ($collNews as $obj) {
+                            if (false == $this->collNews->contains($obj)) {
+                                $this->collNews->append($obj);
+                            }
+                        }
+
+                        $this->collNewsPartial = true;
+                    }
+
+                    return $collNews;
+                }
+
+                if ($partial && $this->collNews) {
+                    foreach ($this->collNews as $obj) {
+                        if ($obj->isNew()) {
+                            $collNews[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collNews = $collNews;
+                $this->collNewsPartial = false;
+            }
+        }
+
+        return $this->collNews;
+    }
+
+    /**
+     * Sets a collection of ChildNews objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $news A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildFile The current object (for fluent API support)
+     */
+    public function setNews(Collection $news, ConnectionInterface $con = null)
+    {
+        /** @var ChildNews[] $newsToDelete */
+        $newsToDelete = $this->getNews(new Criteria(), $con)->diff($news);
+
+
+        $this->newsScheduledForDeletion = $newsToDelete;
+
+        foreach ($newsToDelete as $newsRemoved) {
+            $newsRemoved->setFile(null);
+        }
+
+        $this->collNews = null;
+        foreach ($news as $news) {
+            $this->addNews($news);
+        }
+
+        $this->collNews = $news;
+        $this->collNewsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related News objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related News objects.
+     * @throws PropelException
+     */
+    public function countNews(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collNewsPartial && !$this->isNew();
+        if (null === $this->collNews || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collNews) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getNews());
+            }
+
+            $query = ChildNewsQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByFile($this)
+                ->count($con);
+        }
+
+        return count($this->collNews);
+    }
+
+    /**
+     * Method called to associate a ChildNews object to this object
+     * through the ChildNews foreign key attribute.
+     *
+     * @param  ChildNews $l ChildNews
+     * @return $this|\App\Propel\File The current object (for fluent API support)
+     */
+    public function addNews(ChildNews $l)
+    {
+        if ($this->collNews === null) {
+            $this->initNews();
+            $this->collNewsPartial = true;
+        }
+
+        if (!$this->collNews->contains($l)) {
+            $this->doAddNews($l);
+
+            if ($this->newsScheduledForDeletion and $this->newsScheduledForDeletion->contains($l)) {
+                $this->newsScheduledForDeletion->remove($this->newsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildNews $news The ChildNews object to add.
+     */
+    protected function doAddNews(ChildNews $news)
+    {
+        $this->collNews[]= $news;
+        $news->setFile($this);
+    }
+
+    /**
+     * @param  ChildNews $news The ChildNews object to remove.
+     * @return $this|ChildFile The current object (for fluent API support)
+     */
+    public function removeNews(ChildNews $news)
+    {
+        if ($this->getNews()->contains($news)) {
+            $pos = $this->collNews->search($news);
+            $this->collNews->remove($pos);
+            if (null === $this->newsScheduledForDeletion) {
+                $this->newsScheduledForDeletion = clone $this->collNews;
+                $this->newsScheduledForDeletion->clear();
+            }
+            $this->newsScheduledForDeletion[]= $news;
+            $news->setFile(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this File is new, it will return
+     * an empty collection; or if this File has previously
+     * been saved, it will retrieve related News from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in File.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildNews[] List of ChildNews objects
+     */
+    public function getNewsJoinResourceRelatedByResourceId(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildNewsQuery::create(null, $criteria);
+        $query->joinWith('ResourceRelatedByResourceId', $joinBehavior);
+
+        return $this->getNews($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this File is new, it will return
+     * an empty collection; or if this File has previously
+     * been saved, it will retrieve related News from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in File.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildNews[] List of ChildNews objects
+     */
+    public function getNewsJoinResourceRelatedByNewsFor(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildNewsQuery::create(null, $criteria);
+        $query->joinWith('ResourceRelatedByNewsFor', $joinBehavior);
+
+        return $this->getNews($query, $con);
+    }
+
+    /**
+     * Clears out the collPeriodicPlans collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addPeriodicPlans()
+     */
+    public function clearPeriodicPlans()
+    {
+        $this->collPeriodicPlans = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collPeriodicPlans collection loaded partially.
+     */
+    public function resetPartialPeriodicPlans($v = true)
+    {
+        $this->collPeriodicPlansPartial = $v;
+    }
+
+    /**
+     * Initializes the collPeriodicPlans collection.
+     *
+     * By default this just sets the collPeriodicPlans collection to an empty array (like clearcollPeriodicPlans());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initPeriodicPlans($overrideExisting = true)
+    {
+        if (null !== $this->collPeriodicPlans && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = PeriodicPlanTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collPeriodicPlans = new $collectionClassName;
+        $this->collPeriodicPlans->setModel('\App\Propel\PeriodicPlan');
+    }
+
+    /**
+     * Gets an array of ChildPeriodicPlan objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildFile is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildPeriodicPlan[] List of ChildPeriodicPlan objects
+     * @throws PropelException
+     */
+    public function getPeriodicPlans(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPeriodicPlansPartial && !$this->isNew();
+        if (null === $this->collPeriodicPlans || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collPeriodicPlans) {
+                // return empty collection
+                $this->initPeriodicPlans();
+            } else {
+                $collPeriodicPlans = ChildPeriodicPlanQuery::create(null, $criteria)
+                    ->filterByFile($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collPeriodicPlansPartial && count($collPeriodicPlans)) {
+                        $this->initPeriodicPlans(false);
+
+                        foreach ($collPeriodicPlans as $obj) {
+                            if (false == $this->collPeriodicPlans->contains($obj)) {
+                                $this->collPeriodicPlans->append($obj);
+                            }
+                        }
+
+                        $this->collPeriodicPlansPartial = true;
+                    }
+
+                    return $collPeriodicPlans;
+                }
+
+                if ($partial && $this->collPeriodicPlans) {
+                    foreach ($this->collPeriodicPlans as $obj) {
+                        if ($obj->isNew()) {
+                            $collPeriodicPlans[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collPeriodicPlans = $collPeriodicPlans;
+                $this->collPeriodicPlansPartial = false;
+            }
+        }
+
+        return $this->collPeriodicPlans;
+    }
+
+    /**
+     * Sets a collection of ChildPeriodicPlan objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $periodicPlans A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildFile The current object (for fluent API support)
+     */
+    public function setPeriodicPlans(Collection $periodicPlans, ConnectionInterface $con = null)
+    {
+        /** @var ChildPeriodicPlan[] $periodicPlansToDelete */
+        $periodicPlansToDelete = $this->getPeriodicPlans(new Criteria(), $con)->diff($periodicPlans);
+
+
+        $this->periodicPlansScheduledForDeletion = $periodicPlansToDelete;
+
+        foreach ($periodicPlansToDelete as $periodicPlanRemoved) {
+            $periodicPlanRemoved->setFile(null);
+        }
+
+        $this->collPeriodicPlans = null;
+        foreach ($periodicPlans as $periodicPlan) {
+            $this->addPeriodicPlan($periodicPlan);
+        }
+
+        $this->collPeriodicPlans = $periodicPlans;
+        $this->collPeriodicPlansPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related PeriodicPlan objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related PeriodicPlan objects.
+     * @throws PropelException
+     */
+    public function countPeriodicPlans(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPeriodicPlansPartial && !$this->isNew();
+        if (null === $this->collPeriodicPlans || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collPeriodicPlans) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getPeriodicPlans());
+            }
+
+            $query = ChildPeriodicPlanQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByFile($this)
+                ->count($con);
+        }
+
+        return count($this->collPeriodicPlans);
+    }
+
+    /**
+     * Method called to associate a ChildPeriodicPlan object to this object
+     * through the ChildPeriodicPlan foreign key attribute.
+     *
+     * @param  ChildPeriodicPlan $l ChildPeriodicPlan
+     * @return $this|\App\Propel\File The current object (for fluent API support)
+     */
+    public function addPeriodicPlan(ChildPeriodicPlan $l)
+    {
+        if ($this->collPeriodicPlans === null) {
+            $this->initPeriodicPlans();
+            $this->collPeriodicPlansPartial = true;
+        }
+
+        if (!$this->collPeriodicPlans->contains($l)) {
+            $this->doAddPeriodicPlan($l);
+
+            if ($this->periodicPlansScheduledForDeletion and $this->periodicPlansScheduledForDeletion->contains($l)) {
+                $this->periodicPlansScheduledForDeletion->remove($this->periodicPlansScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildPeriodicPlan $periodicPlan The ChildPeriodicPlan object to add.
+     */
+    protected function doAddPeriodicPlan(ChildPeriodicPlan $periodicPlan)
+    {
+        $this->collPeriodicPlans[]= $periodicPlan;
+        $periodicPlan->setFile($this);
+    }
+
+    /**
+     * @param  ChildPeriodicPlan $periodicPlan The ChildPeriodicPlan object to remove.
+     * @return $this|ChildFile The current object (for fluent API support)
+     */
+    public function removePeriodicPlan(ChildPeriodicPlan $periodicPlan)
+    {
+        if ($this->getPeriodicPlans()->contains($periodicPlan)) {
+            $pos = $this->collPeriodicPlans->search($periodicPlan);
+            $this->collPeriodicPlans->remove($pos);
+            if (null === $this->periodicPlansScheduledForDeletion) {
+                $this->periodicPlansScheduledForDeletion = clone $this->collPeriodicPlans;
+                $this->periodicPlansScheduledForDeletion->clear();
+            }
+            $this->periodicPlansScheduledForDeletion[]= $periodicPlan;
+            $periodicPlan->setFile(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this File is new, it will return
+     * an empty collection; or if this File has previously
+     * been saved, it will retrieve related PeriodicPlans from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in File.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildPeriodicPlan[] List of ChildPeriodicPlan objects
+     */
+    public function getPeriodicPlansJoinResource(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildPeriodicPlanQuery::create(null, $criteria);
+        $query->joinWith('Resource', $joinBehavior);
+
+        return $this->getPeriodicPlans($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this File is new, it will return
+     * an empty collection; or if this File has previously
+     * been saved, it will retrieve related PeriodicPlans from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in File.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildPeriodicPlan[] List of ChildPeriodicPlan objects
+     */
+    public function getPeriodicPlansJoinPeriodicType(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildPeriodicPlanQuery::create(null, $criteria);
+        $query->joinWith('PeriodicType', $joinBehavior);
+
+        return $this->getPeriodicPlans($query, $con);
     }
 
     /**
@@ -2072,6 +2799,31 @@ abstract class File implements ActiveRecordInterface
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildProduct[] List of ChildProduct objects
      */
+    public function getProductsJoinProvider(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildProductQuery::create(null, $criteria);
+        $query->joinWith('Provider', $joinBehavior);
+
+        return $this->getProducts($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this File is new, it will return
+     * an empty collection; or if this File has previously
+     * been saved, it will retrieve related Products from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in File.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildProduct[] List of ChildProduct objects
+     */
     public function getProductsJoinUnit(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildProductQuery::create(null, $criteria);
@@ -2103,6 +2855,256 @@ abstract class File implements ActiveRecordInterface
         $query->joinWith('Resource', $joinBehavior);
 
         return $this->getProducts($query, $con);
+    }
+
+    /**
+     * Clears out the collProviders collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addProviders()
+     */
+    public function clearProviders()
+    {
+        $this->collProviders = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collProviders collection loaded partially.
+     */
+    public function resetPartialProviders($v = true)
+    {
+        $this->collProvidersPartial = $v;
+    }
+
+    /**
+     * Initializes the collProviders collection.
+     *
+     * By default this just sets the collProviders collection to an empty array (like clearcollProviders());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initProviders($overrideExisting = true)
+    {
+        if (null !== $this->collProviders && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = ProviderTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collProviders = new $collectionClassName;
+        $this->collProviders->setModel('\App\Propel\Provider');
+    }
+
+    /**
+     * Gets an array of ChildProvider objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildFile is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildProvider[] List of ChildProvider objects
+     * @throws PropelException
+     */
+    public function getProviders(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collProvidersPartial && !$this->isNew();
+        if (null === $this->collProviders || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collProviders) {
+                // return empty collection
+                $this->initProviders();
+            } else {
+                $collProviders = ChildProviderQuery::create(null, $criteria)
+                    ->filterByFile($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collProvidersPartial && count($collProviders)) {
+                        $this->initProviders(false);
+
+                        foreach ($collProviders as $obj) {
+                            if (false == $this->collProviders->contains($obj)) {
+                                $this->collProviders->append($obj);
+                            }
+                        }
+
+                        $this->collProvidersPartial = true;
+                    }
+
+                    return $collProviders;
+                }
+
+                if ($partial && $this->collProviders) {
+                    foreach ($this->collProviders as $obj) {
+                        if ($obj->isNew()) {
+                            $collProviders[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collProviders = $collProviders;
+                $this->collProvidersPartial = false;
+            }
+        }
+
+        return $this->collProviders;
+    }
+
+    /**
+     * Sets a collection of ChildProvider objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $providers A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildFile The current object (for fluent API support)
+     */
+    public function setProviders(Collection $providers, ConnectionInterface $con = null)
+    {
+        /** @var ChildProvider[] $providersToDelete */
+        $providersToDelete = $this->getProviders(new Criteria(), $con)->diff($providers);
+
+
+        $this->providersScheduledForDeletion = $providersToDelete;
+
+        foreach ($providersToDelete as $providerRemoved) {
+            $providerRemoved->setFile(null);
+        }
+
+        $this->collProviders = null;
+        foreach ($providers as $provider) {
+            $this->addProvider($provider);
+        }
+
+        $this->collProviders = $providers;
+        $this->collProvidersPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Provider objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Provider objects.
+     * @throws PropelException
+     */
+    public function countProviders(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collProvidersPartial && !$this->isNew();
+        if (null === $this->collProviders || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collProviders) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getProviders());
+            }
+
+            $query = ChildProviderQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByFile($this)
+                ->count($con);
+        }
+
+        return count($this->collProviders);
+    }
+
+    /**
+     * Method called to associate a ChildProvider object to this object
+     * through the ChildProvider foreign key attribute.
+     *
+     * @param  ChildProvider $l ChildProvider
+     * @return $this|\App\Propel\File The current object (for fluent API support)
+     */
+    public function addProvider(ChildProvider $l)
+    {
+        if ($this->collProviders === null) {
+            $this->initProviders();
+            $this->collProvidersPartial = true;
+        }
+
+        if (!$this->collProviders->contains($l)) {
+            $this->doAddProvider($l);
+
+            if ($this->providersScheduledForDeletion and $this->providersScheduledForDeletion->contains($l)) {
+                $this->providersScheduledForDeletion->remove($this->providersScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildProvider $provider The ChildProvider object to add.
+     */
+    protected function doAddProvider(ChildProvider $provider)
+    {
+        $this->collProviders[]= $provider;
+        $provider->setFile($this);
+    }
+
+    /**
+     * @param  ChildProvider $provider The ChildProvider object to remove.
+     * @return $this|ChildFile The current object (for fluent API support)
+     */
+    public function removeProvider(ChildProvider $provider)
+    {
+        if ($this->getProviders()->contains($provider)) {
+            $pos = $this->collProviders->search($provider);
+            $this->collProviders->remove($pos);
+            if (null === $this->providersScheduledForDeletion) {
+                $this->providersScheduledForDeletion = clone $this->collProviders;
+                $this->providersScheduledForDeletion->clear();
+            }
+            $this->providersScheduledForDeletion[]= $provider;
+            $provider->setFile(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this File is new, it will return
+     * an empty collection; or if this File has previously
+     * been saved, it will retrieve related Providers from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in File.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildProvider[] List of ChildProvider objects
+     */
+    public function getProvidersJoinResource(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildProviderQuery::create(null, $criteria);
+        $query->joinWith('Resource', $joinBehavior);
+
+        return $this->getProviders($query, $con);
     }
 
     /**
@@ -2668,8 +3670,23 @@ abstract class File implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collNews) {
+                foreach ($this->collNews as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collPeriodicPlans) {
+                foreach ($this->collPeriodicPlans as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collProducts) {
                 foreach ($this->collProducts as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collProviders) {
+                foreach ($this->collProviders as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
@@ -2686,7 +3703,10 @@ abstract class File implements ActiveRecordInterface
         } // if ($deep)
 
         $this->collCategories = null;
+        $this->collNews = null;
+        $this->collPeriodicPlans = null;
         $this->collProducts = null;
+        $this->collProviders = null;
         $this->collResourceFiles = null;
         $this->collUsers = null;
         $this->aFileType = null;

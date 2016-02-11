@@ -21,18 +21,22 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  * @method     ChildPeriodicPlanQuery orderByPeriodicPlanId($order = Criteria::ASC) Order by the periodic_plan_id column
+ * @method     ChildPeriodicPlanQuery orderByResourceId($order = Criteria::ASC) Order by the resource_id column
  * @method     ChildPeriodicPlanQuery orderByPeriodicPlanName($order = Criteria::ASC) Order by the periodic_plan_name column
  * @method     ChildPeriodicPlanQuery orderByPeriodicPlanPoint($order = Criteria::ASC) Order by the periodic_plan_point column
  * @method     ChildPeriodicPlanQuery orderByPeriodicTypeId($order = Criteria::ASC) Order by the periodic_type_id column
  * @method     ChildPeriodicPlanQuery orderByDelieveryPeriodicWeekday($order = Criteria::ASC) Order by the delievery_periodic_weekday column
+ * @method     ChildPeriodicPlanQuery orderByPeriodicPlanPic($order = Criteria::ASC) Order by the periodic_plan_pic column
  * @method     ChildPeriodicPlanQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method     ChildPeriodicPlanQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  *
  * @method     ChildPeriodicPlanQuery groupByPeriodicPlanId() Group by the periodic_plan_id column
+ * @method     ChildPeriodicPlanQuery groupByResourceId() Group by the resource_id column
  * @method     ChildPeriodicPlanQuery groupByPeriodicPlanName() Group by the periodic_plan_name column
  * @method     ChildPeriodicPlanQuery groupByPeriodicPlanPoint() Group by the periodic_plan_point column
  * @method     ChildPeriodicPlanQuery groupByPeriodicTypeId() Group by the periodic_type_id column
  * @method     ChildPeriodicPlanQuery groupByDelieveryPeriodicWeekday() Group by the delievery_periodic_weekday column
+ * @method     ChildPeriodicPlanQuery groupByPeriodicPlanPic() Group by the periodic_plan_pic column
  * @method     ChildPeriodicPlanQuery groupByCreatedAt() Group by the created_at column
  * @method     ChildPeriodicPlanQuery groupByUpdatedAt() Group by the updated_at column
  *
@@ -44,6 +48,16 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPeriodicPlanQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
  * @method     ChildPeriodicPlanQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
  *
+ * @method     ChildPeriodicPlanQuery leftJoinResource($relationAlias = null) Adds a LEFT JOIN clause to the query using the Resource relation
+ * @method     ChildPeriodicPlanQuery rightJoinResource($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Resource relation
+ * @method     ChildPeriodicPlanQuery innerJoinResource($relationAlias = null) Adds a INNER JOIN clause to the query using the Resource relation
+ *
+ * @method     ChildPeriodicPlanQuery joinWithResource($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Resource relation
+ *
+ * @method     ChildPeriodicPlanQuery leftJoinWithResource() Adds a LEFT JOIN clause and with to the query using the Resource relation
+ * @method     ChildPeriodicPlanQuery rightJoinWithResource() Adds a RIGHT JOIN clause and with to the query using the Resource relation
+ * @method     ChildPeriodicPlanQuery innerJoinWithResource() Adds a INNER JOIN clause and with to the query using the Resource relation
+ *
  * @method     ChildPeriodicPlanQuery leftJoinPeriodicType($relationAlias = null) Adds a LEFT JOIN clause to the query using the PeriodicType relation
  * @method     ChildPeriodicPlanQuery rightJoinPeriodicType($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PeriodicType relation
  * @method     ChildPeriodicPlanQuery innerJoinPeriodicType($relationAlias = null) Adds a INNER JOIN clause to the query using the PeriodicType relation
@@ -53,6 +67,16 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPeriodicPlanQuery leftJoinWithPeriodicType() Adds a LEFT JOIN clause and with to the query using the PeriodicType relation
  * @method     ChildPeriodicPlanQuery rightJoinWithPeriodicType() Adds a RIGHT JOIN clause and with to the query using the PeriodicType relation
  * @method     ChildPeriodicPlanQuery innerJoinWithPeriodicType() Adds a INNER JOIN clause and with to the query using the PeriodicType relation
+ *
+ * @method     ChildPeriodicPlanQuery leftJoinFile($relationAlias = null) Adds a LEFT JOIN clause to the query using the File relation
+ * @method     ChildPeriodicPlanQuery rightJoinFile($relationAlias = null) Adds a RIGHT JOIN clause to the query using the File relation
+ * @method     ChildPeriodicPlanQuery innerJoinFile($relationAlias = null) Adds a INNER JOIN clause to the query using the File relation
+ *
+ * @method     ChildPeriodicPlanQuery joinWithFile($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the File relation
+ *
+ * @method     ChildPeriodicPlanQuery leftJoinWithFile() Adds a LEFT JOIN clause and with to the query using the File relation
+ * @method     ChildPeriodicPlanQuery rightJoinWithFile() Adds a RIGHT JOIN clause and with to the query using the File relation
+ * @method     ChildPeriodicPlanQuery innerJoinWithFile() Adds a INNER JOIN clause and with to the query using the File relation
  *
  * @method     ChildPeriodicPlanQuery leftJoinDeliveryPeriodic($relationAlias = null) Adds a LEFT JOIN clause to the query using the DeliveryPeriodic relation
  * @method     ChildPeriodicPlanQuery rightJoinDeliveryPeriodic($relationAlias = null) Adds a RIGHT JOIN clause to the query using the DeliveryPeriodic relation
@@ -84,16 +108,18 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPeriodicPlanQuery rightJoinWithUserPeriodicPlan() Adds a RIGHT JOIN clause and with to the query using the UserPeriodicPlan relation
  * @method     ChildPeriodicPlanQuery innerJoinWithUserPeriodicPlan() Adds a INNER JOIN clause and with to the query using the UserPeriodicPlan relation
  *
- * @method     \App\Propel\PeriodicTypeQuery|\App\Propel\DeliveryPeriodicQuery|\App\Propel\PeriodicPlanExceptionQuery|\App\Propel\UserPeriodicPlanQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \App\Propel\ResourceQuery|\App\Propel\PeriodicTypeQuery|\App\Propel\FileQuery|\App\Propel\DeliveryPeriodicQuery|\App\Propel\PeriodicPlanExceptionQuery|\App\Propel\UserPeriodicPlanQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildPeriodicPlan findOne(ConnectionInterface $con = null) Return the first ChildPeriodicPlan matching the query
  * @method     ChildPeriodicPlan findOneOrCreate(ConnectionInterface $con = null) Return the first ChildPeriodicPlan matching the query, or a new ChildPeriodicPlan object populated from the query conditions when no match is found
  *
  * @method     ChildPeriodicPlan findOneByPeriodicPlanId(int $periodic_plan_id) Return the first ChildPeriodicPlan filtered by the periodic_plan_id column
+ * @method     ChildPeriodicPlan findOneByResourceId(int $resource_id) Return the first ChildPeriodicPlan filtered by the resource_id column
  * @method     ChildPeriodicPlan findOneByPeriodicPlanName(string $periodic_plan_name) Return the first ChildPeriodicPlan filtered by the periodic_plan_name column
  * @method     ChildPeriodicPlan findOneByPeriodicPlanPoint(string $periodic_plan_point) Return the first ChildPeriodicPlan filtered by the periodic_plan_point column
  * @method     ChildPeriodicPlan findOneByPeriodicTypeId(int $periodic_type_id) Return the first ChildPeriodicPlan filtered by the periodic_type_id column
  * @method     ChildPeriodicPlan findOneByDelieveryPeriodicWeekday(int $delievery_periodic_weekday) Return the first ChildPeriodicPlan filtered by the delievery_periodic_weekday column
+ * @method     ChildPeriodicPlan findOneByPeriodicPlanPic(int $periodic_plan_pic) Return the first ChildPeriodicPlan filtered by the periodic_plan_pic column
  * @method     ChildPeriodicPlan findOneByCreatedAt(string $created_at) Return the first ChildPeriodicPlan filtered by the created_at column
  * @method     ChildPeriodicPlan findOneByUpdatedAt(string $updated_at) Return the first ChildPeriodicPlan filtered by the updated_at column *
 
@@ -101,19 +127,23 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPeriodicPlan requireOne(ConnectionInterface $con = null) Return the first ChildPeriodicPlan matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildPeriodicPlan requireOneByPeriodicPlanId(int $periodic_plan_id) Return the first ChildPeriodicPlan filtered by the periodic_plan_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildPeriodicPlan requireOneByResourceId(int $resource_id) Return the first ChildPeriodicPlan filtered by the resource_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPeriodicPlan requireOneByPeriodicPlanName(string $periodic_plan_name) Return the first ChildPeriodicPlan filtered by the periodic_plan_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPeriodicPlan requireOneByPeriodicPlanPoint(string $periodic_plan_point) Return the first ChildPeriodicPlan filtered by the periodic_plan_point column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPeriodicPlan requireOneByPeriodicTypeId(int $periodic_type_id) Return the first ChildPeriodicPlan filtered by the periodic_type_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPeriodicPlan requireOneByDelieveryPeriodicWeekday(int $delievery_periodic_weekday) Return the first ChildPeriodicPlan filtered by the delievery_periodic_weekday column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildPeriodicPlan requireOneByPeriodicPlanPic(int $periodic_plan_pic) Return the first ChildPeriodicPlan filtered by the periodic_plan_pic column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPeriodicPlan requireOneByCreatedAt(string $created_at) Return the first ChildPeriodicPlan filtered by the created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPeriodicPlan requireOneByUpdatedAt(string $updated_at) Return the first ChildPeriodicPlan filtered by the updated_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildPeriodicPlan[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildPeriodicPlan objects based on current ModelCriteria
  * @method     ChildPeriodicPlan[]|ObjectCollection findByPeriodicPlanId(int $periodic_plan_id) Return ChildPeriodicPlan objects filtered by the periodic_plan_id column
+ * @method     ChildPeriodicPlan[]|ObjectCollection findByResourceId(int $resource_id) Return ChildPeriodicPlan objects filtered by the resource_id column
  * @method     ChildPeriodicPlan[]|ObjectCollection findByPeriodicPlanName(string $periodic_plan_name) Return ChildPeriodicPlan objects filtered by the periodic_plan_name column
  * @method     ChildPeriodicPlan[]|ObjectCollection findByPeriodicPlanPoint(string $periodic_plan_point) Return ChildPeriodicPlan objects filtered by the periodic_plan_point column
  * @method     ChildPeriodicPlan[]|ObjectCollection findByPeriodicTypeId(int $periodic_type_id) Return ChildPeriodicPlan objects filtered by the periodic_type_id column
  * @method     ChildPeriodicPlan[]|ObjectCollection findByDelieveryPeriodicWeekday(int $delievery_periodic_weekday) Return ChildPeriodicPlan objects filtered by the delievery_periodic_weekday column
+ * @method     ChildPeriodicPlan[]|ObjectCollection findByPeriodicPlanPic(int $periodic_plan_pic) Return ChildPeriodicPlan objects filtered by the periodic_plan_pic column
  * @method     ChildPeriodicPlan[]|ObjectCollection findByCreatedAt(string $created_at) Return ChildPeriodicPlan objects filtered by the created_at column
  * @method     ChildPeriodicPlan[]|ObjectCollection findByUpdatedAt(string $updated_at) Return ChildPeriodicPlan objects filtered by the updated_at column
  * @method     ChildPeriodicPlan[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
@@ -208,7 +238,7 @@ abstract class PeriodicPlanQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT periodic_plan_id, periodic_plan_name, periodic_plan_point, periodic_type_id, delievery_periodic_weekday, created_at, updated_at FROM periodic_plan WHERE periodic_plan_id = :p0';
+        $sql = 'SELECT periodic_plan_id, resource_id, periodic_plan_name, periodic_plan_point, periodic_type_id, delievery_periodic_weekday, periodic_plan_pic, created_at, updated_at FROM periodic_plan WHERE periodic_plan_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -337,6 +367,49 @@ abstract class PeriodicPlanQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(PeriodicPlanTableMap::COL_PERIODIC_PLAN_ID, $periodicPlanId, $comparison);
+    }
+
+    /**
+     * Filter the query on the resource_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByResourceId(1234); // WHERE resource_id = 1234
+     * $query->filterByResourceId(array(12, 34)); // WHERE resource_id IN (12, 34)
+     * $query->filterByResourceId(array('min' => 12)); // WHERE resource_id > 12
+     * </code>
+     *
+     * @see       filterByResource()
+     *
+     * @param     mixed $resourceId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildPeriodicPlanQuery The current query, for fluid interface
+     */
+    public function filterByResourceId($resourceId = null, $comparison = null)
+    {
+        if (is_array($resourceId)) {
+            $useMinMax = false;
+            if (isset($resourceId['min'])) {
+                $this->addUsingAlias(PeriodicPlanTableMap::COL_RESOURCE_ID, $resourceId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($resourceId['max'])) {
+                $this->addUsingAlias(PeriodicPlanTableMap::COL_RESOURCE_ID, $resourceId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(PeriodicPlanTableMap::COL_RESOURCE_ID, $resourceId, $comparison);
     }
 
     /**
@@ -482,6 +555,49 @@ abstract class PeriodicPlanQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the periodic_plan_pic column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByPeriodicPlanPic(1234); // WHERE periodic_plan_pic = 1234
+     * $query->filterByPeriodicPlanPic(array(12, 34)); // WHERE periodic_plan_pic IN (12, 34)
+     * $query->filterByPeriodicPlanPic(array('min' => 12)); // WHERE periodic_plan_pic > 12
+     * </code>
+     *
+     * @see       filterByFile()
+     *
+     * @param     mixed $periodicPlanPic The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildPeriodicPlanQuery The current query, for fluid interface
+     */
+    public function filterByPeriodicPlanPic($periodicPlanPic = null, $comparison = null)
+    {
+        if (is_array($periodicPlanPic)) {
+            $useMinMax = false;
+            if (isset($periodicPlanPic['min'])) {
+                $this->addUsingAlias(PeriodicPlanTableMap::COL_PERIODIC_PLAN_PIC, $periodicPlanPic['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($periodicPlanPic['max'])) {
+                $this->addUsingAlias(PeriodicPlanTableMap::COL_PERIODIC_PLAN_PIC, $periodicPlanPic['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(PeriodicPlanTableMap::COL_PERIODIC_PLAN_PIC, $periodicPlanPic, $comparison);
+    }
+
+    /**
      * Filter the query on the created_at column
      *
      * Example usage:
@@ -568,6 +684,83 @@ abstract class PeriodicPlanQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query by a related \App\Propel\Resource object
+     *
+     * @param \App\Propel\Resource|ObjectCollection $resource The related object(s) to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildPeriodicPlanQuery The current query, for fluid interface
+     */
+    public function filterByResource($resource, $comparison = null)
+    {
+        if ($resource instanceof \App\Propel\Resource) {
+            return $this
+                ->addUsingAlias(PeriodicPlanTableMap::COL_RESOURCE_ID, $resource->getResourceId(), $comparison);
+        } elseif ($resource instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(PeriodicPlanTableMap::COL_RESOURCE_ID, $resource->toKeyValue('PrimaryKey', 'ResourceId'), $comparison);
+        } else {
+            throw new PropelException('filterByResource() only accepts arguments of type \App\Propel\Resource or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Resource relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildPeriodicPlanQuery The current query, for fluid interface
+     */
+    public function joinResource($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Resource');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Resource');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Resource relation Resource object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \App\Propel\ResourceQuery A secondary query class using the current class as primary query
+     */
+    public function useResourceQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinResource($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Resource', '\App\Propel\ResourceQuery');
+    }
+
+    /**
      * Filter the query by a related \App\Propel\PeriodicType object
      *
      * @param \App\Propel\PeriodicType|ObjectCollection $periodicType The related object(s) to use as filter
@@ -642,6 +835,83 @@ abstract class PeriodicPlanQuery extends ModelCriteria
         return $this
             ->joinPeriodicType($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'PeriodicType', '\App\Propel\PeriodicTypeQuery');
+    }
+
+    /**
+     * Filter the query by a related \App\Propel\File object
+     *
+     * @param \App\Propel\File|ObjectCollection $file The related object(s) to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildPeriodicPlanQuery The current query, for fluid interface
+     */
+    public function filterByFile($file, $comparison = null)
+    {
+        if ($file instanceof \App\Propel\File) {
+            return $this
+                ->addUsingAlias(PeriodicPlanTableMap::COL_PERIODIC_PLAN_PIC, $file->getFileId(), $comparison);
+        } elseif ($file instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(PeriodicPlanTableMap::COL_PERIODIC_PLAN_PIC, $file->toKeyValue('PrimaryKey', 'FileId'), $comparison);
+        } else {
+            throw new PropelException('filterByFile() only accepts arguments of type \App\Propel\File or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the File relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildPeriodicPlanQuery The current query, for fluid interface
+     */
+    public function joinFile($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('File');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'File');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the File relation File object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \App\Propel\FileQuery A secondary query class using the current class as primary query
+     */
+    public function useFileQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinFile($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'File', '\App\Propel\FileQuery');
     }
 
     /**

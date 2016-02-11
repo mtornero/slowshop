@@ -29,7 +29,7 @@
   </table>
   <table name="delivery" idMethod="native" phpName="Delivery">
     <column name="delivery_id" phpName="DeliveryId" type="INTEGER" size="10" sqlType="int(10) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
-    <column name="delivery_type_id" phpName="DeliveryTypeId" type="SMALLINT" size="8" sqlType="mediumint(8) unsigned" required="true"/>
+    <column name="delivery_type_id" phpName="DeliveryTypeId" type="SMALLINT" size="5" sqlType="smallint(5) unsigned" required="true"/>
     <column name="delivery_date" phpName="DeliveryDate" type="TIMESTAMP"/>
     <foreign-key foreignTable="delivery_type" name="fk_delivery_1" onUpdate="CASCADE">
       <reference local="delivery_type_id" foreign="delivery_type_id"/>
@@ -68,7 +68,7 @@
     </vendor>
   </table>
   <table name="delivery_type" idMethod="native" phpName="DeliveryType">
-    <column name="delivery_type_id" phpName="DeliveryTypeId" type="SMALLINT" size="8" sqlType="mediumint(8) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="delivery_type_id" phpName="DeliveryTypeId" type="SMALLINT" size="5" sqlType="smallint(5) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="delivery_type_code" phpName="DeliveryTypeCode" type="VARCHAR" size="45" required="true"/>
     <column name="delivery_type_name" phpName="DeliveryTypeName" type="VARCHAR" size="60" required="true"/>
     <column name="delivery_type_is_active" phpName="DeliveryTypeIsActive" type="BOOLEAN" size="1" sqlType="tinyint(1) unsigned" required="true"/>
@@ -84,7 +84,7 @@
   </table>
   <table name="file" idMethod="native" phpName="File">
     <column name="file_id" phpName="FileId" type="INTEGER" size="10" sqlType="int(10) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
-    <column name="file_type_id" phpName="FileTypeId" type="SMALLINT" size="8" sqlType="mediumint(8) unsigned" required="true"/>
+    <column name="file_type_id" phpName="FileTypeId" type="SMALLINT" size="5" sqlType="smallint(5) unsigned" required="true"/>
     <column name="file_path" phpName="FilePath" type="VARCHAR" size="45" required="true"/>
     <foreign-key foreignTable="file_type" name="fk_file_1" onUpdate="CASCADE">
       <reference local="file_type_id" foreign="file_type_id"/>
@@ -98,7 +98,7 @@
     </vendor>
   </table>
   <table name="file_type" idMethod="native" phpName="FileType">
-    <column name="file_type_id" phpName="FileTypeId" type="SMALLINT" size="8" sqlType="mediumint(8) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="file_type_id" phpName="FileTypeId" type="SMALLINT" size="5" sqlType="smallint(5) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="file_type_code" phpName="FileTypeCode" type="VARCHAR" size="45" required="true"/>
     <column name="file_type_name" phpName="FileTypeName" type="VARCHAR" size="60" required="true"/>
     <unique name="file_type_code_UNIQUE">
@@ -107,6 +107,40 @@
     <behavior name="i18n">
       <parameter name="i18n_columns" value="file_type_name" />
     </behavior>
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+  <table name="news" idMethod="native" phpName="News">
+    <column name="news_id" phpName="NewsId" type="INTEGER" size="10" sqlType="int(10) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="resource_id" phpName="ResourceId" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+    <column name="news_headline" phpName="NewsHeadline" type="VARCHAR" size="200" required="true"/>
+    <column name="news_opening" phpName="NewsOpening" type="VARCHAR" size="250"/>
+    <column name="news_body" phpName="NewsBody" type="LONGVARCHAR"/>
+    <column name="news_pic" phpName="NewsPic" type="INTEGER" size="10" sqlType="int(10) unsigned"/>
+    <column name="news_from" phpName="NewsFrom" type="DATE"/>
+    <column name="news_to" phpName="NewsTo" type="DATE"/>
+    <column name="news_for" phpName="NewsFor" type="INTEGER" size="10" sqlType="int(10) unsigned"/>
+    <column name="news_weight" phpName="NewsWeight" type="TINYINT" size="3" sqlType="tinyint(3) unsigned" required="true" defaultValue="5"/>
+    <foreign-key foreignTable="resource" name="fk_news_1" onUpdate="CASCADE">
+      <reference local="resource_id" foreign="resource_id"/>
+    </foreign-key>
+    <foreign-key foreignTable="file" name="fk_news_2" onUpdate="CASCADE">
+      <reference local="news_pic" foreign="file_id"/>
+    </foreign-key>
+    <foreign-key foreignTable="resource" name="fk_news_3" onUpdate="CASCADE">
+      <reference local="news_for" foreign="resource_id"/>
+    </foreign-key>
+    <index name="fk_news_1_idx">
+      <index-column name="resource_id"/>
+    </index>
+    <index name="fk_news_2_idx">
+      <index-column name="news_pic"/>
+    </index>
+    <index name="fk_news_3_idx">
+      <index-column name="news_for"/>
+    </index>
+    <behavior name="timestampable" />
     <vendor type="mysql">
       <parameter name="Engine" value="InnoDB"/>
     </vendor>
@@ -137,12 +171,16 @@
     <column name="order_product_id" phpName="OrderProductId" type="INTEGER" size="10" sqlType="int(10) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="order_id" phpName="OrderId" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
     <column name="product_id" phpName="ProductId" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+    <column name="product_variation_id" phpName="ProductVariationId" type="INTEGER" size="10" sqlType="int(10) unsigned"/>
     <column name="product_quantity" phpName="ProductQuantity" type="INTEGER" required="true"/>
     <foreign-key foreignTable="order" name="fk_order_product_1" onUpdate="CASCADE">
       <reference local="order_id" foreign="order_id"/>
     </foreign-key>
     <foreign-key foreignTable="product" name="fk_order_product_2" onUpdate="CASCADE">
       <reference local="product_id" foreign="product_id"/>
+    </foreign-key>
+    <foreign-key foreignTable="product_variation" name="fk_order_product_3" onUpdate="CASCADE">
+      <reference local="product_variation_id" foreign="product_variation_id"/>
     </foreign-key>
     <index name="fk_order_product_1_idx">
       <index-column name="order_id"/>
@@ -157,15 +195,29 @@
   </table>
   <table name="periodic_plan" idMethod="native" phpName="PeriodicPlan">
     <column name="periodic_plan_id" phpName="PeriodicPlanId" type="INTEGER" size="10" sqlType="int(10) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="resource_id" phpName="ResourceId" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
     <column name="periodic_plan_name" phpName="PeriodicPlanName" type="VARCHAR" size="60" required="true"/>
     <column name="periodic_plan_point" phpName="PeriodicPlanPoint" type="VARCHAR" size="250"/>
     <column name="periodic_type_id" phpName="PeriodicTypeId" type="TINYINT" size="3" sqlType="tinyint(3) unsigned" required="true"/>
     <column name="delievery_periodic_weekday" phpName="DelieveryPeriodicWeekday" type="TINYINT" required="true"/>
-    <foreign-key foreignTable="periodic_type" name="fk_delievery_periodic_plan_1" onUpdate="CASCADE">
+    <column name="periodic_plan_pic" phpName="PeriodicPlanPic" type="INTEGER" size="10" sqlType="int(10) unsigned"/>
+    <foreign-key foreignTable="resource" name="fk_periodic_plan_1" onUpdate="CASCADE">
+      <reference local="resource_id" foreign="resource_id"/>
+    </foreign-key>
+    <foreign-key foreignTable="periodic_type" name="fk_periodic_plan_2" onUpdate="CASCADE">
       <reference local="periodic_type_id" foreign="periodic_type_id"/>
     </foreign-key>
-    <index name="fk_delievery_periodic_plan_1_idx">
+    <foreign-key foreignTable="file" name="fk_periodic_plan_3" onUpdate="CASCADE">
+      <reference local="periodic_plan_pic" foreign="file_id"/>
+    </foreign-key>
+    <index name="fk_periodic_plan_1_idx">
+      <index-column name="resource_id"/>
+    </index>
+    <index name="fk_periodic_plan_2_idx">
       <index-column name="periodic_type_id"/>
+    </index>
+    <index name="fk_periodic_plan_3_idx">
+      <index-column name="periodic_plan_pic"/>
     </index>
     <behavior name="timestampable" />
     <vendor type="mysql">
@@ -209,6 +261,7 @@
     <column name="product_name" phpName="ProductName" type="VARCHAR" size="60" required="true"/>
     <column name="product_description" phpName="ProductDescription" type="VARCHAR" size="250"/>
     <column name="category_id" phpName="CategoryId" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+    <column name="provider_id" phpName="ProviderId" type="INTEGER" size="10" sqlType="int(10) unsigned"/>
     <column name="unit_id" phpName="UnitId" type="TINYINT" size="3" sqlType="tinyint(3) unsigned" required="true"/>
     <column name="product_range" phpName="ProductRange" type="VARCHAR" size="45"/>
     <column name="product_price" phpName="ProductPrice" type="DECIMAL" size="10" scale="2" required="true"/>
@@ -217,30 +270,102 @@
     <foreign-key foreignTable="category" name="fk_product_1" onUpdate="CASCADE">
       <reference local="category_id" foreign="category_id"/>
     </foreign-key>
-    <foreign-key foreignTable="unit" name="fk_product_2" onUpdate="CASCADE">
+    <foreign-key foreignTable="provider" name="fk_product_2" onUpdate="CASCADE">
+      <reference local="provider_id" foreign="provider_id"/>
+    </foreign-key>
+    <foreign-key foreignTable="unit" name="fk_product_3" onUpdate="CASCADE">
       <reference local="unit_id" foreign="unit_id"/>
     </foreign-key>
-    <foreign-key foreignTable="file" name="fk_product_3" onUpdate="CASCADE">
+    <foreign-key foreignTable="file" name="fk_product_4" onUpdate="CASCADE">
       <reference local="product_pic" foreign="file_id"/>
     </foreign-key>
-    <foreign-key foreignTable="resource" name="fk_product_4" onUpdate="CASCADE">
+    <foreign-key foreignTable="resource" name="fk_product_5" onUpdate="CASCADE">
       <reference local="resource_id" foreign="resource_id"/>
     </foreign-key>
     <index name="fk_product_1_idx">
       <index-column name="category_id"/>
     </index>
     <index name="fk_product_2_idx">
-      <index-column name="unit_id"/>
+      <index-column name="provider_id"/>
     </index>
     <index name="fk_product_3_idx">
-      <index-column name="product_pic"/>
+      <index-column name="unit_id"/>
     </index>
     <index name="fk_product_4_idx">
+      <index-column name="product_pic"/>
+    </index>
+    <index name="fk_product_5_idx">
       <index-column name="resource_id"/>
     </index>
     <behavior name="delegate">
       <parameter name="to" value="resource" />
     </behavior>
+    <behavior name="timestampable" />
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+  <table name="product_highlighted" idMethod="native" phpName="ProductHighlighted">
+    <column name="product_highlighted_id" phpName="ProductHighlightedId" type="INTEGER" size="10" sqlType="int(10) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="product_id" phpName="ProductId" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+    <column name="product_highlighted_for" phpName="ProductHighlightedFor" type="INTEGER" size="10" sqlType="int(10) unsigned"/>
+    <column name="product_highlighted_from" phpName="ProductHighlightedFrom" type="DATE"/>
+    <column name="product_highlighted_to" phpName="ProductHighlightedTo" type="DATE"/>
+    <column name="product_highlighted_weight" phpName="ProductHighlightedWeight" type="TINYINT" size="3" sqlType="tinyint(3) unsigned" required="true" defaultValue="5"/>
+    <foreign-key foreignTable="product" name="fk_product_highlighted_1" onUpdate="CASCADE">
+      <reference local="product_id" foreign="product_id"/>
+    </foreign-key>
+    <foreign-key foreignTable="resource" name="fk_product_highlighted_2" onUpdate="CASCADE">
+      <reference local="product_highlighted_for" foreign="resource_id"/>
+    </foreign-key>
+    <index name="fk_product_highlighted_1_idx">
+      <index-column name="product_id"/>
+    </index>
+    <index name="fk_product_highlighted_2_idx">
+      <index-column name="product_highlighted_for"/>
+    </index>
+    <behavior name="timestampable" />
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+  <table name="product_variation" idMethod="native" phpName="ProductVariation">
+    <column name="product_variation_id" phpName="ProductVariationId" type="INTEGER" size="10" sqlType="int(10) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="product_variation_type_id" phpName="ProductVariationTypeId" type="SMALLINT" size="5" sqlType="smallint(5) unsigned" required="true"/>
+    <column name="variation_id" phpName="VariationId" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+    <foreign-key foreignTable="product_variation_type" name="fk_product_variation_1" onUpdate="CASCADE">
+      <reference local="product_variation_type_id" foreign="product_variation_type_id"/>
+    </foreign-key>
+    <foreign-key foreignTable="variation" name="fk_product_variation_2" onUpdate="CASCADE">
+      <reference local="variation_id" foreign="variation_id"/>
+    </foreign-key>
+    <index name="fk_product_variation_1_idx">
+      <index-column name="product_variation_type_id"/>
+    </index>
+    <index name="fk_product_variation_2_idx">
+      <index-column name="variation_id"/>
+    </index>
+    <behavior name="timestampable" />
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+  <table name="product_variation_type" idMethod="native" phpName="ProductVariationType">
+    <column name="product_variation_type_id" phpName="ProductVariationTypeId" type="SMALLINT" size="5" sqlType="smallint(5) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="product_id" phpName="ProductId" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+    <column name="variation_type_id" phpName="VariationTypeId" type="SMALLINT" size="5"  sqlType="smallint(5) unsigned" required="true"/>
+    <foreign-key foreignTable="product" name="fk_product_variation_type_1" onUpdate="CASCADE">
+      <reference local="product_id" foreign="product_id"/>
+    </foreign-key>
+    <foreign-key foreignTable="variation_type" name="fk_product_variation_type_2" onUpdate="CASCADE">
+      <reference local="variation_type_id" foreign="variation_type_id"/>
+    </foreign-key>
+    <index name="fk_product_variation_type_1_idx">
+      <index-column name="product_id"/>
+    </index>
+    <index name="fk_product_variation_type_2_idx">
+      <index-column name="variation_type_id"/>
+    </index>
     <behavior name="timestampable" />
     <vendor type="mysql">
       <parameter name="Engine" value="InnoDB"/>
@@ -252,6 +377,7 @@
     <column name="promotion_type_id" phpName="PromotionTypeId" type="SMALLINT" size="5" sqlType="smallint(5) unsigned" required="true"/>
     <column name="promotion_value" phpName="PromotionValue" type="DECIMAL" size="10" scale="2"/>
     <column name="promotion_gift" phpName="PromotionGift" type="INTEGER" size="10" sqlType="int(10) unsigned"/>
+    <column name="promotion_description" phpName="PromotionDescription" type="LONGVARCHAR"/>
     <column name="promotion_starting_point" phpName="PromotionStartingPoint" type="INTEGER"/>
     <column name="promotion_starting_date" phpName="PromotionStartingDate" type="DATE"/>
     <column name="promotion_ending_date" phpName="PromotionEndingDate" type="DATE"/>
@@ -290,9 +416,40 @@
       <parameter name="Engine" value="InnoDB"/>
     </vendor>
   </table>
+  <table name="provider" idMethod="native" phpName="Provider">
+    <column name="provider_id" phpName="ProviderId" type="INTEGER" size="10" sqlType="int(10) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="resource_id" phpName="ResourceId" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+    <column name="provider_name" phpName="ProviderName" type="VARCHAR" size="250" required="true"/>
+    <column name="provider_description" phpName="ProviderDescription" type="LONGVARCHAR"/>
+    <column name="provider_is_own" phpName="ProviderIsOwn" type="BOOLEAN" size="1" sqlType="tinyint(1) unsigned"/>
+    <column name="provider_is_active" phpName="ProviderIsActive" type="BOOLEAN" size="1" sqlType="tinyint(1) unsigned"/>
+    <column name="provider_pic" phpName="ProviderPic" type="INTEGER" size="10" sqlType="int(10) unsigned"/>
+    <foreign-key foreignTable="resource" name="fk_provider_1" onUpdate="CASCADE">
+      <reference local="resource_id" foreign="resource_id"/>
+    </foreign-key>
+    <foreign-key foreignTable="file" name="fk_provider_2" onUpdate="CASCADE">
+      <reference local="provider_pic" foreign="file_id"/>
+    </foreign-key>
+    <index name="fk_provider_1_idx">
+      <index-column name="resource_id"/>
+    </index>
+    <index name="fk_provider_2_idx">
+      <index-column name="provider_pic"/>
+    </index>
+    <behavior name="timestampable" />
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
   <table name="resource" idMethod="native" phpName="Resource">
     <column name="resource_id" phpName="ResourceId" type="INTEGER" size="10" sqlType="int(10) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="resource_type_id" phpName="ResourceTypeId" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+    <column name="social_views" phpName="SocialViews" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true" defaultValue="0"/>
+    <column name="social_likes" phpName="SocialLikes" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true" defaultValue="0"/>
+    <column name="social_dislikes" phpName="SocialDislikes" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true" defaultValue="0"/>
+    <column name="social_comments" phpName="SocialComments" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true" defaultValue="0"/>
+    <column name="social_favourites" phpName="SocialFavourites" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true" defaultValue="0"/>
+    <column name="social_recommendations" phpName="SocialRecommendations" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true" defaultValue="0"/>
     <foreign-key foreignTable="resource_type" name="fk_resource_1" onUpdate="CASCADE">
       <reference local="resource_type_id" foreign="resource_type_id"/>
     </foreign-key>
@@ -327,13 +484,9 @@
   <table name="resource_type" idMethod="native" phpName="ResourceType">
     <column name="resource_type_id" phpName="ResourceTypeId" type="INTEGER" size="10" sqlType="int(10) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="resource_type_code" phpName="ResourceTypeCode" type="VARCHAR" size="45" required="true"/>
-    <column name="resource_type_name" phpName="ResourceTypeName" type="VARCHAR" size="60" required="true"/>
     <unique name="resource_type_code_UNIQUE">
       <unique-column name="resource_type_code"/>
     </unique>
-    <behavior name="i18n">
-      <parameter name="i18n_columns" value="resource_type_name" />
-    </behavior>
     <vendor type="mysql">
       <parameter name="Engine" value="InnoDB"/>
     </vendor>
@@ -352,6 +505,103 @@
       <parameter name="Engine" value="InnoDB"/>
     </vendor>
   </table>
+  <table name="social_view" idMethod="native" phpName="SocialView">
+    <column name="social_view_id" phpName="SocialViewId" type="INTEGER" size="10" sqlType="int(10) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="user_id" phpName="UserId" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+    <column name="social_view_for" phpName="SocialViewFor" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+    <foreign-key foreignTable="user" name="fk_social_view_1" onUpdate="CASCADE">
+      <reference local="user_id" foreign="user_id"/>
+    </foreign-key>
+    <foreign-key foreignTable="resource" name="fk_social_view_2" onUpdate="CASCADE">
+      <reference local="social_view_for" foreign="resource_id"/>
+    </foreign-key>
+    <index name="fk_social_view_1_idx">
+      <index-column name="user_id"/>
+    </index>
+    <index name="fk_social_view_2_idx">
+      <index-column name="social_view_for"/>
+    </index>
+    <behavior name="timestampable" />
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+  <table name="social_like" idMethod="native" phpName="SocialLike">
+    <column name="social_like_id" phpName="SocialLikeId" type="INTEGER" size="10" sqlType="int(10) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="user_id" phpName="UserId" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+    <column name="social_like_for" phpName="SocialLikeFor" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+    <column name="social_like_direction" phpName="SocialLikeDirection" type="CHAR" sqlType="enum('like','dislike')" required="true" defaultValue="like"/>
+    <foreign-key foreignTable="user" name="fk_social_like_1" onUpdate="CASCADE">
+      <reference local="user_id" foreign="user_id"/>
+    </foreign-key>
+    <foreign-key foreignTable="resource" name="fk_social_like_2" onUpdate="CASCADE">
+      <reference local="social_like_for" foreign="resource_id"/>
+    </foreign-key>
+    <index name="fk_social_like_1_idx">
+      <index-column name="user_id"/>
+    </index>
+    <index name="fk_social_like_2_idx">
+      <index-column name="social_like_for"/>
+    </index>
+    <unique name="social_like_for_UNIQUE">
+      <unique-column name="user_id"/>
+      <unique-column name="social_like_for"/>
+    </unique>
+    <behavior name="timestampable" />
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+  <table name="social_comment" idMethod="native" phpName="SocialComment">
+    <column name="social_comment_id" phpName="SocialCommentId" type="INTEGER" size="10" sqlType="int(10) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="user_id" phpName="UserId" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+    <column name="social_comment_for" phpName="SocialCommentFor" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+    <column name="social_comment_body" phpName="SocialCommentBody" type="LONGVARCHAR" required="true"/>
+    <foreign-key foreignTable="user" name="fk_social_comment_1" onUpdate="CASCADE">
+      <reference local="user_id" foreign="user_id"/>
+    </foreign-key>
+    <foreign-key foreignTable="resource" name="fk_social_comment_2" onUpdate="CASCADE">
+      <reference local="social_comment_for" foreign="resource_id"/>
+    </foreign-key>
+    <index name="fk_social_comment_1_idx">
+      <index-column name="user_id"/>
+    </index>
+    <index name="fk_social_comment_2_idx">
+      <index-column name="social_comment_for"/>
+    </index>
+    <behavior name="timestampable" />
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+  <table name="social_recommendation" idMethod="native" phpName="SocialRecommendation">
+    <column name="social_recommendation_id" phpName="SocialRecommendationId" type="INTEGER" size="10" sqlType="int(10) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="user_id" phpName="UserId" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+    <column name="social_recommendation_for" phpName="SocialRecommendationFor" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+    <column name="social_recommendation_to" phpName="SocialRecommendationTo" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+    <foreign-key foreignTable="user" name="fk_social_recommendation_1" onUpdate="CASCADE">
+      <reference local="user_id" foreign="user_id"/>
+    </foreign-key>
+    <foreign-key foreignTable="resource" name="fk_social_recommendation_2" onUpdate="CASCADE">
+      <reference local="social_recommendation_for" foreign="resource_id"/>
+    </foreign-key>
+    <foreign-key foreignTable="user" name="fk_social_recommendation_3" onUpdate="CASCADE">
+      <reference local="social_recommendation_to" foreign="user_id"/>
+    </foreign-key>
+    <index name="fk_social_recommendation_1_idx">
+      <index-column name="user_id"/>
+    </index>
+    <index name="fk_social_recommendation_2_idx">
+      <index-column name="social_recommendation_for"/>
+    </index>
+    <index name="fk_social_recommendation_3_idx">
+      <index-column name="social_recommendation_to"/>
+    </index>
+    <behavior name="timestampable" />
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
   <table name="unit" idMethod="native" phpName="Unit">
     <column name="unit_id" phpName="UnitId" type="TINYINT" size="3" sqlType="tinyint(3) unsigned" primaryKey="true" required="true"/>
     <column name="unit_name" phpName="UnitName" type="VARCHAR" size="60" required="true"/>
@@ -365,11 +615,12 @@
   <table name="user" idMethod="native" phpName="User">
     <column name="user_id" phpName="UserId" type="INTEGER" size="10" sqlType="int(10) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="resource_id" phpName="ResourceId" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
-    <column name="use_name" phpName="UseName" type="VARCHAR" size="60" required="true"/>
+    <column name="user_name" phpName="UseName" type="VARCHAR" size="60" required="true"/>
     <column name="user_surname" phpName="UserSurname" type="VARCHAR" size="60"/>
     <column name="user_login" phpName="UserLogin" type="VARCHAR" size="60" required="true"/>
     <column name="user_pass" phpName="UserPass" type="VARCHAR" size="60" required="true"/>
     <column name="user_pass_is_temp" phpName="UserPassIsTemp" type="VARCHAR" size="45" required="true"/>
+    <column name="remember_token" phpName="RememberToken" type="VARCHAR" size="60"/>
     <column name="user_email" phpName="UserEmail" type="VARCHAR" size="100"/>
     <column name="user_phone" phpName="UserPhone" type="VARCHAR" size="45"/>
     <column name="user_address" phpName="UserAddress" type="VARCHAR" size="250"/>
@@ -417,6 +668,76 @@
     </index>
     <index name="fk_user_periodic_plan_2_idx">
       <index-column name="periodic_plan_id"/>
+    </index>
+    <behavior name="timestampable" />
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+  <table name="variation" idMethod="native" phpName="Variation">
+    <column name="variation_id" phpName="VariationId" type="INTEGER" size="10" sqlType="int(10) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="variation_type_id" phpName="VariationTypeId" type="SMALLINT" size="5" sqlType="smallint(5) unsigned" required="true"/>
+    <column name="variation_name" phpName="VariationName" type="VARCHAR" size="60" required="true"/>
+    <column name="variation_is_general" phpName="VariationIsGeneral" type="BOOLEAN" size="1" sqlType="tinyint(1) unsigned" required="true"/>
+    <foreign-key foreignTable="variation_type" name="fk_variation_1" onUpdate="CASCADE">
+      <reference local="variation_type_id" foreign="variation_type_id"/>
+    </foreign-key>
+    <index name="fk_variation_1_idx">
+      <index-column name="variation_type_id"/>
+    </index>
+    <behavior name="i18n">
+      <parameter name="i18n_columns" value="variation_name" />
+    </behavior>
+    <behavior name="timestampable" />
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+  <table name="variation_type" idMethod="native" phpName="VariationType">
+    <column name="variation_type_id" phpName="VariationTypeId" type="SMALLINT" size="5" sqlType="smallint(5) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="variation_type_name" phpName="VariationTypeName" type="VARCHAR" size="60" required="true"/>
+    <column name="variation_type_is_general" phpName="VariationTypeIsGeneral" type="BOOLEAN" size="1" sqlType="tinyint(1) unsigned" required="true"/>
+    <behavior name="i18n">
+      <parameter name="i18n_columns" value="variation_type_name" />
+    </behavior>
+    <behavior name="timestampable" />
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+  <table name="wishlist" idMethod="native" phpName="Wishlist">
+    <column name="wishlist_id" phpName="WishlistId" type="INTEGER" size="10" sqlType="int(5) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="user_id" phpName="UserId" type="INTEGER" size="10" sqlType="int(5) unsigned" required="true"/>
+    <column name="wishlist_name" phpName="WishlistName" type="VARCHAR" size="60" required="true"/>
+    <column name="wishlist_comment" phpName="WishlistComment" type="VARCHAR" size="250"/>
+    <column name="wishlist_is_public" phpName="WishlistIsGeneral" type="BOOLEAN" size="1" sqlType="tinyint(1) unsigned" required="true"/>
+    <foreign-key foreignTable="user" name="fk_wishlist_1" onUpdate="CASCADE">
+      <reference local="user_id" foreign="user_id"/>
+    </foreign-key>
+    <index name="fk_wishlist_1_idx">
+      <index-column name="user_id"/>
+    </index>
+    <behavior name="timestampable" />
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+  <table name="wishlist_product" idMethod="native" phpName="WishlistProduct">
+    <column name="wishlist_product_id" phpName="WishlistProductId" type="INTEGER" size="10" sqlType="int(10) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="wishlist_id" phpName="WishlistId" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+    <column name="product_id" phpName="ProductId" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+    <column name="wishlist_product_comment" phpName="WishlistProductComment" type="VARCHAR" size="250"/>
+    <foreign-key foreignTable="wishlist" name="fk_wishlist_product_1" onUpdate="CASCADE">
+      <reference local="wishlist_id" foreign="wishlist_id"/>
+    </foreign-key>
+    <foreign-key foreignTable="product" name="fk_wishlist_product_2" onUpdate="CASCADE">
+      <reference local="product_id" foreign="product_id"/>
+    </foreign-key>
+    <index name="fk_wishlist_product_1_idx">
+      <index-column name="wishlist_id"/>
+    </index>
+    <index name="fk_wishlist_product_2_idx">
+      <index-column name="product_id"/>
     </index>
     <behavior name="timestampable" />
     <vendor type="mysql">

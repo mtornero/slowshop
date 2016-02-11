@@ -5,7 +5,6 @@ namespace App\Propel\Base;
 use \Exception;
 use \PDO;
 use App\Propel\ResourceType as ChildResourceType;
-use App\Propel\ResourceTypeI18nQuery as ChildResourceTypeI18nQuery;
 use App\Propel\ResourceTypeQuery as ChildResourceTypeQuery;
 use App\Propel\Map\ResourceTypeTableMap;
 use Propel\Runtime\Propel;
@@ -45,17 +44,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildResourceTypeQuery rightJoinWithResource() Adds a RIGHT JOIN clause and with to the query using the Resource relation
  * @method     ChildResourceTypeQuery innerJoinWithResource() Adds a INNER JOIN clause and with to the query using the Resource relation
  *
- * @method     ChildResourceTypeQuery leftJoinResourceTypeI18n($relationAlias = null) Adds a LEFT JOIN clause to the query using the ResourceTypeI18n relation
- * @method     ChildResourceTypeQuery rightJoinResourceTypeI18n($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ResourceTypeI18n relation
- * @method     ChildResourceTypeQuery innerJoinResourceTypeI18n($relationAlias = null) Adds a INNER JOIN clause to the query using the ResourceTypeI18n relation
- *
- * @method     ChildResourceTypeQuery joinWithResourceTypeI18n($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the ResourceTypeI18n relation
- *
- * @method     ChildResourceTypeQuery leftJoinWithResourceTypeI18n() Adds a LEFT JOIN clause and with to the query using the ResourceTypeI18n relation
- * @method     ChildResourceTypeQuery rightJoinWithResourceTypeI18n() Adds a RIGHT JOIN clause and with to the query using the ResourceTypeI18n relation
- * @method     ChildResourceTypeQuery innerJoinWithResourceTypeI18n() Adds a INNER JOIN clause and with to the query using the ResourceTypeI18n relation
- *
- * @method     \App\Propel\ResourceQuery|\App\Propel\ResourceTypeI18nQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \App\Propel\ResourceQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildResourceType findOne(ConnectionInterface $con = null) Return the first ChildResourceType matching the query
  * @method     ChildResourceType findOneOrCreate(ConnectionInterface $con = null) Return the first ChildResourceType matching the query, or a new ChildResourceType object populated from the query conditions when no match is found
@@ -398,79 +387,6 @@ abstract class ResourceTypeQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related \App\Propel\ResourceTypeI18n object
-     *
-     * @param \App\Propel\ResourceTypeI18n|ObjectCollection $resourceTypeI18n the related object to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ChildResourceTypeQuery The current query, for fluid interface
-     */
-    public function filterByResourceTypeI18n($resourceTypeI18n, $comparison = null)
-    {
-        if ($resourceTypeI18n instanceof \App\Propel\ResourceTypeI18n) {
-            return $this
-                ->addUsingAlias(ResourceTypeTableMap::COL_RESOURCE_TYPE_ID, $resourceTypeI18n->getResourceTypeId(), $comparison);
-        } elseif ($resourceTypeI18n instanceof ObjectCollection) {
-            return $this
-                ->useResourceTypeI18nQuery()
-                ->filterByPrimaryKeys($resourceTypeI18n->getPrimaryKeys())
-                ->endUse();
-        } else {
-            throw new PropelException('filterByResourceTypeI18n() only accepts arguments of type \App\Propel\ResourceTypeI18n or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the ResourceTypeI18n relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this|ChildResourceTypeQuery The current query, for fluid interface
-     */
-    public function joinResourceTypeI18n($relationAlias = null, $joinType = 'LEFT JOIN')
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('ResourceTypeI18n');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'ResourceTypeI18n');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the ResourceTypeI18n relation ResourceTypeI18n object
-     *
-     * @see useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return \App\Propel\ResourceTypeI18nQuery A secondary query class using the current class as primary query
-     */
-    public function useResourceTypeI18nQuery($relationAlias = null, $joinType = 'LEFT JOIN')
-    {
-        return $this
-            ->joinResourceTypeI18n($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'ResourceTypeI18n', '\App\Propel\ResourceTypeI18nQuery');
-    }
-
-    /**
      * Exclude object from result
      *
      * @param   ChildResourceType $resourceType Object to remove from the list of results
@@ -545,63 +461,6 @@ abstract class ResourceTypeQuery extends ModelCriteria
 
             return $affectedRows;
         });
-    }
-
-    // i18n behavior
-
-    /**
-     * Adds a JOIN clause to the query using the i18n relation
-     *
-     * @param     string $locale Locale to use for the join condition, e.g. 'fr_FR'
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'. Defaults to left join.
-     *
-     * @return    ChildResourceTypeQuery The current query, for fluid interface
-     */
-    public function joinI18n($locale = 'en_US', $relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        $relationName = $relationAlias ? $relationAlias : 'ResourceTypeI18n';
-
-        return $this
-            ->joinResourceTypeI18n($relationAlias, $joinType)
-            ->addJoinCondition($relationName, $relationName . '.Locale = ?', $locale);
-    }
-
-    /**
-     * Adds a JOIN clause to the query and hydrates the related I18n object.
-     * Shortcut for $c->joinI18n($locale)->with()
-     *
-     * @param     string $locale Locale to use for the join condition, e.g. 'fr_FR'
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'. Defaults to left join.
-     *
-     * @return    $this|ChildResourceTypeQuery The current query, for fluid interface
-     */
-    public function joinWithI18n($locale = 'en_US', $joinType = Criteria::LEFT_JOIN)
-    {
-        $this
-            ->joinI18n($locale, null, $joinType)
-            ->with('ResourceTypeI18n');
-        $this->with['ResourceTypeI18n']->setIsWithOneToMany(false);
-
-        return $this;
-    }
-
-    /**
-     * Use the I18n relation query object
-     *
-     * @see       useQuery()
-     *
-     * @param     string $locale Locale to use for the join condition, e.g. 'fr_FR'
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'. Defaults to left join.
-     *
-     * @return    ChildResourceTypeI18nQuery A secondary query class using the current class as primary query
-     */
-    public function useI18nQuery($locale = 'en_US', $relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        return $this
-            ->joinI18n($locale, $relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'ResourceTypeI18n', '\App\Propel\ResourceTypeI18nQuery');
     }
 
 } // ResourceTypeQuery

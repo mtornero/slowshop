@@ -59,7 +59,7 @@ class UserTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 15;
+    const NUM_COLUMNS = 16;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class UserTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 15;
+    const NUM_HYDRATE_COLUMNS = 16;
 
     /**
      * the column name for the user_id field
@@ -82,9 +82,9 @@ class UserTableMap extends TableMap
     const COL_RESOURCE_ID = 'user.resource_id';
 
     /**
-     * the column name for the use_name field
+     * the column name for the user_name field
      */
-    const COL_USE_NAME = 'user.use_name';
+    const COL_USER_NAME = 'user.user_name';
 
     /**
      * the column name for the user_surname field
@@ -105,6 +105,11 @@ class UserTableMap extends TableMap
      * the column name for the user_pass_is_temp field
      */
     const COL_USER_PASS_IS_TEMP = 'user.user_pass_is_temp';
+
+    /**
+     * the column name for the remember_token field
+     */
+    const COL_REMEMBER_TOKEN = 'user.remember_token';
 
     /**
      * the column name for the user_email field
@@ -158,11 +163,11 @@ class UserTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('UserId', 'ResourceId', 'UseName', 'UserSurname', 'UserLogin', 'UserPass', 'UserPassIsTemp', 'UserEmail', 'UserPhone', 'UserAddress', 'RoleId', 'UserIsActive', 'UserPic', 'CreatedAt', 'UpdatedAt', ),
-        self::TYPE_CAMELNAME     => array('userId', 'resourceId', 'useName', 'userSurname', 'userLogin', 'userPass', 'userPassIsTemp', 'userEmail', 'userPhone', 'userAddress', 'roleId', 'userIsActive', 'userPic', 'createdAt', 'updatedAt', ),
-        self::TYPE_COLNAME       => array(UserTableMap::COL_USER_ID, UserTableMap::COL_RESOURCE_ID, UserTableMap::COL_USE_NAME, UserTableMap::COL_USER_SURNAME, UserTableMap::COL_USER_LOGIN, UserTableMap::COL_USER_PASS, UserTableMap::COL_USER_PASS_IS_TEMP, UserTableMap::COL_USER_EMAIL, UserTableMap::COL_USER_PHONE, UserTableMap::COL_USER_ADDRESS, UserTableMap::COL_ROLE_ID, UserTableMap::COL_USER_IS_ACTIVE, UserTableMap::COL_USER_PIC, UserTableMap::COL_CREATED_AT, UserTableMap::COL_UPDATED_AT, ),
-        self::TYPE_FIELDNAME     => array('user_id', 'resource_id', 'use_name', 'user_surname', 'user_login', 'user_pass', 'user_pass_is_temp', 'user_email', 'user_phone', 'user_address', 'role_id', 'user_is_active', 'user_pic', 'created_at', 'updated_at', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, )
+        self::TYPE_PHPNAME       => array('UserId', 'ResourceId', 'UseName', 'UserSurname', 'UserLogin', 'UserPass', 'UserPassIsTemp', 'RememberToken', 'UserEmail', 'UserPhone', 'UserAddress', 'RoleId', 'UserIsActive', 'UserPic', 'CreatedAt', 'UpdatedAt', ),
+        self::TYPE_CAMELNAME     => array('userId', 'resourceId', 'useName', 'userSurname', 'userLogin', 'userPass', 'userPassIsTemp', 'rememberToken', 'userEmail', 'userPhone', 'userAddress', 'roleId', 'userIsActive', 'userPic', 'createdAt', 'updatedAt', ),
+        self::TYPE_COLNAME       => array(UserTableMap::COL_USER_ID, UserTableMap::COL_RESOURCE_ID, UserTableMap::COL_USER_NAME, UserTableMap::COL_USER_SURNAME, UserTableMap::COL_USER_LOGIN, UserTableMap::COL_USER_PASS, UserTableMap::COL_USER_PASS_IS_TEMP, UserTableMap::COL_REMEMBER_TOKEN, UserTableMap::COL_USER_EMAIL, UserTableMap::COL_USER_PHONE, UserTableMap::COL_USER_ADDRESS, UserTableMap::COL_ROLE_ID, UserTableMap::COL_USER_IS_ACTIVE, UserTableMap::COL_USER_PIC, UserTableMap::COL_CREATED_AT, UserTableMap::COL_UPDATED_AT, ),
+        self::TYPE_FIELDNAME     => array('user_id', 'resource_id', 'user_name', 'user_surname', 'user_login', 'user_pass', 'user_pass_is_temp', 'remember_token', 'user_email', 'user_phone', 'user_address', 'role_id', 'user_is_active', 'user_pic', 'created_at', 'updated_at', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, )
     );
 
     /**
@@ -172,11 +177,11 @@ class UserTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('UserId' => 0, 'ResourceId' => 1, 'UseName' => 2, 'UserSurname' => 3, 'UserLogin' => 4, 'UserPass' => 5, 'UserPassIsTemp' => 6, 'UserEmail' => 7, 'UserPhone' => 8, 'UserAddress' => 9, 'RoleId' => 10, 'UserIsActive' => 11, 'UserPic' => 12, 'CreatedAt' => 13, 'UpdatedAt' => 14, ),
-        self::TYPE_CAMELNAME     => array('userId' => 0, 'resourceId' => 1, 'useName' => 2, 'userSurname' => 3, 'userLogin' => 4, 'userPass' => 5, 'userPassIsTemp' => 6, 'userEmail' => 7, 'userPhone' => 8, 'userAddress' => 9, 'roleId' => 10, 'userIsActive' => 11, 'userPic' => 12, 'createdAt' => 13, 'updatedAt' => 14, ),
-        self::TYPE_COLNAME       => array(UserTableMap::COL_USER_ID => 0, UserTableMap::COL_RESOURCE_ID => 1, UserTableMap::COL_USE_NAME => 2, UserTableMap::COL_USER_SURNAME => 3, UserTableMap::COL_USER_LOGIN => 4, UserTableMap::COL_USER_PASS => 5, UserTableMap::COL_USER_PASS_IS_TEMP => 6, UserTableMap::COL_USER_EMAIL => 7, UserTableMap::COL_USER_PHONE => 8, UserTableMap::COL_USER_ADDRESS => 9, UserTableMap::COL_ROLE_ID => 10, UserTableMap::COL_USER_IS_ACTIVE => 11, UserTableMap::COL_USER_PIC => 12, UserTableMap::COL_CREATED_AT => 13, UserTableMap::COL_UPDATED_AT => 14, ),
-        self::TYPE_FIELDNAME     => array('user_id' => 0, 'resource_id' => 1, 'use_name' => 2, 'user_surname' => 3, 'user_login' => 4, 'user_pass' => 5, 'user_pass_is_temp' => 6, 'user_email' => 7, 'user_phone' => 8, 'user_address' => 9, 'role_id' => 10, 'user_is_active' => 11, 'user_pic' => 12, 'created_at' => 13, 'updated_at' => 14, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, )
+        self::TYPE_PHPNAME       => array('UserId' => 0, 'ResourceId' => 1, 'UseName' => 2, 'UserSurname' => 3, 'UserLogin' => 4, 'UserPass' => 5, 'UserPassIsTemp' => 6, 'RememberToken' => 7, 'UserEmail' => 8, 'UserPhone' => 9, 'UserAddress' => 10, 'RoleId' => 11, 'UserIsActive' => 12, 'UserPic' => 13, 'CreatedAt' => 14, 'UpdatedAt' => 15, ),
+        self::TYPE_CAMELNAME     => array('userId' => 0, 'resourceId' => 1, 'useName' => 2, 'userSurname' => 3, 'userLogin' => 4, 'userPass' => 5, 'userPassIsTemp' => 6, 'rememberToken' => 7, 'userEmail' => 8, 'userPhone' => 9, 'userAddress' => 10, 'roleId' => 11, 'userIsActive' => 12, 'userPic' => 13, 'createdAt' => 14, 'updatedAt' => 15, ),
+        self::TYPE_COLNAME       => array(UserTableMap::COL_USER_ID => 0, UserTableMap::COL_RESOURCE_ID => 1, UserTableMap::COL_USER_NAME => 2, UserTableMap::COL_USER_SURNAME => 3, UserTableMap::COL_USER_LOGIN => 4, UserTableMap::COL_USER_PASS => 5, UserTableMap::COL_USER_PASS_IS_TEMP => 6, UserTableMap::COL_REMEMBER_TOKEN => 7, UserTableMap::COL_USER_EMAIL => 8, UserTableMap::COL_USER_PHONE => 9, UserTableMap::COL_USER_ADDRESS => 10, UserTableMap::COL_ROLE_ID => 11, UserTableMap::COL_USER_IS_ACTIVE => 12, UserTableMap::COL_USER_PIC => 13, UserTableMap::COL_CREATED_AT => 14, UserTableMap::COL_UPDATED_AT => 15, ),
+        self::TYPE_FIELDNAME     => array('user_id' => 0, 'resource_id' => 1, 'user_name' => 2, 'user_surname' => 3, 'user_login' => 4, 'user_pass' => 5, 'user_pass_is_temp' => 6, 'remember_token' => 7, 'user_email' => 8, 'user_phone' => 9, 'user_address' => 10, 'role_id' => 11, 'user_is_active' => 12, 'user_pic' => 13, 'created_at' => 14, 'updated_at' => 15, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, )
     );
 
     /**
@@ -198,11 +203,12 @@ class UserTableMap extends TableMap
         // columns
         $this->addPrimaryKey('user_id', 'UserId', 'INTEGER', true, 10, null);
         $this->addForeignKey('resource_id', 'ResourceId', 'INTEGER', 'resource', 'resource_id', true, 10, null);
-        $this->addColumn('use_name', 'UseName', 'VARCHAR', true, 60, null);
+        $this->addColumn('user_name', 'UseName', 'VARCHAR', true, 60, null);
         $this->addColumn('user_surname', 'UserSurname', 'VARCHAR', false, 60, null);
         $this->addColumn('user_login', 'UserLogin', 'VARCHAR', true, 60, null);
         $this->addColumn('user_pass', 'UserPass', 'VARCHAR', true, 60, null);
         $this->addColumn('user_pass_is_temp', 'UserPassIsTemp', 'VARCHAR', true, 45, null);
+        $this->addColumn('remember_token', 'RememberToken', 'VARCHAR', false, 60, null);
         $this->addColumn('user_email', 'UserEmail', 'VARCHAR', false, 100, null);
         $this->addColumn('user_phone', 'UserPhone', 'VARCHAR', false, 45, null);
         $this->addColumn('user_address', 'UserAddress', 'VARCHAR', false, 250, null);
@@ -246,6 +252,41 @@ class UserTableMap extends TableMap
     1 => ':user_id',
   ),
 ), null, 'CASCADE', 'Orders', false);
+        $this->addRelation('SocialView', '\\App\\Propel\\SocialView', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':user_id',
+    1 => ':user_id',
+  ),
+), null, 'CASCADE', 'SocialViews', false);
+        $this->addRelation('SocialLike', '\\App\\Propel\\SocialLike', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':user_id',
+    1 => ':user_id',
+  ),
+), null, 'CASCADE', 'SocialLikes', false);
+        $this->addRelation('SocialComment', '\\App\\Propel\\SocialComment', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':user_id',
+    1 => ':user_id',
+  ),
+), null, 'CASCADE', 'SocialComments', false);
+        $this->addRelation('SocialRecommendationRelatedByUserId', '\\App\\Propel\\SocialRecommendation', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':user_id',
+    1 => ':user_id',
+  ),
+), null, 'CASCADE', 'SocialRecommendationsRelatedByUserId', false);
+        $this->addRelation('SocialRecommendationRelatedBySocialRecommendationTo', '\\App\\Propel\\SocialRecommendation', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':social_recommendation_to',
+    1 => ':user_id',
+  ),
+), null, 'CASCADE', 'SocialRecommendationsRelatedBySocialRecommendationTo', false);
         $this->addRelation('UserPeriodicPlan', '\\App\\Propel\\UserPeriodicPlan', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
@@ -253,6 +294,13 @@ class UserTableMap extends TableMap
     1 => ':user_id',
   ),
 ), null, 'CASCADE', 'UserPeriodicPlans', false);
+        $this->addRelation('Wishlist', '\\App\\Propel\\Wishlist', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':user_id',
+    1 => ':user_id',
+  ),
+), null, 'CASCADE', 'Wishlists', false);
     } // buildRelations()
 
     /**
@@ -412,11 +460,12 @@ class UserTableMap extends TableMap
         if (null === $alias) {
             $criteria->addSelectColumn(UserTableMap::COL_USER_ID);
             $criteria->addSelectColumn(UserTableMap::COL_RESOURCE_ID);
-            $criteria->addSelectColumn(UserTableMap::COL_USE_NAME);
+            $criteria->addSelectColumn(UserTableMap::COL_USER_NAME);
             $criteria->addSelectColumn(UserTableMap::COL_USER_SURNAME);
             $criteria->addSelectColumn(UserTableMap::COL_USER_LOGIN);
             $criteria->addSelectColumn(UserTableMap::COL_USER_PASS);
             $criteria->addSelectColumn(UserTableMap::COL_USER_PASS_IS_TEMP);
+            $criteria->addSelectColumn(UserTableMap::COL_REMEMBER_TOKEN);
             $criteria->addSelectColumn(UserTableMap::COL_USER_EMAIL);
             $criteria->addSelectColumn(UserTableMap::COL_USER_PHONE);
             $criteria->addSelectColumn(UserTableMap::COL_USER_ADDRESS);
@@ -428,11 +477,12 @@ class UserTableMap extends TableMap
         } else {
             $criteria->addSelectColumn($alias . '.user_id');
             $criteria->addSelectColumn($alias . '.resource_id');
-            $criteria->addSelectColumn($alias . '.use_name');
+            $criteria->addSelectColumn($alias . '.user_name');
             $criteria->addSelectColumn($alias . '.user_surname');
             $criteria->addSelectColumn($alias . '.user_login');
             $criteria->addSelectColumn($alias . '.user_pass');
             $criteria->addSelectColumn($alias . '.user_pass_is_temp');
+            $criteria->addSelectColumn($alias . '.remember_token');
             $criteria->addSelectColumn($alias . '.user_email');
             $criteria->addSelectColumn($alias . '.user_phone');
             $criteria->addSelectColumn($alias . '.user_address');

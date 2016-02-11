@@ -1324,6 +1324,12 @@ abstract class Category implements ActiveRecordInterface
             $keys[8] => $this->getTreeRight(),
             $keys[9] => $this->getTreeLevel(),
             $keys_resource[1] => $this->getResourceTypeId(),
+            $keys_resource[2] => $this->getSocialViews(),
+            $keys_resource[3] => $this->getSocialLikes(),
+            $keys_resource[4] => $this->getSocialDislikes(),
+            $keys_resource[5] => $this->getSocialComments(),
+            $keys_resource[6] => $this->getSocialFavourites(),
+            $keys_resource[7] => $this->getSocialRecommendations(),
 
         );
         if ($result[$keys[5]] instanceof \DateTime) {
@@ -2054,6 +2060,31 @@ abstract class Category implements ActiveRecordInterface
         }
 
         return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Category is new, it will return
+     * an empty collection; or if this Category has previously
+     * been saved, it will retrieve related Products from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Category.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildProduct[] List of ChildProduct objects
+     */
+    public function getProductsJoinProvider(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildProductQuery::create(null, $criteria);
+        $query->joinWith('Provider', $joinBehavior);
+
+        return $this->getProducts($query, $con);
     }
 
 

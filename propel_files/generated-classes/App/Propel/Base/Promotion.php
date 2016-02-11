@@ -102,6 +102,13 @@ abstract class Promotion implements ActiveRecordInterface
     protected $promotion_gift;
 
     /**
+     * The value for the promotion_description field.
+     *
+     * @var        string
+     */
+    protected $promotion_description;
+
+    /**
      * The value for the promotion_starting_point field.
      *
      * @var        int
@@ -437,6 +444,16 @@ abstract class Promotion implements ActiveRecordInterface
     }
 
     /**
+     * Get the [promotion_description] column value.
+     *
+     * @return string
+     */
+    public function getPromotionDescription()
+    {
+        return $this->promotion_description;
+    }
+
+    /**
      * Get the [promotion_starting_point] column value.
      *
      * @return int
@@ -655,6 +672,26 @@ abstract class Promotion implements ActiveRecordInterface
     } // setPromotionGift()
 
     /**
+     * Set the value of [promotion_description] column.
+     *
+     * @param string $v new value
+     * @return $this|\App\Propel\Promotion The current object (for fluent API support)
+     */
+    public function setPromotionDescription($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->promotion_description !== $v) {
+            $this->promotion_description = $v;
+            $this->modifiedColumns[PromotionTableMap::COL_PROMOTION_DESCRIPTION] = true;
+        }
+
+        return $this;
+    } // setPromotionDescription()
+
+    /**
      * Set the value of [promotion_starting_point] column.
      *
      * @param int $v new value
@@ -833,31 +870,34 @@ abstract class Promotion implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : PromotionTableMap::translateFieldName('PromotionGift', TableMap::TYPE_PHPNAME, $indexType)];
             $this->promotion_gift = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : PromotionTableMap::translateFieldName('PromotionStartingPoint', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : PromotionTableMap::translateFieldName('PromotionDescription', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->promotion_description = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : PromotionTableMap::translateFieldName('PromotionStartingPoint', TableMap::TYPE_PHPNAME, $indexType)];
             $this->promotion_starting_point = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : PromotionTableMap::translateFieldName('PromotionStartingDate', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : PromotionTableMap::translateFieldName('PromotionStartingDate', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00') {
                 $col = null;
             }
             $this->promotion_starting_date = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : PromotionTableMap::translateFieldName('PromotionEndingDate', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : PromotionTableMap::translateFieldName('PromotionEndingDate', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00') {
                 $col = null;
             }
             $this->promotion_ending_date = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : PromotionTableMap::translateFieldName('PromotionIsActive', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : PromotionTableMap::translateFieldName('PromotionIsActive', TableMap::TYPE_PHPNAME, $indexType)];
             $this->promotion_is_active = (null !== $col) ? (boolean) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : PromotionTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : PromotionTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : PromotionTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : PromotionTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -870,7 +910,7 @@ abstract class Promotion implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 11; // 11 = PromotionTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 12; // 12 = PromotionTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\App\\Propel\\Promotion'), 0, $e);
@@ -1121,6 +1161,9 @@ abstract class Promotion implements ActiveRecordInterface
         if ($this->isColumnModified(PromotionTableMap::COL_PROMOTION_GIFT)) {
             $modifiedColumns[':p' . $index++]  = 'promotion_gift';
         }
+        if ($this->isColumnModified(PromotionTableMap::COL_PROMOTION_DESCRIPTION)) {
+            $modifiedColumns[':p' . $index++]  = 'promotion_description';
+        }
         if ($this->isColumnModified(PromotionTableMap::COL_PROMOTION_STARTING_POINT)) {
             $modifiedColumns[':p' . $index++]  = 'promotion_starting_point';
         }
@@ -1164,6 +1207,9 @@ abstract class Promotion implements ActiveRecordInterface
                         break;
                     case 'promotion_gift':
                         $stmt->bindValue($identifier, $this->promotion_gift, PDO::PARAM_INT);
+                        break;
+                    case 'promotion_description':
+                        $stmt->bindValue($identifier, $this->promotion_description, PDO::PARAM_STR);
                         break;
                     case 'promotion_starting_point':
                         $stmt->bindValue($identifier, $this->promotion_starting_point, PDO::PARAM_INT);
@@ -1261,21 +1307,24 @@ abstract class Promotion implements ActiveRecordInterface
                 return $this->getPromotionGift();
                 break;
             case 5:
-                return $this->getPromotionStartingPoint();
+                return $this->getPromotionDescription();
                 break;
             case 6:
-                return $this->getPromotionStartingDate();
+                return $this->getPromotionStartingPoint();
                 break;
             case 7:
-                return $this->getPromotionEndingDate();
+                return $this->getPromotionStartingDate();
                 break;
             case 8:
-                return $this->getPromotionIsActive();
+                return $this->getPromotionEndingDate();
                 break;
             case 9:
-                return $this->getCreatedAt();
+                return $this->getPromotionIsActive();
                 break;
             case 10:
+                return $this->getCreatedAt();
+                break;
+            case 11:
                 return $this->getUpdatedAt();
                 break;
             default:
@@ -1314,29 +1363,36 @@ abstract class Promotion implements ActiveRecordInterface
             $keys[2] => $this->getPromotionTypeId(),
             $keys[3] => $this->getPromotionValue(),
             $keys[4] => $this->getPromotionGift(),
-            $keys[5] => $this->getPromotionStartingPoint(),
-            $keys[6] => $this->getPromotionStartingDate(),
-            $keys[7] => $this->getPromotionEndingDate(),
-            $keys[8] => $this->getPromotionIsActive(),
-            $keys[9] => $this->getCreatedAt(),
-            $keys[10] => $this->getUpdatedAt(),
+            $keys[5] => $this->getPromotionDescription(),
+            $keys[6] => $this->getPromotionStartingPoint(),
+            $keys[7] => $this->getPromotionStartingDate(),
+            $keys[8] => $this->getPromotionEndingDate(),
+            $keys[9] => $this->getPromotionIsActive(),
+            $keys[10] => $this->getCreatedAt(),
+            $keys[11] => $this->getUpdatedAt(),
             $keys_resource[1] => $this->getResourceTypeId(),
+            $keys_resource[2] => $this->getSocialViews(),
+            $keys_resource[3] => $this->getSocialLikes(),
+            $keys_resource[4] => $this->getSocialDislikes(),
+            $keys_resource[5] => $this->getSocialComments(),
+            $keys_resource[6] => $this->getSocialFavourites(),
+            $keys_resource[7] => $this->getSocialRecommendations(),
 
         );
-        if ($result[$keys[6]] instanceof \DateTime) {
-            $result[$keys[6]] = $result[$keys[6]]->format('c');
-        }
-
         if ($result[$keys[7]] instanceof \DateTime) {
             $result[$keys[7]] = $result[$keys[7]]->format('c');
         }
 
-        if ($result[$keys[9]] instanceof \DateTime) {
-            $result[$keys[9]] = $result[$keys[9]]->format('c');
+        if ($result[$keys[8]] instanceof \DateTime) {
+            $result[$keys[8]] = $result[$keys[8]]->format('c');
         }
 
         if ($result[$keys[10]] instanceof \DateTime) {
             $result[$keys[10]] = $result[$keys[10]]->format('c');
+        }
+
+        if ($result[$keys[11]] instanceof \DateTime) {
+            $result[$keys[11]] = $result[$keys[11]]->format('c');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1425,21 +1481,24 @@ abstract class Promotion implements ActiveRecordInterface
                 $this->setPromotionGift($value);
                 break;
             case 5:
-                $this->setPromotionStartingPoint($value);
+                $this->setPromotionDescription($value);
                 break;
             case 6:
-                $this->setPromotionStartingDate($value);
+                $this->setPromotionStartingPoint($value);
                 break;
             case 7:
-                $this->setPromotionEndingDate($value);
+                $this->setPromotionStartingDate($value);
                 break;
             case 8:
-                $this->setPromotionIsActive($value);
+                $this->setPromotionEndingDate($value);
                 break;
             case 9:
-                $this->setCreatedAt($value);
+                $this->setPromotionIsActive($value);
                 break;
             case 10:
+                $this->setCreatedAt($value);
+                break;
+            case 11:
                 $this->setUpdatedAt($value);
                 break;
         } // switch()
@@ -1484,22 +1543,25 @@ abstract class Promotion implements ActiveRecordInterface
             $this->setPromotionGift($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setPromotionStartingPoint($arr[$keys[5]]);
+            $this->setPromotionDescription($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setPromotionStartingDate($arr[$keys[6]]);
+            $this->setPromotionStartingPoint($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setPromotionEndingDate($arr[$keys[7]]);
+            $this->setPromotionStartingDate($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setPromotionIsActive($arr[$keys[8]]);
+            $this->setPromotionEndingDate($arr[$keys[8]]);
         }
         if (array_key_exists($keys[9], $arr)) {
-            $this->setCreatedAt($arr[$keys[9]]);
+            $this->setPromotionIsActive($arr[$keys[9]]);
         }
         if (array_key_exists($keys[10], $arr)) {
-            $this->setUpdatedAt($arr[$keys[10]]);
+            $this->setCreatedAt($arr[$keys[10]]);
+        }
+        if (array_key_exists($keys[11], $arr)) {
+            $this->setUpdatedAt($arr[$keys[11]]);
         }
     }
 
@@ -1556,6 +1618,9 @@ abstract class Promotion implements ActiveRecordInterface
         }
         if ($this->isColumnModified(PromotionTableMap::COL_PROMOTION_GIFT)) {
             $criteria->add(PromotionTableMap::COL_PROMOTION_GIFT, $this->promotion_gift);
+        }
+        if ($this->isColumnModified(PromotionTableMap::COL_PROMOTION_DESCRIPTION)) {
+            $criteria->add(PromotionTableMap::COL_PROMOTION_DESCRIPTION, $this->promotion_description);
         }
         if ($this->isColumnModified(PromotionTableMap::COL_PROMOTION_STARTING_POINT)) {
             $criteria->add(PromotionTableMap::COL_PROMOTION_STARTING_POINT, $this->promotion_starting_point);
@@ -1665,6 +1730,7 @@ abstract class Promotion implements ActiveRecordInterface
         $copyObj->setPromotionTypeId($this->getPromotionTypeId());
         $copyObj->setPromotionValue($this->getPromotionValue());
         $copyObj->setPromotionGift($this->getPromotionGift());
+        $copyObj->setPromotionDescription($this->getPromotionDescription());
         $copyObj->setPromotionStartingPoint($this->getPromotionStartingPoint());
         $copyObj->setPromotionStartingDate($this->getPromotionStartingDate());
         $copyObj->setPromotionEndingDate($this->getPromotionEndingDate());
@@ -1819,6 +1885,7 @@ abstract class Promotion implements ActiveRecordInterface
         $this->promotion_type_id = null;
         $this->promotion_value = null;
         $this->promotion_gift = null;
+        $this->promotion_description = null;
         $this->promotion_starting_point = null;
         $this->promotion_starting_date = null;
         $this->promotion_ending_date = null;

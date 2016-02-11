@@ -12,13 +12,24 @@ use App\Propel\FileQuery as ChildFileQuery;
 use App\Propel\OrderProduct as ChildOrderProduct;
 use App\Propel\OrderProductQuery as ChildOrderProductQuery;
 use App\Propel\Product as ChildProduct;
+use App\Propel\ProductHighlighted as ChildProductHighlighted;
+use App\Propel\ProductHighlightedQuery as ChildProductHighlightedQuery;
 use App\Propel\ProductQuery as ChildProductQuery;
+use App\Propel\ProductVariationType as ChildProductVariationType;
+use App\Propel\ProductVariationTypeQuery as ChildProductVariationTypeQuery;
+use App\Propel\Provider as ChildProvider;
+use App\Propel\ProviderQuery as ChildProviderQuery;
 use App\Propel\Resource as ChildResource;
 use App\Propel\ResourceQuery as ChildResourceQuery;
 use App\Propel\Unit as ChildUnit;
 use App\Propel\UnitQuery as ChildUnitQuery;
+use App\Propel\WishlistProduct as ChildWishlistProduct;
+use App\Propel\WishlistProductQuery as ChildWishlistProductQuery;
 use App\Propel\Map\OrderProductTableMap;
+use App\Propel\Map\ProductHighlightedTableMap;
 use App\Propel\Map\ProductTableMap;
+use App\Propel\Map\ProductVariationTypeTableMap;
+use App\Propel\Map\WishlistProductTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -110,6 +121,13 @@ abstract class Product implements ActiveRecordInterface
     protected $category_id;
 
     /**
+     * The value for the provider_id field.
+     *
+     * @var        int
+     */
+    protected $provider_id;
+
+    /**
      * The value for the unit_id field.
      *
      * @var        int
@@ -164,6 +182,11 @@ abstract class Product implements ActiveRecordInterface
     protected $aCategory;
 
     /**
+     * @var        ChildProvider
+     */
+    protected $aProvider;
+
+    /**
      * @var        ChildUnit
      */
     protected $aUnit;
@@ -185,6 +208,24 @@ abstract class Product implements ActiveRecordInterface
     protected $collOrderProductsPartial;
 
     /**
+     * @var        ObjectCollection|ChildProductHighlighted[] Collection to store aggregation of ChildProductHighlighted objects.
+     */
+    protected $collProductHighlighteds;
+    protected $collProductHighlightedsPartial;
+
+    /**
+     * @var        ObjectCollection|ChildProductVariationType[] Collection to store aggregation of ChildProductVariationType objects.
+     */
+    protected $collProductVariationTypes;
+    protected $collProductVariationTypesPartial;
+
+    /**
+     * @var        ObjectCollection|ChildWishlistProduct[] Collection to store aggregation of ChildWishlistProduct objects.
+     */
+    protected $collWishlistProducts;
+    protected $collWishlistProductsPartial;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
@@ -197,6 +238,24 @@ abstract class Product implements ActiveRecordInterface
      * @var ObjectCollection|ChildOrderProduct[]
      */
     protected $orderProductsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildProductHighlighted[]
+     */
+    protected $productHighlightedsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildProductVariationType[]
+     */
+    protected $productVariationTypesScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildWishlistProduct[]
+     */
+    protected $wishlistProductsScheduledForDeletion = null;
 
     /**
      * Initializes internal state of App\Propel\Base\Product object.
@@ -474,6 +533,16 @@ abstract class Product implements ActiveRecordInterface
     }
 
     /**
+     * Get the [provider_id] column value.
+     *
+     * @return int
+     */
+    public function getProviderId()
+    {
+        return $this->provider_id;
+    }
+
+    /**
      * Get the [unit_id] column value.
      *
      * @return int
@@ -670,6 +739,30 @@ abstract class Product implements ActiveRecordInterface
 
         return $this;
     } // setCategoryId()
+
+    /**
+     * Set the value of [provider_id] column.
+     *
+     * @param int $v new value
+     * @return $this|\App\Propel\Product The current object (for fluent API support)
+     */
+    public function setProviderId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->provider_id !== $v) {
+            $this->provider_id = $v;
+            $this->modifiedColumns[ProductTableMap::COL_PROVIDER_ID] = true;
+        }
+
+        if ($this->aProvider !== null && $this->aProvider->getProviderId() !== $v) {
+            $this->aProvider = null;
+        }
+
+        return $this;
+    } // setProviderId()
 
     /**
      * Set the value of [unit_id] column.
@@ -870,28 +963,31 @@ abstract class Product implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : ProductTableMap::translateFieldName('CategoryId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->category_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : ProductTableMap::translateFieldName('UnitId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : ProductTableMap::translateFieldName('ProviderId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->provider_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : ProductTableMap::translateFieldName('UnitId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->unit_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : ProductTableMap::translateFieldName('ProductRange', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : ProductTableMap::translateFieldName('ProductRange', TableMap::TYPE_PHPNAME, $indexType)];
             $this->product_range = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : ProductTableMap::translateFieldName('ProductPrice', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : ProductTableMap::translateFieldName('ProductPrice', TableMap::TYPE_PHPNAME, $indexType)];
             $this->product_price = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : ProductTableMap::translateFieldName('ProductIsActive', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : ProductTableMap::translateFieldName('ProductIsActive', TableMap::TYPE_PHPNAME, $indexType)];
             $this->product_is_active = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : ProductTableMap::translateFieldName('ProductPic', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : ProductTableMap::translateFieldName('ProductPic', TableMap::TYPE_PHPNAME, $indexType)];
             $this->product_pic = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : ProductTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : ProductTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : ProductTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : ProductTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -904,7 +1000,7 @@ abstract class Product implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 12; // 12 = ProductTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 13; // 13 = ProductTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\App\\Propel\\Product'), 0, $e);
@@ -931,6 +1027,9 @@ abstract class Product implements ActiveRecordInterface
         }
         if ($this->aCategory !== null && $this->category_id !== $this->aCategory->getCategoryId()) {
             $this->aCategory = null;
+        }
+        if ($this->aProvider !== null && $this->provider_id !== $this->aProvider->getProviderId()) {
+            $this->aProvider = null;
         }
         if ($this->aUnit !== null && $this->unit_id !== $this->aUnit->getUnitId()) {
             $this->aUnit = null;
@@ -978,10 +1077,17 @@ abstract class Product implements ActiveRecordInterface
         if ($deep) {  // also de-associate any related objects?
 
             $this->aCategory = null;
+            $this->aProvider = null;
             $this->aUnit = null;
             $this->aFile = null;
             $this->aResource = null;
             $this->collOrderProducts = null;
+
+            $this->collProductHighlighteds = null;
+
+            $this->collProductVariationTypes = null;
+
+            $this->collWishlistProducts = null;
 
         } // if (deep)
     }
@@ -1106,6 +1212,13 @@ abstract class Product implements ActiveRecordInterface
                 $this->setCategory($this->aCategory);
             }
 
+            if ($this->aProvider !== null) {
+                if ($this->aProvider->isModified() || $this->aProvider->isNew()) {
+                    $affectedRows += $this->aProvider->save($con);
+                }
+                $this->setProvider($this->aProvider);
+            }
+
             if ($this->aUnit !== null) {
                 if ($this->aUnit->isModified() || $this->aUnit->isNew()) {
                     $affectedRows += $this->aUnit->save($con);
@@ -1155,6 +1268,57 @@ abstract class Product implements ActiveRecordInterface
                 }
             }
 
+            if ($this->productHighlightedsScheduledForDeletion !== null) {
+                if (!$this->productHighlightedsScheduledForDeletion->isEmpty()) {
+                    \App\Propel\ProductHighlightedQuery::create()
+                        ->filterByPrimaryKeys($this->productHighlightedsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->productHighlightedsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collProductHighlighteds !== null) {
+                foreach ($this->collProductHighlighteds as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->productVariationTypesScheduledForDeletion !== null) {
+                if (!$this->productVariationTypesScheduledForDeletion->isEmpty()) {
+                    \App\Propel\ProductVariationTypeQuery::create()
+                        ->filterByPrimaryKeys($this->productVariationTypesScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->productVariationTypesScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collProductVariationTypes !== null) {
+                foreach ($this->collProductVariationTypes as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->wishlistProductsScheduledForDeletion !== null) {
+                if (!$this->wishlistProductsScheduledForDeletion->isEmpty()) {
+                    \App\Propel\WishlistProductQuery::create()
+                        ->filterByPrimaryKeys($this->wishlistProductsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->wishlistProductsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collWishlistProducts !== null) {
+                foreach ($this->collWishlistProducts as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
             $this->alreadyInSave = false;
 
         }
@@ -1195,6 +1359,9 @@ abstract class Product implements ActiveRecordInterface
         }
         if ($this->isColumnModified(ProductTableMap::COL_CATEGORY_ID)) {
             $modifiedColumns[':p' . $index++]  = 'category_id';
+        }
+        if ($this->isColumnModified(ProductTableMap::COL_PROVIDER_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'provider_id';
         }
         if ($this->isColumnModified(ProductTableMap::COL_UNIT_ID)) {
             $modifiedColumns[':p' . $index++]  = 'unit_id';
@@ -1242,6 +1409,9 @@ abstract class Product implements ActiveRecordInterface
                         break;
                     case 'category_id':
                         $stmt->bindValue($identifier, $this->category_id, PDO::PARAM_INT);
+                        break;
+                    case 'provider_id':
+                        $stmt->bindValue($identifier, $this->provider_id, PDO::PARAM_INT);
                         break;
                     case 'unit_id':
                         $stmt->bindValue($identifier, $this->unit_id, PDO::PARAM_INT);
@@ -1342,24 +1512,27 @@ abstract class Product implements ActiveRecordInterface
                 return $this->getCategoryId();
                 break;
             case 5:
-                return $this->getUnitId();
+                return $this->getProviderId();
                 break;
             case 6:
-                return $this->getProductRange();
+                return $this->getUnitId();
                 break;
             case 7:
-                return $this->getProductPrice();
+                return $this->getProductRange();
                 break;
             case 8:
-                return $this->getProductIsActive();
+                return $this->getProductPrice();
                 break;
             case 9:
-                return $this->getProductPic();
+                return $this->getProductIsActive();
                 break;
             case 10:
-                return $this->getCreatedAt();
+                return $this->getProductPic();
                 break;
             case 11:
+                return $this->getCreatedAt();
+                break;
+            case 12:
                 return $this->getUpdatedAt();
                 break;
             default:
@@ -1398,22 +1571,29 @@ abstract class Product implements ActiveRecordInterface
             $keys[2] => $this->getProductName(),
             $keys[3] => $this->getProductDescription(),
             $keys[4] => $this->getCategoryId(),
-            $keys[5] => $this->getUnitId(),
-            $keys[6] => $this->getProductRange(),
-            $keys[7] => $this->getProductPrice(),
-            $keys[8] => $this->getProductIsActive(),
-            $keys[9] => $this->getProductPic(),
-            $keys[10] => $this->getCreatedAt(),
-            $keys[11] => $this->getUpdatedAt(),
+            $keys[5] => $this->getProviderId(),
+            $keys[6] => $this->getUnitId(),
+            $keys[7] => $this->getProductRange(),
+            $keys[8] => $this->getProductPrice(),
+            $keys[9] => $this->getProductIsActive(),
+            $keys[10] => $this->getProductPic(),
+            $keys[11] => $this->getCreatedAt(),
+            $keys[12] => $this->getUpdatedAt(),
             $keys_resource[1] => $this->getResourceTypeId(),
+            $keys_resource[2] => $this->getSocialViews(),
+            $keys_resource[3] => $this->getSocialLikes(),
+            $keys_resource[4] => $this->getSocialDislikes(),
+            $keys_resource[5] => $this->getSocialComments(),
+            $keys_resource[6] => $this->getSocialFavourites(),
+            $keys_resource[7] => $this->getSocialRecommendations(),
 
         );
-        if ($result[$keys[10]] instanceof \DateTime) {
-            $result[$keys[10]] = $result[$keys[10]]->format('c');
-        }
-
         if ($result[$keys[11]] instanceof \DateTime) {
             $result[$keys[11]] = $result[$keys[11]]->format('c');
+        }
+
+        if ($result[$keys[12]] instanceof \DateTime) {
+            $result[$keys[12]] = $result[$keys[12]]->format('c');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1436,6 +1616,21 @@ abstract class Product implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->aCategory->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aProvider) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'provider';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'provider';
+                        break;
+                    default:
+                        $key = 'Provider';
+                }
+
+                $result[$key] = $this->aProvider->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->aUnit) {
 
@@ -1497,6 +1692,51 @@ abstract class Product implements ActiveRecordInterface
 
                 $result[$key] = $this->collOrderProducts->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
+            if (null !== $this->collProductHighlighteds) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'productHighlighteds';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'product_highlighteds';
+                        break;
+                    default:
+                        $key = 'ProductHighlighteds';
+                }
+
+                $result[$key] = $this->collProductHighlighteds->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collProductVariationTypes) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'productVariationTypes';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'product_variation_types';
+                        break;
+                    default:
+                        $key = 'ProductVariationTypes';
+                }
+
+                $result[$key] = $this->collProductVariationTypes->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collWishlistProducts) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'wishlistProducts';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'wishlist_products';
+                        break;
+                    default:
+                        $key = 'WishlistProducts';
+                }
+
+                $result[$key] = $this->collWishlistProducts->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
         }
 
         return $result;
@@ -1547,24 +1787,27 @@ abstract class Product implements ActiveRecordInterface
                 $this->setCategoryId($value);
                 break;
             case 5:
-                $this->setUnitId($value);
+                $this->setProviderId($value);
                 break;
             case 6:
-                $this->setProductRange($value);
+                $this->setUnitId($value);
                 break;
             case 7:
-                $this->setProductPrice($value);
+                $this->setProductRange($value);
                 break;
             case 8:
-                $this->setProductIsActive($value);
+                $this->setProductPrice($value);
                 break;
             case 9:
-                $this->setProductPic($value);
+                $this->setProductIsActive($value);
                 break;
             case 10:
-                $this->setCreatedAt($value);
+                $this->setProductPic($value);
                 break;
             case 11:
+                $this->setCreatedAt($value);
+                break;
+            case 12:
                 $this->setUpdatedAt($value);
                 break;
         } // switch()
@@ -1609,25 +1852,28 @@ abstract class Product implements ActiveRecordInterface
             $this->setCategoryId($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setUnitId($arr[$keys[5]]);
+            $this->setProviderId($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setProductRange($arr[$keys[6]]);
+            $this->setUnitId($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setProductPrice($arr[$keys[7]]);
+            $this->setProductRange($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setProductIsActive($arr[$keys[8]]);
+            $this->setProductPrice($arr[$keys[8]]);
         }
         if (array_key_exists($keys[9], $arr)) {
-            $this->setProductPic($arr[$keys[9]]);
+            $this->setProductIsActive($arr[$keys[9]]);
         }
         if (array_key_exists($keys[10], $arr)) {
-            $this->setCreatedAt($arr[$keys[10]]);
+            $this->setProductPic($arr[$keys[10]]);
         }
         if (array_key_exists($keys[11], $arr)) {
-            $this->setUpdatedAt($arr[$keys[11]]);
+            $this->setCreatedAt($arr[$keys[11]]);
+        }
+        if (array_key_exists($keys[12], $arr)) {
+            $this->setUpdatedAt($arr[$keys[12]]);
         }
     }
 
@@ -1684,6 +1930,9 @@ abstract class Product implements ActiveRecordInterface
         }
         if ($this->isColumnModified(ProductTableMap::COL_CATEGORY_ID)) {
             $criteria->add(ProductTableMap::COL_CATEGORY_ID, $this->category_id);
+        }
+        if ($this->isColumnModified(ProductTableMap::COL_PROVIDER_ID)) {
+            $criteria->add(ProductTableMap::COL_PROVIDER_ID, $this->provider_id);
         }
         if ($this->isColumnModified(ProductTableMap::COL_UNIT_ID)) {
             $criteria->add(ProductTableMap::COL_UNIT_ID, $this->unit_id);
@@ -1796,6 +2045,7 @@ abstract class Product implements ActiveRecordInterface
         $copyObj->setProductName($this->getProductName());
         $copyObj->setProductDescription($this->getProductDescription());
         $copyObj->setCategoryId($this->getCategoryId());
+        $copyObj->setProviderId($this->getProviderId());
         $copyObj->setUnitId($this->getUnitId());
         $copyObj->setProductRange($this->getProductRange());
         $copyObj->setProductPrice($this->getProductPrice());
@@ -1812,6 +2062,24 @@ abstract class Product implements ActiveRecordInterface
             foreach ($this->getOrderProducts() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addOrderProduct($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getProductHighlighteds() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addProductHighlighted($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getProductVariationTypes() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addProductVariationType($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getWishlistProducts() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addWishlistProduct($relObj->copy($deepCopy));
                 }
             }
 
@@ -1894,6 +2162,57 @@ abstract class Product implements ActiveRecordInterface
         }
 
         return $this->aCategory;
+    }
+
+    /**
+     * Declares an association between this object and a ChildProvider object.
+     *
+     * @param  ChildProvider $v
+     * @return $this|\App\Propel\Product The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setProvider(ChildProvider $v = null)
+    {
+        if ($v === null) {
+            $this->setProviderId(NULL);
+        } else {
+            $this->setProviderId($v->getProviderId());
+        }
+
+        $this->aProvider = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildProvider object, it will not be re-added.
+        if ($v !== null) {
+            $v->addProduct($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildProvider object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildProvider The associated ChildProvider object.
+     * @throws PropelException
+     */
+    public function getProvider(ConnectionInterface $con = null)
+    {
+        if ($this->aProvider === null && ($this->provider_id !== null)) {
+            $this->aProvider = ChildProviderQuery::create()->findPk($this->provider_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aProvider->addProducts($this);
+             */
+        }
+
+        return $this->aProvider;
     }
 
     /**
@@ -2062,6 +2381,15 @@ abstract class Product implements ActiveRecordInterface
     {
         if ('OrderProduct' == $relationName) {
             return $this->initOrderProducts();
+        }
+        if ('ProductHighlighted' == $relationName) {
+            return $this->initProductHighlighteds();
+        }
+        if ('ProductVariationType' == $relationName) {
+            return $this->initProductVariationTypes();
+        }
+        if ('WishlistProduct' == $relationName) {
+            return $this->initWishlistProducts();
         }
     }
 
@@ -2315,6 +2643,781 @@ abstract class Product implements ActiveRecordInterface
         return $this->getOrderProducts($query, $con);
     }
 
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Product is new, it will return
+     * an empty collection; or if this Product has previously
+     * been saved, it will retrieve related OrderProducts from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Product.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildOrderProduct[] List of ChildOrderProduct objects
+     */
+    public function getOrderProductsJoinProductVariation(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildOrderProductQuery::create(null, $criteria);
+        $query->joinWith('ProductVariation', $joinBehavior);
+
+        return $this->getOrderProducts($query, $con);
+    }
+
+    /**
+     * Clears out the collProductHighlighteds collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addProductHighlighteds()
+     */
+    public function clearProductHighlighteds()
+    {
+        $this->collProductHighlighteds = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collProductHighlighteds collection loaded partially.
+     */
+    public function resetPartialProductHighlighteds($v = true)
+    {
+        $this->collProductHighlightedsPartial = $v;
+    }
+
+    /**
+     * Initializes the collProductHighlighteds collection.
+     *
+     * By default this just sets the collProductHighlighteds collection to an empty array (like clearcollProductHighlighteds());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initProductHighlighteds($overrideExisting = true)
+    {
+        if (null !== $this->collProductHighlighteds && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = ProductHighlightedTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collProductHighlighteds = new $collectionClassName;
+        $this->collProductHighlighteds->setModel('\App\Propel\ProductHighlighted');
+    }
+
+    /**
+     * Gets an array of ChildProductHighlighted objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildProduct is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildProductHighlighted[] List of ChildProductHighlighted objects
+     * @throws PropelException
+     */
+    public function getProductHighlighteds(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collProductHighlightedsPartial && !$this->isNew();
+        if (null === $this->collProductHighlighteds || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collProductHighlighteds) {
+                // return empty collection
+                $this->initProductHighlighteds();
+            } else {
+                $collProductHighlighteds = ChildProductHighlightedQuery::create(null, $criteria)
+                    ->filterByProduct($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collProductHighlightedsPartial && count($collProductHighlighteds)) {
+                        $this->initProductHighlighteds(false);
+
+                        foreach ($collProductHighlighteds as $obj) {
+                            if (false == $this->collProductHighlighteds->contains($obj)) {
+                                $this->collProductHighlighteds->append($obj);
+                            }
+                        }
+
+                        $this->collProductHighlightedsPartial = true;
+                    }
+
+                    return $collProductHighlighteds;
+                }
+
+                if ($partial && $this->collProductHighlighteds) {
+                    foreach ($this->collProductHighlighteds as $obj) {
+                        if ($obj->isNew()) {
+                            $collProductHighlighteds[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collProductHighlighteds = $collProductHighlighteds;
+                $this->collProductHighlightedsPartial = false;
+            }
+        }
+
+        return $this->collProductHighlighteds;
+    }
+
+    /**
+     * Sets a collection of ChildProductHighlighted objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $productHighlighteds A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildProduct The current object (for fluent API support)
+     */
+    public function setProductHighlighteds(Collection $productHighlighteds, ConnectionInterface $con = null)
+    {
+        /** @var ChildProductHighlighted[] $productHighlightedsToDelete */
+        $productHighlightedsToDelete = $this->getProductHighlighteds(new Criteria(), $con)->diff($productHighlighteds);
+
+
+        $this->productHighlightedsScheduledForDeletion = $productHighlightedsToDelete;
+
+        foreach ($productHighlightedsToDelete as $productHighlightedRemoved) {
+            $productHighlightedRemoved->setProduct(null);
+        }
+
+        $this->collProductHighlighteds = null;
+        foreach ($productHighlighteds as $productHighlighted) {
+            $this->addProductHighlighted($productHighlighted);
+        }
+
+        $this->collProductHighlighteds = $productHighlighteds;
+        $this->collProductHighlightedsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related ProductHighlighted objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related ProductHighlighted objects.
+     * @throws PropelException
+     */
+    public function countProductHighlighteds(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collProductHighlightedsPartial && !$this->isNew();
+        if (null === $this->collProductHighlighteds || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collProductHighlighteds) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getProductHighlighteds());
+            }
+
+            $query = ChildProductHighlightedQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByProduct($this)
+                ->count($con);
+        }
+
+        return count($this->collProductHighlighteds);
+    }
+
+    /**
+     * Method called to associate a ChildProductHighlighted object to this object
+     * through the ChildProductHighlighted foreign key attribute.
+     *
+     * @param  ChildProductHighlighted $l ChildProductHighlighted
+     * @return $this|\App\Propel\Product The current object (for fluent API support)
+     */
+    public function addProductHighlighted(ChildProductHighlighted $l)
+    {
+        if ($this->collProductHighlighteds === null) {
+            $this->initProductHighlighteds();
+            $this->collProductHighlightedsPartial = true;
+        }
+
+        if (!$this->collProductHighlighteds->contains($l)) {
+            $this->doAddProductHighlighted($l);
+
+            if ($this->productHighlightedsScheduledForDeletion and $this->productHighlightedsScheduledForDeletion->contains($l)) {
+                $this->productHighlightedsScheduledForDeletion->remove($this->productHighlightedsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildProductHighlighted $productHighlighted The ChildProductHighlighted object to add.
+     */
+    protected function doAddProductHighlighted(ChildProductHighlighted $productHighlighted)
+    {
+        $this->collProductHighlighteds[]= $productHighlighted;
+        $productHighlighted->setProduct($this);
+    }
+
+    /**
+     * @param  ChildProductHighlighted $productHighlighted The ChildProductHighlighted object to remove.
+     * @return $this|ChildProduct The current object (for fluent API support)
+     */
+    public function removeProductHighlighted(ChildProductHighlighted $productHighlighted)
+    {
+        if ($this->getProductHighlighteds()->contains($productHighlighted)) {
+            $pos = $this->collProductHighlighteds->search($productHighlighted);
+            $this->collProductHighlighteds->remove($pos);
+            if (null === $this->productHighlightedsScheduledForDeletion) {
+                $this->productHighlightedsScheduledForDeletion = clone $this->collProductHighlighteds;
+                $this->productHighlightedsScheduledForDeletion->clear();
+            }
+            $this->productHighlightedsScheduledForDeletion[]= clone $productHighlighted;
+            $productHighlighted->setProduct(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Product is new, it will return
+     * an empty collection; or if this Product has previously
+     * been saved, it will retrieve related ProductHighlighteds from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Product.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildProductHighlighted[] List of ChildProductHighlighted objects
+     */
+    public function getProductHighlightedsJoinResource(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildProductHighlightedQuery::create(null, $criteria);
+        $query->joinWith('Resource', $joinBehavior);
+
+        return $this->getProductHighlighteds($query, $con);
+    }
+
+    /**
+     * Clears out the collProductVariationTypes collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addProductVariationTypes()
+     */
+    public function clearProductVariationTypes()
+    {
+        $this->collProductVariationTypes = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collProductVariationTypes collection loaded partially.
+     */
+    public function resetPartialProductVariationTypes($v = true)
+    {
+        $this->collProductVariationTypesPartial = $v;
+    }
+
+    /**
+     * Initializes the collProductVariationTypes collection.
+     *
+     * By default this just sets the collProductVariationTypes collection to an empty array (like clearcollProductVariationTypes());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initProductVariationTypes($overrideExisting = true)
+    {
+        if (null !== $this->collProductVariationTypes && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = ProductVariationTypeTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collProductVariationTypes = new $collectionClassName;
+        $this->collProductVariationTypes->setModel('\App\Propel\ProductVariationType');
+    }
+
+    /**
+     * Gets an array of ChildProductVariationType objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildProduct is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildProductVariationType[] List of ChildProductVariationType objects
+     * @throws PropelException
+     */
+    public function getProductVariationTypes(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collProductVariationTypesPartial && !$this->isNew();
+        if (null === $this->collProductVariationTypes || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collProductVariationTypes) {
+                // return empty collection
+                $this->initProductVariationTypes();
+            } else {
+                $collProductVariationTypes = ChildProductVariationTypeQuery::create(null, $criteria)
+                    ->filterByProduct($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collProductVariationTypesPartial && count($collProductVariationTypes)) {
+                        $this->initProductVariationTypes(false);
+
+                        foreach ($collProductVariationTypes as $obj) {
+                            if (false == $this->collProductVariationTypes->contains($obj)) {
+                                $this->collProductVariationTypes->append($obj);
+                            }
+                        }
+
+                        $this->collProductVariationTypesPartial = true;
+                    }
+
+                    return $collProductVariationTypes;
+                }
+
+                if ($partial && $this->collProductVariationTypes) {
+                    foreach ($this->collProductVariationTypes as $obj) {
+                        if ($obj->isNew()) {
+                            $collProductVariationTypes[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collProductVariationTypes = $collProductVariationTypes;
+                $this->collProductVariationTypesPartial = false;
+            }
+        }
+
+        return $this->collProductVariationTypes;
+    }
+
+    /**
+     * Sets a collection of ChildProductVariationType objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $productVariationTypes A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildProduct The current object (for fluent API support)
+     */
+    public function setProductVariationTypes(Collection $productVariationTypes, ConnectionInterface $con = null)
+    {
+        /** @var ChildProductVariationType[] $productVariationTypesToDelete */
+        $productVariationTypesToDelete = $this->getProductVariationTypes(new Criteria(), $con)->diff($productVariationTypes);
+
+
+        $this->productVariationTypesScheduledForDeletion = $productVariationTypesToDelete;
+
+        foreach ($productVariationTypesToDelete as $productVariationTypeRemoved) {
+            $productVariationTypeRemoved->setProduct(null);
+        }
+
+        $this->collProductVariationTypes = null;
+        foreach ($productVariationTypes as $productVariationType) {
+            $this->addProductVariationType($productVariationType);
+        }
+
+        $this->collProductVariationTypes = $productVariationTypes;
+        $this->collProductVariationTypesPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related ProductVariationType objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related ProductVariationType objects.
+     * @throws PropelException
+     */
+    public function countProductVariationTypes(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collProductVariationTypesPartial && !$this->isNew();
+        if (null === $this->collProductVariationTypes || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collProductVariationTypes) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getProductVariationTypes());
+            }
+
+            $query = ChildProductVariationTypeQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByProduct($this)
+                ->count($con);
+        }
+
+        return count($this->collProductVariationTypes);
+    }
+
+    /**
+     * Method called to associate a ChildProductVariationType object to this object
+     * through the ChildProductVariationType foreign key attribute.
+     *
+     * @param  ChildProductVariationType $l ChildProductVariationType
+     * @return $this|\App\Propel\Product The current object (for fluent API support)
+     */
+    public function addProductVariationType(ChildProductVariationType $l)
+    {
+        if ($this->collProductVariationTypes === null) {
+            $this->initProductVariationTypes();
+            $this->collProductVariationTypesPartial = true;
+        }
+
+        if (!$this->collProductVariationTypes->contains($l)) {
+            $this->doAddProductVariationType($l);
+
+            if ($this->productVariationTypesScheduledForDeletion and $this->productVariationTypesScheduledForDeletion->contains($l)) {
+                $this->productVariationTypesScheduledForDeletion->remove($this->productVariationTypesScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildProductVariationType $productVariationType The ChildProductVariationType object to add.
+     */
+    protected function doAddProductVariationType(ChildProductVariationType $productVariationType)
+    {
+        $this->collProductVariationTypes[]= $productVariationType;
+        $productVariationType->setProduct($this);
+    }
+
+    /**
+     * @param  ChildProductVariationType $productVariationType The ChildProductVariationType object to remove.
+     * @return $this|ChildProduct The current object (for fluent API support)
+     */
+    public function removeProductVariationType(ChildProductVariationType $productVariationType)
+    {
+        if ($this->getProductVariationTypes()->contains($productVariationType)) {
+            $pos = $this->collProductVariationTypes->search($productVariationType);
+            $this->collProductVariationTypes->remove($pos);
+            if (null === $this->productVariationTypesScheduledForDeletion) {
+                $this->productVariationTypesScheduledForDeletion = clone $this->collProductVariationTypes;
+                $this->productVariationTypesScheduledForDeletion->clear();
+            }
+            $this->productVariationTypesScheduledForDeletion[]= clone $productVariationType;
+            $productVariationType->setProduct(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Product is new, it will return
+     * an empty collection; or if this Product has previously
+     * been saved, it will retrieve related ProductVariationTypes from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Product.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildProductVariationType[] List of ChildProductVariationType objects
+     */
+    public function getProductVariationTypesJoinVariationType(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildProductVariationTypeQuery::create(null, $criteria);
+        $query->joinWith('VariationType', $joinBehavior);
+
+        return $this->getProductVariationTypes($query, $con);
+    }
+
+    /**
+     * Clears out the collWishlistProducts collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addWishlistProducts()
+     */
+    public function clearWishlistProducts()
+    {
+        $this->collWishlistProducts = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collWishlistProducts collection loaded partially.
+     */
+    public function resetPartialWishlistProducts($v = true)
+    {
+        $this->collWishlistProductsPartial = $v;
+    }
+
+    /**
+     * Initializes the collWishlistProducts collection.
+     *
+     * By default this just sets the collWishlistProducts collection to an empty array (like clearcollWishlistProducts());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initWishlistProducts($overrideExisting = true)
+    {
+        if (null !== $this->collWishlistProducts && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = WishlistProductTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collWishlistProducts = new $collectionClassName;
+        $this->collWishlistProducts->setModel('\App\Propel\WishlistProduct');
+    }
+
+    /**
+     * Gets an array of ChildWishlistProduct objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildProduct is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildWishlistProduct[] List of ChildWishlistProduct objects
+     * @throws PropelException
+     */
+    public function getWishlistProducts(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collWishlistProductsPartial && !$this->isNew();
+        if (null === $this->collWishlistProducts || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collWishlistProducts) {
+                // return empty collection
+                $this->initWishlistProducts();
+            } else {
+                $collWishlistProducts = ChildWishlistProductQuery::create(null, $criteria)
+                    ->filterByProduct($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collWishlistProductsPartial && count($collWishlistProducts)) {
+                        $this->initWishlistProducts(false);
+
+                        foreach ($collWishlistProducts as $obj) {
+                            if (false == $this->collWishlistProducts->contains($obj)) {
+                                $this->collWishlistProducts->append($obj);
+                            }
+                        }
+
+                        $this->collWishlistProductsPartial = true;
+                    }
+
+                    return $collWishlistProducts;
+                }
+
+                if ($partial && $this->collWishlistProducts) {
+                    foreach ($this->collWishlistProducts as $obj) {
+                        if ($obj->isNew()) {
+                            $collWishlistProducts[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collWishlistProducts = $collWishlistProducts;
+                $this->collWishlistProductsPartial = false;
+            }
+        }
+
+        return $this->collWishlistProducts;
+    }
+
+    /**
+     * Sets a collection of ChildWishlistProduct objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $wishlistProducts A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildProduct The current object (for fluent API support)
+     */
+    public function setWishlistProducts(Collection $wishlistProducts, ConnectionInterface $con = null)
+    {
+        /** @var ChildWishlistProduct[] $wishlistProductsToDelete */
+        $wishlistProductsToDelete = $this->getWishlistProducts(new Criteria(), $con)->diff($wishlistProducts);
+
+
+        $this->wishlistProductsScheduledForDeletion = $wishlistProductsToDelete;
+
+        foreach ($wishlistProductsToDelete as $wishlistProductRemoved) {
+            $wishlistProductRemoved->setProduct(null);
+        }
+
+        $this->collWishlistProducts = null;
+        foreach ($wishlistProducts as $wishlistProduct) {
+            $this->addWishlistProduct($wishlistProduct);
+        }
+
+        $this->collWishlistProducts = $wishlistProducts;
+        $this->collWishlistProductsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related WishlistProduct objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related WishlistProduct objects.
+     * @throws PropelException
+     */
+    public function countWishlistProducts(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collWishlistProductsPartial && !$this->isNew();
+        if (null === $this->collWishlistProducts || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collWishlistProducts) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getWishlistProducts());
+            }
+
+            $query = ChildWishlistProductQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByProduct($this)
+                ->count($con);
+        }
+
+        return count($this->collWishlistProducts);
+    }
+
+    /**
+     * Method called to associate a ChildWishlistProduct object to this object
+     * through the ChildWishlistProduct foreign key attribute.
+     *
+     * @param  ChildWishlistProduct $l ChildWishlistProduct
+     * @return $this|\App\Propel\Product The current object (for fluent API support)
+     */
+    public function addWishlistProduct(ChildWishlistProduct $l)
+    {
+        if ($this->collWishlistProducts === null) {
+            $this->initWishlistProducts();
+            $this->collWishlistProductsPartial = true;
+        }
+
+        if (!$this->collWishlistProducts->contains($l)) {
+            $this->doAddWishlistProduct($l);
+
+            if ($this->wishlistProductsScheduledForDeletion and $this->wishlistProductsScheduledForDeletion->contains($l)) {
+                $this->wishlistProductsScheduledForDeletion->remove($this->wishlistProductsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildWishlistProduct $wishlistProduct The ChildWishlistProduct object to add.
+     */
+    protected function doAddWishlistProduct(ChildWishlistProduct $wishlistProduct)
+    {
+        $this->collWishlistProducts[]= $wishlistProduct;
+        $wishlistProduct->setProduct($this);
+    }
+
+    /**
+     * @param  ChildWishlistProduct $wishlistProduct The ChildWishlistProduct object to remove.
+     * @return $this|ChildProduct The current object (for fluent API support)
+     */
+    public function removeWishlistProduct(ChildWishlistProduct $wishlistProduct)
+    {
+        if ($this->getWishlistProducts()->contains($wishlistProduct)) {
+            $pos = $this->collWishlistProducts->search($wishlistProduct);
+            $this->collWishlistProducts->remove($pos);
+            if (null === $this->wishlistProductsScheduledForDeletion) {
+                $this->wishlistProductsScheduledForDeletion = clone $this->collWishlistProducts;
+                $this->wishlistProductsScheduledForDeletion->clear();
+            }
+            $this->wishlistProductsScheduledForDeletion[]= clone $wishlistProduct;
+            $wishlistProduct->setProduct(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Product is new, it will return
+     * an empty collection; or if this Product has previously
+     * been saved, it will retrieve related WishlistProducts from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Product.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildWishlistProduct[] List of ChildWishlistProduct objects
+     */
+    public function getWishlistProductsJoinWishlist(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildWishlistProductQuery::create(null, $criteria);
+        $query->joinWith('Wishlist', $joinBehavior);
+
+        return $this->getWishlistProducts($query, $con);
+    }
+
     /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
@@ -2324,6 +3427,9 @@ abstract class Product implements ActiveRecordInterface
     {
         if (null !== $this->aCategory) {
             $this->aCategory->removeProduct($this);
+        }
+        if (null !== $this->aProvider) {
+            $this->aProvider->removeProduct($this);
         }
         if (null !== $this->aUnit) {
             $this->aUnit->removeProduct($this);
@@ -2339,6 +3445,7 @@ abstract class Product implements ActiveRecordInterface
         $this->product_name = null;
         $this->product_description = null;
         $this->category_id = null;
+        $this->provider_id = null;
         $this->unit_id = null;
         $this->product_range = null;
         $this->product_price = null;
@@ -2369,10 +3476,29 @@ abstract class Product implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collProductHighlighteds) {
+                foreach ($this->collProductHighlighteds as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collProductVariationTypes) {
+                foreach ($this->collProductVariationTypes as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collWishlistProducts) {
+                foreach ($this->collWishlistProducts as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
         $this->collOrderProducts = null;
+        $this->collProductHighlighteds = null;
+        $this->collProductVariationTypes = null;
+        $this->collWishlistProducts = null;
         $this->aCategory = null;
+        $this->aProvider = null;
         $this->aUnit = null;
         $this->aFile = null;
         $this->aResource = null;

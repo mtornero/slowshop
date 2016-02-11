@@ -59,7 +59,7 @@ class ResourceTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 2;
+    const NUM_COLUMNS = 8;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class ResourceTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 2;
+    const NUM_HYDRATE_COLUMNS = 8;
 
     /**
      * the column name for the resource_id field
@@ -80,6 +80,36 @@ class ResourceTableMap extends TableMap
      * the column name for the resource_type_id field
      */
     const COL_RESOURCE_TYPE_ID = 'resource.resource_type_id';
+
+    /**
+     * the column name for the social_views field
+     */
+    const COL_SOCIAL_VIEWS = 'resource.social_views';
+
+    /**
+     * the column name for the social_likes field
+     */
+    const COL_SOCIAL_LIKES = 'resource.social_likes';
+
+    /**
+     * the column name for the social_dislikes field
+     */
+    const COL_SOCIAL_DISLIKES = 'resource.social_dislikes';
+
+    /**
+     * the column name for the social_comments field
+     */
+    const COL_SOCIAL_COMMENTS = 'resource.social_comments';
+
+    /**
+     * the column name for the social_favourites field
+     */
+    const COL_SOCIAL_FAVOURITES = 'resource.social_favourites';
+
+    /**
+     * the column name for the social_recommendations field
+     */
+    const COL_SOCIAL_RECOMMENDATIONS = 'resource.social_recommendations';
 
     /**
      * The default string format for model objects of the related table
@@ -93,11 +123,11 @@ class ResourceTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('ResourceId', 'ResourceTypeId', ),
-        self::TYPE_CAMELNAME     => array('resourceId', 'resourceTypeId', ),
-        self::TYPE_COLNAME       => array(ResourceTableMap::COL_RESOURCE_ID, ResourceTableMap::COL_RESOURCE_TYPE_ID, ),
-        self::TYPE_FIELDNAME     => array('resource_id', 'resource_type_id', ),
-        self::TYPE_NUM           => array(0, 1, )
+        self::TYPE_PHPNAME       => array('ResourceId', 'ResourceTypeId', 'SocialViews', 'SocialLikes', 'SocialDislikes', 'SocialComments', 'SocialFavourites', 'SocialRecommendations', ),
+        self::TYPE_CAMELNAME     => array('resourceId', 'resourceTypeId', 'socialViews', 'socialLikes', 'socialDislikes', 'socialComments', 'socialFavourites', 'socialRecommendations', ),
+        self::TYPE_COLNAME       => array(ResourceTableMap::COL_RESOURCE_ID, ResourceTableMap::COL_RESOURCE_TYPE_ID, ResourceTableMap::COL_SOCIAL_VIEWS, ResourceTableMap::COL_SOCIAL_LIKES, ResourceTableMap::COL_SOCIAL_DISLIKES, ResourceTableMap::COL_SOCIAL_COMMENTS, ResourceTableMap::COL_SOCIAL_FAVOURITES, ResourceTableMap::COL_SOCIAL_RECOMMENDATIONS, ),
+        self::TYPE_FIELDNAME     => array('resource_id', 'resource_type_id', 'social_views', 'social_likes', 'social_dislikes', 'social_comments', 'social_favourites', 'social_recommendations', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -107,11 +137,11 @@ class ResourceTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('ResourceId' => 0, 'ResourceTypeId' => 1, ),
-        self::TYPE_CAMELNAME     => array('resourceId' => 0, 'resourceTypeId' => 1, ),
-        self::TYPE_COLNAME       => array(ResourceTableMap::COL_RESOURCE_ID => 0, ResourceTableMap::COL_RESOURCE_TYPE_ID => 1, ),
-        self::TYPE_FIELDNAME     => array('resource_id' => 0, 'resource_type_id' => 1, ),
-        self::TYPE_NUM           => array(0, 1, )
+        self::TYPE_PHPNAME       => array('ResourceId' => 0, 'ResourceTypeId' => 1, 'SocialViews' => 2, 'SocialLikes' => 3, 'SocialDislikes' => 4, 'SocialComments' => 5, 'SocialFavourites' => 6, 'SocialRecommendations' => 7, ),
+        self::TYPE_CAMELNAME     => array('resourceId' => 0, 'resourceTypeId' => 1, 'socialViews' => 2, 'socialLikes' => 3, 'socialDislikes' => 4, 'socialComments' => 5, 'socialFavourites' => 6, 'socialRecommendations' => 7, ),
+        self::TYPE_COLNAME       => array(ResourceTableMap::COL_RESOURCE_ID => 0, ResourceTableMap::COL_RESOURCE_TYPE_ID => 1, ResourceTableMap::COL_SOCIAL_VIEWS => 2, ResourceTableMap::COL_SOCIAL_LIKES => 3, ResourceTableMap::COL_SOCIAL_DISLIKES => 4, ResourceTableMap::COL_SOCIAL_COMMENTS => 5, ResourceTableMap::COL_SOCIAL_FAVOURITES => 6, ResourceTableMap::COL_SOCIAL_RECOMMENDATIONS => 7, ),
+        self::TYPE_FIELDNAME     => array('resource_id' => 0, 'resource_type_id' => 1, 'social_views' => 2, 'social_likes' => 3, 'social_dislikes' => 4, 'social_comments' => 5, 'social_favourites' => 6, 'social_recommendations' => 7, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -133,6 +163,12 @@ class ResourceTableMap extends TableMap
         // columns
         $this->addPrimaryKey('resource_id', 'ResourceId', 'INTEGER', true, 10, null);
         $this->addForeignKey('resource_type_id', 'ResourceTypeId', 'INTEGER', 'resource_type', 'resource_type_id', true, 10, null);
+        $this->addColumn('social_views', 'SocialViews', 'INTEGER', true, 10, 0);
+        $this->addColumn('social_likes', 'SocialLikes', 'INTEGER', true, 10, 0);
+        $this->addColumn('social_dislikes', 'SocialDislikes', 'INTEGER', true, 10, 0);
+        $this->addColumn('social_comments', 'SocialComments', 'INTEGER', true, 10, 0);
+        $this->addColumn('social_favourites', 'SocialFavourites', 'INTEGER', true, 10, 0);
+        $this->addColumn('social_recommendations', 'SocialRecommendations', 'INTEGER', true, 10, 0);
     } // initialize()
 
     /**
@@ -154,6 +190,27 @@ class ResourceTableMap extends TableMap
     1 => ':resource_id',
   ),
 ), null, 'CASCADE', 'Categories', false);
+        $this->addRelation('NewsRelatedByResourceId', '\\App\\Propel\\News', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':resource_id',
+    1 => ':resource_id',
+  ),
+), null, 'CASCADE', 'NewsRelatedByResourceId', false);
+        $this->addRelation('NewsRelatedByNewsFor', '\\App\\Propel\\News', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':news_for',
+    1 => ':resource_id',
+  ),
+), null, 'CASCADE', 'NewsRelatedByNewsFor', false);
+        $this->addRelation('PeriodicPlan', '\\App\\Propel\\PeriodicPlan', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':resource_id',
+    1 => ':resource_id',
+  ),
+), null, 'CASCADE', 'PeriodicPlans', false);
         $this->addRelation('Product', '\\App\\Propel\\Product', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
@@ -161,6 +218,13 @@ class ResourceTableMap extends TableMap
     1 => ':resource_id',
   ),
 ), null, 'CASCADE', 'Products', false);
+        $this->addRelation('ProductHighlighted', '\\App\\Propel\\ProductHighlighted', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':product_highlighted_for',
+    1 => ':resource_id',
+  ),
+), null, 'CASCADE', 'ProductHighlighteds', false);
         $this->addRelation('Promotion', '\\App\\Propel\\Promotion', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
@@ -168,6 +232,13 @@ class ResourceTableMap extends TableMap
     1 => ':resource_id',
   ),
 ), null, 'CASCADE', 'Promotions', false);
+        $this->addRelation('Provider', '\\App\\Propel\\Provider', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':resource_id',
+    1 => ':resource_id',
+  ),
+), null, 'CASCADE', 'Providers', false);
         $this->addRelation('ResourceFile', '\\App\\Propel\\ResourceFile', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
@@ -175,6 +246,34 @@ class ResourceTableMap extends TableMap
     1 => ':resource_id',
   ),
 ), null, 'CASCADE', 'ResourceFiles', false);
+        $this->addRelation('SocialView', '\\App\\Propel\\SocialView', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':social_view_for',
+    1 => ':resource_id',
+  ),
+), null, 'CASCADE', 'SocialViews', false);
+        $this->addRelation('SocialLike', '\\App\\Propel\\SocialLike', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':social_like_for',
+    1 => ':resource_id',
+  ),
+), null, 'CASCADE', 'SocialLikes', false);
+        $this->addRelation('SocialComment', '\\App\\Propel\\SocialComment', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':social_comment_for',
+    1 => ':resource_id',
+  ),
+), null, 'CASCADE', 'SocialComments', false);
+        $this->addRelation('SocialRecommendation', '\\App\\Propel\\SocialRecommendation', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':social_recommendation_for',
+    1 => ':resource_id',
+  ),
+), null, 'CASCADE', 'SocialRecommendations', false);
         $this->addRelation('User', '\\App\\Propel\\User', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
@@ -327,9 +426,21 @@ class ResourceTableMap extends TableMap
         if (null === $alias) {
             $criteria->addSelectColumn(ResourceTableMap::COL_RESOURCE_ID);
             $criteria->addSelectColumn(ResourceTableMap::COL_RESOURCE_TYPE_ID);
+            $criteria->addSelectColumn(ResourceTableMap::COL_SOCIAL_VIEWS);
+            $criteria->addSelectColumn(ResourceTableMap::COL_SOCIAL_LIKES);
+            $criteria->addSelectColumn(ResourceTableMap::COL_SOCIAL_DISLIKES);
+            $criteria->addSelectColumn(ResourceTableMap::COL_SOCIAL_COMMENTS);
+            $criteria->addSelectColumn(ResourceTableMap::COL_SOCIAL_FAVOURITES);
+            $criteria->addSelectColumn(ResourceTableMap::COL_SOCIAL_RECOMMENDATIONS);
         } else {
             $criteria->addSelectColumn($alias . '.resource_id');
             $criteria->addSelectColumn($alias . '.resource_type_id');
+            $criteria->addSelectColumn($alias . '.social_views');
+            $criteria->addSelectColumn($alias . '.social_likes');
+            $criteria->addSelectColumn($alias . '.social_dislikes');
+            $criteria->addSelectColumn($alias . '.social_comments');
+            $criteria->addSelectColumn($alias . '.social_favourites');
+            $criteria->addSelectColumn($alias . '.social_recommendations');
         }
     }
 

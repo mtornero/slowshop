@@ -59,7 +59,7 @@ class PeriodicPlanTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 7;
+    const NUM_COLUMNS = 9;
 
     /**
      * The number of lazy-loaded columns
@@ -69,12 +69,17 @@ class PeriodicPlanTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 7;
+    const NUM_HYDRATE_COLUMNS = 9;
 
     /**
      * the column name for the periodic_plan_id field
      */
     const COL_PERIODIC_PLAN_ID = 'periodic_plan.periodic_plan_id';
+
+    /**
+     * the column name for the resource_id field
+     */
+    const COL_RESOURCE_ID = 'periodic_plan.resource_id';
 
     /**
      * the column name for the periodic_plan_name field
@@ -95,6 +100,11 @@ class PeriodicPlanTableMap extends TableMap
      * the column name for the delievery_periodic_weekday field
      */
     const COL_DELIEVERY_PERIODIC_WEEKDAY = 'periodic_plan.delievery_periodic_weekday';
+
+    /**
+     * the column name for the periodic_plan_pic field
+     */
+    const COL_PERIODIC_PLAN_PIC = 'periodic_plan.periodic_plan_pic';
 
     /**
      * the column name for the created_at field
@@ -118,11 +128,11 @@ class PeriodicPlanTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('PeriodicPlanId', 'PeriodicPlanName', 'PeriodicPlanPoint', 'PeriodicTypeId', 'DelieveryPeriodicWeekday', 'CreatedAt', 'UpdatedAt', ),
-        self::TYPE_CAMELNAME     => array('periodicPlanId', 'periodicPlanName', 'periodicPlanPoint', 'periodicTypeId', 'delieveryPeriodicWeekday', 'createdAt', 'updatedAt', ),
-        self::TYPE_COLNAME       => array(PeriodicPlanTableMap::COL_PERIODIC_PLAN_ID, PeriodicPlanTableMap::COL_PERIODIC_PLAN_NAME, PeriodicPlanTableMap::COL_PERIODIC_PLAN_POINT, PeriodicPlanTableMap::COL_PERIODIC_TYPE_ID, PeriodicPlanTableMap::COL_DELIEVERY_PERIODIC_WEEKDAY, PeriodicPlanTableMap::COL_CREATED_AT, PeriodicPlanTableMap::COL_UPDATED_AT, ),
-        self::TYPE_FIELDNAME     => array('periodic_plan_id', 'periodic_plan_name', 'periodic_plan_point', 'periodic_type_id', 'delievery_periodic_weekday', 'created_at', 'updated_at', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
+        self::TYPE_PHPNAME       => array('PeriodicPlanId', 'ResourceId', 'PeriodicPlanName', 'PeriodicPlanPoint', 'PeriodicTypeId', 'DelieveryPeriodicWeekday', 'PeriodicPlanPic', 'CreatedAt', 'UpdatedAt', ),
+        self::TYPE_CAMELNAME     => array('periodicPlanId', 'resourceId', 'periodicPlanName', 'periodicPlanPoint', 'periodicTypeId', 'delieveryPeriodicWeekday', 'periodicPlanPic', 'createdAt', 'updatedAt', ),
+        self::TYPE_COLNAME       => array(PeriodicPlanTableMap::COL_PERIODIC_PLAN_ID, PeriodicPlanTableMap::COL_RESOURCE_ID, PeriodicPlanTableMap::COL_PERIODIC_PLAN_NAME, PeriodicPlanTableMap::COL_PERIODIC_PLAN_POINT, PeriodicPlanTableMap::COL_PERIODIC_TYPE_ID, PeriodicPlanTableMap::COL_DELIEVERY_PERIODIC_WEEKDAY, PeriodicPlanTableMap::COL_PERIODIC_PLAN_PIC, PeriodicPlanTableMap::COL_CREATED_AT, PeriodicPlanTableMap::COL_UPDATED_AT, ),
+        self::TYPE_FIELDNAME     => array('periodic_plan_id', 'resource_id', 'periodic_plan_name', 'periodic_plan_point', 'periodic_type_id', 'delievery_periodic_weekday', 'periodic_plan_pic', 'created_at', 'updated_at', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
     );
 
     /**
@@ -132,11 +142,11 @@ class PeriodicPlanTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('PeriodicPlanId' => 0, 'PeriodicPlanName' => 1, 'PeriodicPlanPoint' => 2, 'PeriodicTypeId' => 3, 'DelieveryPeriodicWeekday' => 4, 'CreatedAt' => 5, 'UpdatedAt' => 6, ),
-        self::TYPE_CAMELNAME     => array('periodicPlanId' => 0, 'periodicPlanName' => 1, 'periodicPlanPoint' => 2, 'periodicTypeId' => 3, 'delieveryPeriodicWeekday' => 4, 'createdAt' => 5, 'updatedAt' => 6, ),
-        self::TYPE_COLNAME       => array(PeriodicPlanTableMap::COL_PERIODIC_PLAN_ID => 0, PeriodicPlanTableMap::COL_PERIODIC_PLAN_NAME => 1, PeriodicPlanTableMap::COL_PERIODIC_PLAN_POINT => 2, PeriodicPlanTableMap::COL_PERIODIC_TYPE_ID => 3, PeriodicPlanTableMap::COL_DELIEVERY_PERIODIC_WEEKDAY => 4, PeriodicPlanTableMap::COL_CREATED_AT => 5, PeriodicPlanTableMap::COL_UPDATED_AT => 6, ),
-        self::TYPE_FIELDNAME     => array('periodic_plan_id' => 0, 'periodic_plan_name' => 1, 'periodic_plan_point' => 2, 'periodic_type_id' => 3, 'delievery_periodic_weekday' => 4, 'created_at' => 5, 'updated_at' => 6, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
+        self::TYPE_PHPNAME       => array('PeriodicPlanId' => 0, 'ResourceId' => 1, 'PeriodicPlanName' => 2, 'PeriodicPlanPoint' => 3, 'PeriodicTypeId' => 4, 'DelieveryPeriodicWeekday' => 5, 'PeriodicPlanPic' => 6, 'CreatedAt' => 7, 'UpdatedAt' => 8, ),
+        self::TYPE_CAMELNAME     => array('periodicPlanId' => 0, 'resourceId' => 1, 'periodicPlanName' => 2, 'periodicPlanPoint' => 3, 'periodicTypeId' => 4, 'delieveryPeriodicWeekday' => 5, 'periodicPlanPic' => 6, 'createdAt' => 7, 'updatedAt' => 8, ),
+        self::TYPE_COLNAME       => array(PeriodicPlanTableMap::COL_PERIODIC_PLAN_ID => 0, PeriodicPlanTableMap::COL_RESOURCE_ID => 1, PeriodicPlanTableMap::COL_PERIODIC_PLAN_NAME => 2, PeriodicPlanTableMap::COL_PERIODIC_PLAN_POINT => 3, PeriodicPlanTableMap::COL_PERIODIC_TYPE_ID => 4, PeriodicPlanTableMap::COL_DELIEVERY_PERIODIC_WEEKDAY => 5, PeriodicPlanTableMap::COL_PERIODIC_PLAN_PIC => 6, PeriodicPlanTableMap::COL_CREATED_AT => 7, PeriodicPlanTableMap::COL_UPDATED_AT => 8, ),
+        self::TYPE_FIELDNAME     => array('periodic_plan_id' => 0, 'resource_id' => 1, 'periodic_plan_name' => 2, 'periodic_plan_point' => 3, 'periodic_type_id' => 4, 'delievery_periodic_weekday' => 5, 'periodic_plan_pic' => 6, 'created_at' => 7, 'updated_at' => 8, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
     );
 
     /**
@@ -157,10 +167,12 @@ class PeriodicPlanTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('periodic_plan_id', 'PeriodicPlanId', 'INTEGER', true, 10, null);
+        $this->addForeignKey('resource_id', 'ResourceId', 'INTEGER', 'resource', 'resource_id', true, 10, null);
         $this->addColumn('periodic_plan_name', 'PeriodicPlanName', 'VARCHAR', true, 60, null);
         $this->addColumn('periodic_plan_point', 'PeriodicPlanPoint', 'VARCHAR', false, 250, null);
         $this->addForeignKey('periodic_type_id', 'PeriodicTypeId', 'TINYINT', 'periodic_type', 'periodic_type_id', true, 3, null);
         $this->addColumn('delievery_periodic_weekday', 'DelieveryPeriodicWeekday', 'TINYINT', true, null, null);
+        $this->addForeignKey('periodic_plan_pic', 'PeriodicPlanPic', 'INTEGER', 'file', 'file_id', false, 10, null);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
     } // initialize()
@@ -170,11 +182,25 @@ class PeriodicPlanTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('Resource', '\\App\\Propel\\Resource', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':resource_id',
+    1 => ':resource_id',
+  ),
+), null, 'CASCADE', null, false);
         $this->addRelation('PeriodicType', '\\App\\Propel\\PeriodicType', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':periodic_type_id',
     1 => ':periodic_type_id',
+  ),
+), null, 'CASCADE', null, false);
+        $this->addRelation('File', '\\App\\Propel\\File', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':periodic_plan_pic',
+    1 => ':file_id',
   ),
 ), null, 'CASCADE', null, false);
         $this->addRelation('DeliveryPeriodic', '\\App\\Propel\\DeliveryPeriodic', RelationMap::ONE_TO_MANY, array (
@@ -355,18 +381,22 @@ class PeriodicPlanTableMap extends TableMap
     {
         if (null === $alias) {
             $criteria->addSelectColumn(PeriodicPlanTableMap::COL_PERIODIC_PLAN_ID);
+            $criteria->addSelectColumn(PeriodicPlanTableMap::COL_RESOURCE_ID);
             $criteria->addSelectColumn(PeriodicPlanTableMap::COL_PERIODIC_PLAN_NAME);
             $criteria->addSelectColumn(PeriodicPlanTableMap::COL_PERIODIC_PLAN_POINT);
             $criteria->addSelectColumn(PeriodicPlanTableMap::COL_PERIODIC_TYPE_ID);
             $criteria->addSelectColumn(PeriodicPlanTableMap::COL_DELIEVERY_PERIODIC_WEEKDAY);
+            $criteria->addSelectColumn(PeriodicPlanTableMap::COL_PERIODIC_PLAN_PIC);
             $criteria->addSelectColumn(PeriodicPlanTableMap::COL_CREATED_AT);
             $criteria->addSelectColumn(PeriodicPlanTableMap::COL_UPDATED_AT);
         } else {
             $criteria->addSelectColumn($alias . '.periodic_plan_id');
+            $criteria->addSelectColumn($alias . '.resource_id');
             $criteria->addSelectColumn($alias . '.periodic_plan_name');
             $criteria->addSelectColumn($alias . '.periodic_plan_point');
             $criteria->addSelectColumn($alias . '.periodic_type_id');
             $criteria->addSelectColumn($alias . '.delievery_periodic_weekday');
+            $criteria->addSelectColumn($alias . '.periodic_plan_pic');
             $criteria->addSelectColumn($alias . '.created_at');
             $criteria->addSelectColumn($alias . '.updated_at');
         }

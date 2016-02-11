@@ -22,11 +22,12 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildUserQuery orderByUserId($order = Criteria::ASC) Order by the user_id column
  * @method     ChildUserQuery orderByResourceId($order = Criteria::ASC) Order by the resource_id column
- * @method     ChildUserQuery orderByUseName($order = Criteria::ASC) Order by the use_name column
+ * @method     ChildUserQuery orderByUseName($order = Criteria::ASC) Order by the user_name column
  * @method     ChildUserQuery orderByUserSurname($order = Criteria::ASC) Order by the user_surname column
  * @method     ChildUserQuery orderByUserLogin($order = Criteria::ASC) Order by the user_login column
  * @method     ChildUserQuery orderByUserPass($order = Criteria::ASC) Order by the user_pass column
  * @method     ChildUserQuery orderByUserPassIsTemp($order = Criteria::ASC) Order by the user_pass_is_temp column
+ * @method     ChildUserQuery orderByRememberToken($order = Criteria::ASC) Order by the remember_token column
  * @method     ChildUserQuery orderByUserEmail($order = Criteria::ASC) Order by the user_email column
  * @method     ChildUserQuery orderByUserPhone($order = Criteria::ASC) Order by the user_phone column
  * @method     ChildUserQuery orderByUserAddress($order = Criteria::ASC) Order by the user_address column
@@ -38,11 +39,12 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildUserQuery groupByUserId() Group by the user_id column
  * @method     ChildUserQuery groupByResourceId() Group by the resource_id column
- * @method     ChildUserQuery groupByUseName() Group by the use_name column
+ * @method     ChildUserQuery groupByUseName() Group by the user_name column
  * @method     ChildUserQuery groupByUserSurname() Group by the user_surname column
  * @method     ChildUserQuery groupByUserLogin() Group by the user_login column
  * @method     ChildUserQuery groupByUserPass() Group by the user_pass column
  * @method     ChildUserQuery groupByUserPassIsTemp() Group by the user_pass_is_temp column
+ * @method     ChildUserQuery groupByRememberToken() Group by the remember_token column
  * @method     ChildUserQuery groupByUserEmail() Group by the user_email column
  * @method     ChildUserQuery groupByUserPhone() Group by the user_phone column
  * @method     ChildUserQuery groupByUserAddress() Group by the user_address column
@@ -100,6 +102,56 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery rightJoinWithOrder() Adds a RIGHT JOIN clause and with to the query using the Order relation
  * @method     ChildUserQuery innerJoinWithOrder() Adds a INNER JOIN clause and with to the query using the Order relation
  *
+ * @method     ChildUserQuery leftJoinSocialView($relationAlias = null) Adds a LEFT JOIN clause to the query using the SocialView relation
+ * @method     ChildUserQuery rightJoinSocialView($relationAlias = null) Adds a RIGHT JOIN clause to the query using the SocialView relation
+ * @method     ChildUserQuery innerJoinSocialView($relationAlias = null) Adds a INNER JOIN clause to the query using the SocialView relation
+ *
+ * @method     ChildUserQuery joinWithSocialView($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the SocialView relation
+ *
+ * @method     ChildUserQuery leftJoinWithSocialView() Adds a LEFT JOIN clause and with to the query using the SocialView relation
+ * @method     ChildUserQuery rightJoinWithSocialView() Adds a RIGHT JOIN clause and with to the query using the SocialView relation
+ * @method     ChildUserQuery innerJoinWithSocialView() Adds a INNER JOIN clause and with to the query using the SocialView relation
+ *
+ * @method     ChildUserQuery leftJoinSocialLike($relationAlias = null) Adds a LEFT JOIN clause to the query using the SocialLike relation
+ * @method     ChildUserQuery rightJoinSocialLike($relationAlias = null) Adds a RIGHT JOIN clause to the query using the SocialLike relation
+ * @method     ChildUserQuery innerJoinSocialLike($relationAlias = null) Adds a INNER JOIN clause to the query using the SocialLike relation
+ *
+ * @method     ChildUserQuery joinWithSocialLike($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the SocialLike relation
+ *
+ * @method     ChildUserQuery leftJoinWithSocialLike() Adds a LEFT JOIN clause and with to the query using the SocialLike relation
+ * @method     ChildUserQuery rightJoinWithSocialLike() Adds a RIGHT JOIN clause and with to the query using the SocialLike relation
+ * @method     ChildUserQuery innerJoinWithSocialLike() Adds a INNER JOIN clause and with to the query using the SocialLike relation
+ *
+ * @method     ChildUserQuery leftJoinSocialComment($relationAlias = null) Adds a LEFT JOIN clause to the query using the SocialComment relation
+ * @method     ChildUserQuery rightJoinSocialComment($relationAlias = null) Adds a RIGHT JOIN clause to the query using the SocialComment relation
+ * @method     ChildUserQuery innerJoinSocialComment($relationAlias = null) Adds a INNER JOIN clause to the query using the SocialComment relation
+ *
+ * @method     ChildUserQuery joinWithSocialComment($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the SocialComment relation
+ *
+ * @method     ChildUserQuery leftJoinWithSocialComment() Adds a LEFT JOIN clause and with to the query using the SocialComment relation
+ * @method     ChildUserQuery rightJoinWithSocialComment() Adds a RIGHT JOIN clause and with to the query using the SocialComment relation
+ * @method     ChildUserQuery innerJoinWithSocialComment() Adds a INNER JOIN clause and with to the query using the SocialComment relation
+ *
+ * @method     ChildUserQuery leftJoinSocialRecommendationRelatedByUserId($relationAlias = null) Adds a LEFT JOIN clause to the query using the SocialRecommendationRelatedByUserId relation
+ * @method     ChildUserQuery rightJoinSocialRecommendationRelatedByUserId($relationAlias = null) Adds a RIGHT JOIN clause to the query using the SocialRecommendationRelatedByUserId relation
+ * @method     ChildUserQuery innerJoinSocialRecommendationRelatedByUserId($relationAlias = null) Adds a INNER JOIN clause to the query using the SocialRecommendationRelatedByUserId relation
+ *
+ * @method     ChildUserQuery joinWithSocialRecommendationRelatedByUserId($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the SocialRecommendationRelatedByUserId relation
+ *
+ * @method     ChildUserQuery leftJoinWithSocialRecommendationRelatedByUserId() Adds a LEFT JOIN clause and with to the query using the SocialRecommendationRelatedByUserId relation
+ * @method     ChildUserQuery rightJoinWithSocialRecommendationRelatedByUserId() Adds a RIGHT JOIN clause and with to the query using the SocialRecommendationRelatedByUserId relation
+ * @method     ChildUserQuery innerJoinWithSocialRecommendationRelatedByUserId() Adds a INNER JOIN clause and with to the query using the SocialRecommendationRelatedByUserId relation
+ *
+ * @method     ChildUserQuery leftJoinSocialRecommendationRelatedBySocialRecommendationTo($relationAlias = null) Adds a LEFT JOIN clause to the query using the SocialRecommendationRelatedBySocialRecommendationTo relation
+ * @method     ChildUserQuery rightJoinSocialRecommendationRelatedBySocialRecommendationTo($relationAlias = null) Adds a RIGHT JOIN clause to the query using the SocialRecommendationRelatedBySocialRecommendationTo relation
+ * @method     ChildUserQuery innerJoinSocialRecommendationRelatedBySocialRecommendationTo($relationAlias = null) Adds a INNER JOIN clause to the query using the SocialRecommendationRelatedBySocialRecommendationTo relation
+ *
+ * @method     ChildUserQuery joinWithSocialRecommendationRelatedBySocialRecommendationTo($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the SocialRecommendationRelatedBySocialRecommendationTo relation
+ *
+ * @method     ChildUserQuery leftJoinWithSocialRecommendationRelatedBySocialRecommendationTo() Adds a LEFT JOIN clause and with to the query using the SocialRecommendationRelatedBySocialRecommendationTo relation
+ * @method     ChildUserQuery rightJoinWithSocialRecommendationRelatedBySocialRecommendationTo() Adds a RIGHT JOIN clause and with to the query using the SocialRecommendationRelatedBySocialRecommendationTo relation
+ * @method     ChildUserQuery innerJoinWithSocialRecommendationRelatedBySocialRecommendationTo() Adds a INNER JOIN clause and with to the query using the SocialRecommendationRelatedBySocialRecommendationTo relation
+ *
  * @method     ChildUserQuery leftJoinUserPeriodicPlan($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserPeriodicPlan relation
  * @method     ChildUserQuery rightJoinUserPeriodicPlan($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserPeriodicPlan relation
  * @method     ChildUserQuery innerJoinUserPeriodicPlan($relationAlias = null) Adds a INNER JOIN clause to the query using the UserPeriodicPlan relation
@@ -110,18 +162,29 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery rightJoinWithUserPeriodicPlan() Adds a RIGHT JOIN clause and with to the query using the UserPeriodicPlan relation
  * @method     ChildUserQuery innerJoinWithUserPeriodicPlan() Adds a INNER JOIN clause and with to the query using the UserPeriodicPlan relation
  *
- * @method     \App\Propel\FileQuery|\App\Propel\RoleQuery|\App\Propel\ResourceQuery|\App\Propel\OrderQuery|\App\Propel\UserPeriodicPlanQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     ChildUserQuery leftJoinWishlist($relationAlias = null) Adds a LEFT JOIN clause to the query using the Wishlist relation
+ * @method     ChildUserQuery rightJoinWishlist($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Wishlist relation
+ * @method     ChildUserQuery innerJoinWishlist($relationAlias = null) Adds a INNER JOIN clause to the query using the Wishlist relation
+ *
+ * @method     ChildUserQuery joinWithWishlist($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Wishlist relation
+ *
+ * @method     ChildUserQuery leftJoinWithWishlist() Adds a LEFT JOIN clause and with to the query using the Wishlist relation
+ * @method     ChildUserQuery rightJoinWithWishlist() Adds a RIGHT JOIN clause and with to the query using the Wishlist relation
+ * @method     ChildUserQuery innerJoinWithWishlist() Adds a INNER JOIN clause and with to the query using the Wishlist relation
+ *
+ * @method     \App\Propel\FileQuery|\App\Propel\RoleQuery|\App\Propel\ResourceQuery|\App\Propel\OrderQuery|\App\Propel\SocialViewQuery|\App\Propel\SocialLikeQuery|\App\Propel\SocialCommentQuery|\App\Propel\SocialRecommendationQuery|\App\Propel\UserPeriodicPlanQuery|\App\Propel\WishlistQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildUser findOne(ConnectionInterface $con = null) Return the first ChildUser matching the query
  * @method     ChildUser findOneOrCreate(ConnectionInterface $con = null) Return the first ChildUser matching the query, or a new ChildUser object populated from the query conditions when no match is found
  *
  * @method     ChildUser findOneByUserId(int $user_id) Return the first ChildUser filtered by the user_id column
  * @method     ChildUser findOneByResourceId(int $resource_id) Return the first ChildUser filtered by the resource_id column
- * @method     ChildUser findOneByUseName(string $use_name) Return the first ChildUser filtered by the use_name column
+ * @method     ChildUser findOneByUseName(string $user_name) Return the first ChildUser filtered by the user_name column
  * @method     ChildUser findOneByUserSurname(string $user_surname) Return the first ChildUser filtered by the user_surname column
  * @method     ChildUser findOneByUserLogin(string $user_login) Return the first ChildUser filtered by the user_login column
  * @method     ChildUser findOneByUserPass(string $user_pass) Return the first ChildUser filtered by the user_pass column
  * @method     ChildUser findOneByUserPassIsTemp(string $user_pass_is_temp) Return the first ChildUser filtered by the user_pass_is_temp column
+ * @method     ChildUser findOneByRememberToken(string $remember_token) Return the first ChildUser filtered by the remember_token column
  * @method     ChildUser findOneByUserEmail(string $user_email) Return the first ChildUser filtered by the user_email column
  * @method     ChildUser findOneByUserPhone(string $user_phone) Return the first ChildUser filtered by the user_phone column
  * @method     ChildUser findOneByUserAddress(string $user_address) Return the first ChildUser filtered by the user_address column
@@ -136,11 +199,12 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildUser requireOneByUserId(int $user_id) Return the first ChildUser filtered by the user_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByResourceId(int $resource_id) Return the first ChildUser filtered by the resource_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildUser requireOneByUseName(string $use_name) Return the first ChildUser filtered by the use_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requireOneByUseName(string $user_name) Return the first ChildUser filtered by the user_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByUserSurname(string $user_surname) Return the first ChildUser filtered by the user_surname column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByUserLogin(string $user_login) Return the first ChildUser filtered by the user_login column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByUserPass(string $user_pass) Return the first ChildUser filtered by the user_pass column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByUserPassIsTemp(string $user_pass_is_temp) Return the first ChildUser filtered by the user_pass_is_temp column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requireOneByRememberToken(string $remember_token) Return the first ChildUser filtered by the remember_token column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByUserEmail(string $user_email) Return the first ChildUser filtered by the user_email column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByUserPhone(string $user_phone) Return the first ChildUser filtered by the user_phone column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByUserAddress(string $user_address) Return the first ChildUser filtered by the user_address column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -153,11 +217,12 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUser[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildUser objects based on current ModelCriteria
  * @method     ChildUser[]|ObjectCollection findByUserId(int $user_id) Return ChildUser objects filtered by the user_id column
  * @method     ChildUser[]|ObjectCollection findByResourceId(int $resource_id) Return ChildUser objects filtered by the resource_id column
- * @method     ChildUser[]|ObjectCollection findByUseName(string $use_name) Return ChildUser objects filtered by the use_name column
+ * @method     ChildUser[]|ObjectCollection findByUseName(string $user_name) Return ChildUser objects filtered by the user_name column
  * @method     ChildUser[]|ObjectCollection findByUserSurname(string $user_surname) Return ChildUser objects filtered by the user_surname column
  * @method     ChildUser[]|ObjectCollection findByUserLogin(string $user_login) Return ChildUser objects filtered by the user_login column
  * @method     ChildUser[]|ObjectCollection findByUserPass(string $user_pass) Return ChildUser objects filtered by the user_pass column
  * @method     ChildUser[]|ObjectCollection findByUserPassIsTemp(string $user_pass_is_temp) Return ChildUser objects filtered by the user_pass_is_temp column
+ * @method     ChildUser[]|ObjectCollection findByRememberToken(string $remember_token) Return ChildUser objects filtered by the remember_token column
  * @method     ChildUser[]|ObjectCollection findByUserEmail(string $user_email) Return ChildUser objects filtered by the user_email column
  * @method     ChildUser[]|ObjectCollection findByUserPhone(string $user_phone) Return ChildUser objects filtered by the user_phone column
  * @method     ChildUser[]|ObjectCollection findByUserAddress(string $user_address) Return ChildUser objects filtered by the user_address column
@@ -176,6 +241,12 @@ abstract class UserQuery extends ModelCriteria
 
     protected $delegatedFields = [
         'ResourceTypeId' => 'Resource',
+        'SocialViews' => 'Resource',
+        'SocialLikes' => 'Resource',
+        'SocialDislikes' => 'Resource',
+        'SocialComments' => 'Resource',
+        'SocialFavourites' => 'Resource',
+        'SocialRecommendations' => 'Resource',
     ];
 
 protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
@@ -265,7 +336,7 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT user_id, resource_id, use_name, user_surname, user_login, user_pass, user_pass_is_temp, user_email, user_phone, user_address, role_id, user_is_active, user_pic, created_at, updated_at FROM user WHERE user_id = :p0';
+        $sql = 'SELECT user_id, resource_id, user_name, user_surname, user_login, user_pass, user_pass_is_temp, remember_token, user_email, user_phone, user_address, role_id, user_is_active, user_pic, created_at, updated_at FROM user WHERE user_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -440,12 +511,12 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
     }
 
     /**
-     * Filter the query on the use_name column
+     * Filter the query on the user_name column
      *
      * Example usage:
      * <code>
-     * $query->filterByUseName('fooValue');   // WHERE use_name = 'fooValue'
-     * $query->filterByUseName('%fooValue%'); // WHERE use_name LIKE '%fooValue%'
+     * $query->filterByUseName('fooValue');   // WHERE user_name = 'fooValue'
+     * $query->filterByUseName('%fooValue%'); // WHERE user_name LIKE '%fooValue%'
      * </code>
      *
      * @param     string $useName The value to use as filter.
@@ -465,7 +536,7 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
             }
         }
 
-        return $this->addUsingAlias(UserTableMap::COL_USE_NAME, $useName, $comparison);
+        return $this->addUsingAlias(UserTableMap::COL_USER_NAME, $useName, $comparison);
     }
 
     /**
@@ -582,6 +653,35 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
         }
 
         return $this->addUsingAlias(UserTableMap::COL_USER_PASS_IS_TEMP, $userPassIsTemp, $comparison);
+    }
+
+    /**
+     * Filter the query on the remember_token column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByRememberToken('fooValue');   // WHERE remember_token = 'fooValue'
+     * $query->filterByRememberToken('%fooValue%'); // WHERE remember_token LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $rememberToken The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByRememberToken($rememberToken = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($rememberToken)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $rememberToken)) {
+                $rememberToken = str_replace('*', '%', $rememberToken);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(UserTableMap::COL_REMEMBER_TOKEN, $rememberToken, $comparison);
     }
 
     /**
@@ -1175,6 +1275,371 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
     }
 
     /**
+     * Filter the query by a related \App\Propel\SocialView object
+     *
+     * @param \App\Propel\SocialView|ObjectCollection $socialView the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterBySocialView($socialView, $comparison = null)
+    {
+        if ($socialView instanceof \App\Propel\SocialView) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_USER_ID, $socialView->getUserId(), $comparison);
+        } elseif ($socialView instanceof ObjectCollection) {
+            return $this
+                ->useSocialViewQuery()
+                ->filterByPrimaryKeys($socialView->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterBySocialView() only accepts arguments of type \App\Propel\SocialView or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the SocialView relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinSocialView($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('SocialView');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'SocialView');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the SocialView relation SocialView object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \App\Propel\SocialViewQuery A secondary query class using the current class as primary query
+     */
+    public function useSocialViewQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinSocialView($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'SocialView', '\App\Propel\SocialViewQuery');
+    }
+
+    /**
+     * Filter the query by a related \App\Propel\SocialLike object
+     *
+     * @param \App\Propel\SocialLike|ObjectCollection $socialLike the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterBySocialLike($socialLike, $comparison = null)
+    {
+        if ($socialLike instanceof \App\Propel\SocialLike) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_USER_ID, $socialLike->getUserId(), $comparison);
+        } elseif ($socialLike instanceof ObjectCollection) {
+            return $this
+                ->useSocialLikeQuery()
+                ->filterByPrimaryKeys($socialLike->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterBySocialLike() only accepts arguments of type \App\Propel\SocialLike or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the SocialLike relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinSocialLike($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('SocialLike');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'SocialLike');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the SocialLike relation SocialLike object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \App\Propel\SocialLikeQuery A secondary query class using the current class as primary query
+     */
+    public function useSocialLikeQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinSocialLike($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'SocialLike', '\App\Propel\SocialLikeQuery');
+    }
+
+    /**
+     * Filter the query by a related \App\Propel\SocialComment object
+     *
+     * @param \App\Propel\SocialComment|ObjectCollection $socialComment the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterBySocialComment($socialComment, $comparison = null)
+    {
+        if ($socialComment instanceof \App\Propel\SocialComment) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_USER_ID, $socialComment->getUserId(), $comparison);
+        } elseif ($socialComment instanceof ObjectCollection) {
+            return $this
+                ->useSocialCommentQuery()
+                ->filterByPrimaryKeys($socialComment->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterBySocialComment() only accepts arguments of type \App\Propel\SocialComment or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the SocialComment relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinSocialComment($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('SocialComment');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'SocialComment');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the SocialComment relation SocialComment object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \App\Propel\SocialCommentQuery A secondary query class using the current class as primary query
+     */
+    public function useSocialCommentQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinSocialComment($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'SocialComment', '\App\Propel\SocialCommentQuery');
+    }
+
+    /**
+     * Filter the query by a related \App\Propel\SocialRecommendation object
+     *
+     * @param \App\Propel\SocialRecommendation|ObjectCollection $socialRecommendation the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterBySocialRecommendationRelatedByUserId($socialRecommendation, $comparison = null)
+    {
+        if ($socialRecommendation instanceof \App\Propel\SocialRecommendation) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_USER_ID, $socialRecommendation->getUserId(), $comparison);
+        } elseif ($socialRecommendation instanceof ObjectCollection) {
+            return $this
+                ->useSocialRecommendationRelatedByUserIdQuery()
+                ->filterByPrimaryKeys($socialRecommendation->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterBySocialRecommendationRelatedByUserId() only accepts arguments of type \App\Propel\SocialRecommendation or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the SocialRecommendationRelatedByUserId relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinSocialRecommendationRelatedByUserId($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('SocialRecommendationRelatedByUserId');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'SocialRecommendationRelatedByUserId');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the SocialRecommendationRelatedByUserId relation SocialRecommendation object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \App\Propel\SocialRecommendationQuery A secondary query class using the current class as primary query
+     */
+    public function useSocialRecommendationRelatedByUserIdQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinSocialRecommendationRelatedByUserId($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'SocialRecommendationRelatedByUserId', '\App\Propel\SocialRecommendationQuery');
+    }
+
+    /**
+     * Filter the query by a related \App\Propel\SocialRecommendation object
+     *
+     * @param \App\Propel\SocialRecommendation|ObjectCollection $socialRecommendation the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterBySocialRecommendationRelatedBySocialRecommendationTo($socialRecommendation, $comparison = null)
+    {
+        if ($socialRecommendation instanceof \App\Propel\SocialRecommendation) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_USER_ID, $socialRecommendation->getSocialRecommendationTo(), $comparison);
+        } elseif ($socialRecommendation instanceof ObjectCollection) {
+            return $this
+                ->useSocialRecommendationRelatedBySocialRecommendationToQuery()
+                ->filterByPrimaryKeys($socialRecommendation->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterBySocialRecommendationRelatedBySocialRecommendationTo() only accepts arguments of type \App\Propel\SocialRecommendation or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the SocialRecommendationRelatedBySocialRecommendationTo relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinSocialRecommendationRelatedBySocialRecommendationTo($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('SocialRecommendationRelatedBySocialRecommendationTo');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'SocialRecommendationRelatedBySocialRecommendationTo');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the SocialRecommendationRelatedBySocialRecommendationTo relation SocialRecommendation object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \App\Propel\SocialRecommendationQuery A secondary query class using the current class as primary query
+     */
+    public function useSocialRecommendationRelatedBySocialRecommendationToQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinSocialRecommendationRelatedBySocialRecommendationTo($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'SocialRecommendationRelatedBySocialRecommendationTo', '\App\Propel\SocialRecommendationQuery');
+    }
+
+    /**
      * Filter the query by a related \App\Propel\UserPeriodicPlan object
      *
      * @param \App\Propel\UserPeriodicPlan|ObjectCollection $userPeriodicPlan the related object to use as filter
@@ -1245,6 +1710,79 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
         return $this
             ->joinUserPeriodicPlan($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'UserPeriodicPlan', '\App\Propel\UserPeriodicPlanQuery');
+    }
+
+    /**
+     * Filter the query by a related \App\Propel\Wishlist object
+     *
+     * @param \App\Propel\Wishlist|ObjectCollection $wishlist the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByWishlist($wishlist, $comparison = null)
+    {
+        if ($wishlist instanceof \App\Propel\Wishlist) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_USER_ID, $wishlist->getUserId(), $comparison);
+        } elseif ($wishlist instanceof ObjectCollection) {
+            return $this
+                ->useWishlistQuery()
+                ->filterByPrimaryKeys($wishlist->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByWishlist() only accepts arguments of type \App\Propel\Wishlist or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Wishlist relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinWishlist($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Wishlist');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Wishlist');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Wishlist relation Wishlist object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \App\Propel\WishlistQuery A secondary query class using the current class as primary query
+     */
+    public function useWishlistQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinWishlist($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Wishlist', '\App\Propel\WishlistQuery');
     }
 
     /**
@@ -1365,6 +1903,252 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
     public function orderByResourceTypeId($order = Criteria::ASC)
     {
         return $this->useResourceQuery()->orderByResourceTypeId($order)->endUse();
+    }
+    /**
+    * Filter the query by social_views column
+    *
+    * Example usage:
+    * <code>
+        * $query->filterBySocialViews(1234); // WHERE social_views = 1234
+        * $query->filterBySocialViews(array(12, 34)); // WHERE social_views IN (12, 34)
+        * $query->filterBySocialViews(array('min' => 12)); // WHERE social_views > 12
+        * </code>
+    *
+    * @param     mixed $value The value to use as filter.
+    *              Use scalar values for equality.
+    *              Use array values for in_array() equivalent.
+    *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+    * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+    *
+    * @return $this|ChildUserQuery The current query, for fluid interface
+    */
+    public function filterBySocialViews($value = null, $comparison = null)
+    {
+        return $this->useResourceQuery()->filterBySocialViews($value, $comparison)->endUse();
+    }
+
+    /**
+    * Adds an ORDER BY clause to the query
+    * Usability layer on top of Criteria::addAscendingOrderByColumn() and Criteria::addDescendingOrderByColumn()
+    * Infers $column and $order from $columnName and some optional arguments
+    * Examples:
+    *   $c->orderBy('Book.CreatedAt')
+    *    => $c->addAscendingOrderByColumn(BookTableMap::CREATED_AT)
+    *   $c->orderBy('Book.CategoryId', 'desc')
+    *    => $c->addDescendingOrderByColumn(BookTableMap::CATEGORY_ID)
+    *
+    * @param string $order      The sorting order. Criteria::ASC by default, also accepts Criteria::DESC
+    *
+    * @return $this|ModelCriteria The current object, for fluid interface
+    */
+    public function orderBySocialViews($order = Criteria::ASC)
+    {
+        return $this->useResourceQuery()->orderBySocialViews($order)->endUse();
+    }
+    /**
+    * Filter the query by social_likes column
+    *
+    * Example usage:
+    * <code>
+        * $query->filterBySocialLikes(1234); // WHERE social_likes = 1234
+        * $query->filterBySocialLikes(array(12, 34)); // WHERE social_likes IN (12, 34)
+        * $query->filterBySocialLikes(array('min' => 12)); // WHERE social_likes > 12
+        * </code>
+    *
+    * @param     mixed $value The value to use as filter.
+    *              Use scalar values for equality.
+    *              Use array values for in_array() equivalent.
+    *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+    * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+    *
+    * @return $this|ChildUserQuery The current query, for fluid interface
+    */
+    public function filterBySocialLikes($value = null, $comparison = null)
+    {
+        return $this->useResourceQuery()->filterBySocialLikes($value, $comparison)->endUse();
+    }
+
+    /**
+    * Adds an ORDER BY clause to the query
+    * Usability layer on top of Criteria::addAscendingOrderByColumn() and Criteria::addDescendingOrderByColumn()
+    * Infers $column and $order from $columnName and some optional arguments
+    * Examples:
+    *   $c->orderBy('Book.CreatedAt')
+    *    => $c->addAscendingOrderByColumn(BookTableMap::CREATED_AT)
+    *   $c->orderBy('Book.CategoryId', 'desc')
+    *    => $c->addDescendingOrderByColumn(BookTableMap::CATEGORY_ID)
+    *
+    * @param string $order      The sorting order. Criteria::ASC by default, also accepts Criteria::DESC
+    *
+    * @return $this|ModelCriteria The current object, for fluid interface
+    */
+    public function orderBySocialLikes($order = Criteria::ASC)
+    {
+        return $this->useResourceQuery()->orderBySocialLikes($order)->endUse();
+    }
+    /**
+    * Filter the query by social_dislikes column
+    *
+    * Example usage:
+    * <code>
+        * $query->filterBySocialDislikes(1234); // WHERE social_dislikes = 1234
+        * $query->filterBySocialDislikes(array(12, 34)); // WHERE social_dislikes IN (12, 34)
+        * $query->filterBySocialDislikes(array('min' => 12)); // WHERE social_dislikes > 12
+        * </code>
+    *
+    * @param     mixed $value The value to use as filter.
+    *              Use scalar values for equality.
+    *              Use array values for in_array() equivalent.
+    *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+    * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+    *
+    * @return $this|ChildUserQuery The current query, for fluid interface
+    */
+    public function filterBySocialDislikes($value = null, $comparison = null)
+    {
+        return $this->useResourceQuery()->filterBySocialDislikes($value, $comparison)->endUse();
+    }
+
+    /**
+    * Adds an ORDER BY clause to the query
+    * Usability layer on top of Criteria::addAscendingOrderByColumn() and Criteria::addDescendingOrderByColumn()
+    * Infers $column and $order from $columnName and some optional arguments
+    * Examples:
+    *   $c->orderBy('Book.CreatedAt')
+    *    => $c->addAscendingOrderByColumn(BookTableMap::CREATED_AT)
+    *   $c->orderBy('Book.CategoryId', 'desc')
+    *    => $c->addDescendingOrderByColumn(BookTableMap::CATEGORY_ID)
+    *
+    * @param string $order      The sorting order. Criteria::ASC by default, also accepts Criteria::DESC
+    *
+    * @return $this|ModelCriteria The current object, for fluid interface
+    */
+    public function orderBySocialDislikes($order = Criteria::ASC)
+    {
+        return $this->useResourceQuery()->orderBySocialDislikes($order)->endUse();
+    }
+    /**
+    * Filter the query by social_comments column
+    *
+    * Example usage:
+    * <code>
+        * $query->filterBySocialComments(1234); // WHERE social_comments = 1234
+        * $query->filterBySocialComments(array(12, 34)); // WHERE social_comments IN (12, 34)
+        * $query->filterBySocialComments(array('min' => 12)); // WHERE social_comments > 12
+        * </code>
+    *
+    * @param     mixed $value The value to use as filter.
+    *              Use scalar values for equality.
+    *              Use array values for in_array() equivalent.
+    *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+    * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+    *
+    * @return $this|ChildUserQuery The current query, for fluid interface
+    */
+    public function filterBySocialComments($value = null, $comparison = null)
+    {
+        return $this->useResourceQuery()->filterBySocialComments($value, $comparison)->endUse();
+    }
+
+    /**
+    * Adds an ORDER BY clause to the query
+    * Usability layer on top of Criteria::addAscendingOrderByColumn() and Criteria::addDescendingOrderByColumn()
+    * Infers $column and $order from $columnName and some optional arguments
+    * Examples:
+    *   $c->orderBy('Book.CreatedAt')
+    *    => $c->addAscendingOrderByColumn(BookTableMap::CREATED_AT)
+    *   $c->orderBy('Book.CategoryId', 'desc')
+    *    => $c->addDescendingOrderByColumn(BookTableMap::CATEGORY_ID)
+    *
+    * @param string $order      The sorting order. Criteria::ASC by default, also accepts Criteria::DESC
+    *
+    * @return $this|ModelCriteria The current object, for fluid interface
+    */
+    public function orderBySocialComments($order = Criteria::ASC)
+    {
+        return $this->useResourceQuery()->orderBySocialComments($order)->endUse();
+    }
+    /**
+    * Filter the query by social_favourites column
+    *
+    * Example usage:
+    * <code>
+        * $query->filterBySocialFavourites(1234); // WHERE social_favourites = 1234
+        * $query->filterBySocialFavourites(array(12, 34)); // WHERE social_favourites IN (12, 34)
+        * $query->filterBySocialFavourites(array('min' => 12)); // WHERE social_favourites > 12
+        * </code>
+    *
+    * @param     mixed $value The value to use as filter.
+    *              Use scalar values for equality.
+    *              Use array values for in_array() equivalent.
+    *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+    * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+    *
+    * @return $this|ChildUserQuery The current query, for fluid interface
+    */
+    public function filterBySocialFavourites($value = null, $comparison = null)
+    {
+        return $this->useResourceQuery()->filterBySocialFavourites($value, $comparison)->endUse();
+    }
+
+    /**
+    * Adds an ORDER BY clause to the query
+    * Usability layer on top of Criteria::addAscendingOrderByColumn() and Criteria::addDescendingOrderByColumn()
+    * Infers $column and $order from $columnName and some optional arguments
+    * Examples:
+    *   $c->orderBy('Book.CreatedAt')
+    *    => $c->addAscendingOrderByColumn(BookTableMap::CREATED_AT)
+    *   $c->orderBy('Book.CategoryId', 'desc')
+    *    => $c->addDescendingOrderByColumn(BookTableMap::CATEGORY_ID)
+    *
+    * @param string $order      The sorting order. Criteria::ASC by default, also accepts Criteria::DESC
+    *
+    * @return $this|ModelCriteria The current object, for fluid interface
+    */
+    public function orderBySocialFavourites($order = Criteria::ASC)
+    {
+        return $this->useResourceQuery()->orderBySocialFavourites($order)->endUse();
+    }
+    /**
+    * Filter the query by social_recommendations column
+    *
+    * Example usage:
+    * <code>
+        * $query->filterBySocialRecommendations(1234); // WHERE social_recommendations = 1234
+        * $query->filterBySocialRecommendations(array(12, 34)); // WHERE social_recommendations IN (12, 34)
+        * $query->filterBySocialRecommendations(array('min' => 12)); // WHERE social_recommendations > 12
+        * </code>
+    *
+    * @param     mixed $value The value to use as filter.
+    *              Use scalar values for equality.
+    *              Use array values for in_array() equivalent.
+    *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+    * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+    *
+    * @return $this|ChildUserQuery The current query, for fluid interface
+    */
+    public function filterBySocialRecommendations($value = null, $comparison = null)
+    {
+        return $this->useResourceQuery()->filterBySocialRecommendations($value, $comparison)->endUse();
+    }
+
+    /**
+    * Adds an ORDER BY clause to the query
+    * Usability layer on top of Criteria::addAscendingOrderByColumn() and Criteria::addDescendingOrderByColumn()
+    * Infers $column and $order from $columnName and some optional arguments
+    * Examples:
+    *   $c->orderBy('Book.CreatedAt')
+    *    => $c->addAscendingOrderByColumn(BookTableMap::CREATED_AT)
+    *   $c->orderBy('Book.CategoryId', 'desc')
+    *    => $c->addDescendingOrderByColumn(BookTableMap::CATEGORY_ID)
+    *
+    * @param string $order      The sorting order. Criteria::ASC by default, also accepts Criteria::DESC
+    *
+    * @return $this|ModelCriteria The current object, for fluid interface
+    */
+    public function orderBySocialRecommendations($order = Criteria::ASC)
+    {
+        return $this->useResourceQuery()->orderBySocialRecommendations($order)->endUse();
     }
 
     /**

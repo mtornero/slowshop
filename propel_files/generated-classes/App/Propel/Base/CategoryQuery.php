@@ -132,6 +132,12 @@ abstract class CategoryQuery extends ModelCriteria
 
     protected $delegatedFields = [
         'ResourceTypeId' => 'Resource',
+        'SocialViews' => 'Resource',
+        'SocialLikes' => 'Resource',
+        'SocialDislikes' => 'Resource',
+        'SocialComments' => 'Resource',
+        'SocialFavourites' => 'Resource',
+        'SocialRecommendations' => 'Resource',
     ];
 
 protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
@@ -1050,6 +1056,252 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
     public function orderByResourceTypeId($order = Criteria::ASC)
     {
         return $this->useResourceQuery()->orderByResourceTypeId($order)->endUse();
+    }
+    /**
+    * Filter the query by social_views column
+    *
+    * Example usage:
+    * <code>
+        * $query->filterBySocialViews(1234); // WHERE social_views = 1234
+        * $query->filterBySocialViews(array(12, 34)); // WHERE social_views IN (12, 34)
+        * $query->filterBySocialViews(array('min' => 12)); // WHERE social_views > 12
+        * </code>
+    *
+    * @param     mixed $value The value to use as filter.
+    *              Use scalar values for equality.
+    *              Use array values for in_array() equivalent.
+    *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+    * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+    *
+    * @return $this|ChildCategoryQuery The current query, for fluid interface
+    */
+    public function filterBySocialViews($value = null, $comparison = null)
+    {
+        return $this->useResourceQuery()->filterBySocialViews($value, $comparison)->endUse();
+    }
+
+    /**
+    * Adds an ORDER BY clause to the query
+    * Usability layer on top of Criteria::addAscendingOrderByColumn() and Criteria::addDescendingOrderByColumn()
+    * Infers $column and $order from $columnName and some optional arguments
+    * Examples:
+    *   $c->orderBy('Book.CreatedAt')
+    *    => $c->addAscendingOrderByColumn(BookTableMap::CREATED_AT)
+    *   $c->orderBy('Book.CategoryId', 'desc')
+    *    => $c->addDescendingOrderByColumn(BookTableMap::CATEGORY_ID)
+    *
+    * @param string $order      The sorting order. Criteria::ASC by default, also accepts Criteria::DESC
+    *
+    * @return $this|ModelCriteria The current object, for fluid interface
+    */
+    public function orderBySocialViews($order = Criteria::ASC)
+    {
+        return $this->useResourceQuery()->orderBySocialViews($order)->endUse();
+    }
+    /**
+    * Filter the query by social_likes column
+    *
+    * Example usage:
+    * <code>
+        * $query->filterBySocialLikes(1234); // WHERE social_likes = 1234
+        * $query->filterBySocialLikes(array(12, 34)); // WHERE social_likes IN (12, 34)
+        * $query->filterBySocialLikes(array('min' => 12)); // WHERE social_likes > 12
+        * </code>
+    *
+    * @param     mixed $value The value to use as filter.
+    *              Use scalar values for equality.
+    *              Use array values for in_array() equivalent.
+    *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+    * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+    *
+    * @return $this|ChildCategoryQuery The current query, for fluid interface
+    */
+    public function filterBySocialLikes($value = null, $comparison = null)
+    {
+        return $this->useResourceQuery()->filterBySocialLikes($value, $comparison)->endUse();
+    }
+
+    /**
+    * Adds an ORDER BY clause to the query
+    * Usability layer on top of Criteria::addAscendingOrderByColumn() and Criteria::addDescendingOrderByColumn()
+    * Infers $column and $order from $columnName and some optional arguments
+    * Examples:
+    *   $c->orderBy('Book.CreatedAt')
+    *    => $c->addAscendingOrderByColumn(BookTableMap::CREATED_AT)
+    *   $c->orderBy('Book.CategoryId', 'desc')
+    *    => $c->addDescendingOrderByColumn(BookTableMap::CATEGORY_ID)
+    *
+    * @param string $order      The sorting order. Criteria::ASC by default, also accepts Criteria::DESC
+    *
+    * @return $this|ModelCriteria The current object, for fluid interface
+    */
+    public function orderBySocialLikes($order = Criteria::ASC)
+    {
+        return $this->useResourceQuery()->orderBySocialLikes($order)->endUse();
+    }
+    /**
+    * Filter the query by social_dislikes column
+    *
+    * Example usage:
+    * <code>
+        * $query->filterBySocialDislikes(1234); // WHERE social_dislikes = 1234
+        * $query->filterBySocialDislikes(array(12, 34)); // WHERE social_dislikes IN (12, 34)
+        * $query->filterBySocialDislikes(array('min' => 12)); // WHERE social_dislikes > 12
+        * </code>
+    *
+    * @param     mixed $value The value to use as filter.
+    *              Use scalar values for equality.
+    *              Use array values for in_array() equivalent.
+    *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+    * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+    *
+    * @return $this|ChildCategoryQuery The current query, for fluid interface
+    */
+    public function filterBySocialDislikes($value = null, $comparison = null)
+    {
+        return $this->useResourceQuery()->filterBySocialDislikes($value, $comparison)->endUse();
+    }
+
+    /**
+    * Adds an ORDER BY clause to the query
+    * Usability layer on top of Criteria::addAscendingOrderByColumn() and Criteria::addDescendingOrderByColumn()
+    * Infers $column and $order from $columnName and some optional arguments
+    * Examples:
+    *   $c->orderBy('Book.CreatedAt')
+    *    => $c->addAscendingOrderByColumn(BookTableMap::CREATED_AT)
+    *   $c->orderBy('Book.CategoryId', 'desc')
+    *    => $c->addDescendingOrderByColumn(BookTableMap::CATEGORY_ID)
+    *
+    * @param string $order      The sorting order. Criteria::ASC by default, also accepts Criteria::DESC
+    *
+    * @return $this|ModelCriteria The current object, for fluid interface
+    */
+    public function orderBySocialDislikes($order = Criteria::ASC)
+    {
+        return $this->useResourceQuery()->orderBySocialDislikes($order)->endUse();
+    }
+    /**
+    * Filter the query by social_comments column
+    *
+    * Example usage:
+    * <code>
+        * $query->filterBySocialComments(1234); // WHERE social_comments = 1234
+        * $query->filterBySocialComments(array(12, 34)); // WHERE social_comments IN (12, 34)
+        * $query->filterBySocialComments(array('min' => 12)); // WHERE social_comments > 12
+        * </code>
+    *
+    * @param     mixed $value The value to use as filter.
+    *              Use scalar values for equality.
+    *              Use array values for in_array() equivalent.
+    *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+    * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+    *
+    * @return $this|ChildCategoryQuery The current query, for fluid interface
+    */
+    public function filterBySocialComments($value = null, $comparison = null)
+    {
+        return $this->useResourceQuery()->filterBySocialComments($value, $comparison)->endUse();
+    }
+
+    /**
+    * Adds an ORDER BY clause to the query
+    * Usability layer on top of Criteria::addAscendingOrderByColumn() and Criteria::addDescendingOrderByColumn()
+    * Infers $column and $order from $columnName and some optional arguments
+    * Examples:
+    *   $c->orderBy('Book.CreatedAt')
+    *    => $c->addAscendingOrderByColumn(BookTableMap::CREATED_AT)
+    *   $c->orderBy('Book.CategoryId', 'desc')
+    *    => $c->addDescendingOrderByColumn(BookTableMap::CATEGORY_ID)
+    *
+    * @param string $order      The sorting order. Criteria::ASC by default, also accepts Criteria::DESC
+    *
+    * @return $this|ModelCriteria The current object, for fluid interface
+    */
+    public function orderBySocialComments($order = Criteria::ASC)
+    {
+        return $this->useResourceQuery()->orderBySocialComments($order)->endUse();
+    }
+    /**
+    * Filter the query by social_favourites column
+    *
+    * Example usage:
+    * <code>
+        * $query->filterBySocialFavourites(1234); // WHERE social_favourites = 1234
+        * $query->filterBySocialFavourites(array(12, 34)); // WHERE social_favourites IN (12, 34)
+        * $query->filterBySocialFavourites(array('min' => 12)); // WHERE social_favourites > 12
+        * </code>
+    *
+    * @param     mixed $value The value to use as filter.
+    *              Use scalar values for equality.
+    *              Use array values for in_array() equivalent.
+    *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+    * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+    *
+    * @return $this|ChildCategoryQuery The current query, for fluid interface
+    */
+    public function filterBySocialFavourites($value = null, $comparison = null)
+    {
+        return $this->useResourceQuery()->filterBySocialFavourites($value, $comparison)->endUse();
+    }
+
+    /**
+    * Adds an ORDER BY clause to the query
+    * Usability layer on top of Criteria::addAscendingOrderByColumn() and Criteria::addDescendingOrderByColumn()
+    * Infers $column and $order from $columnName and some optional arguments
+    * Examples:
+    *   $c->orderBy('Book.CreatedAt')
+    *    => $c->addAscendingOrderByColumn(BookTableMap::CREATED_AT)
+    *   $c->orderBy('Book.CategoryId', 'desc')
+    *    => $c->addDescendingOrderByColumn(BookTableMap::CATEGORY_ID)
+    *
+    * @param string $order      The sorting order. Criteria::ASC by default, also accepts Criteria::DESC
+    *
+    * @return $this|ModelCriteria The current object, for fluid interface
+    */
+    public function orderBySocialFavourites($order = Criteria::ASC)
+    {
+        return $this->useResourceQuery()->orderBySocialFavourites($order)->endUse();
+    }
+    /**
+    * Filter the query by social_recommendations column
+    *
+    * Example usage:
+    * <code>
+        * $query->filterBySocialRecommendations(1234); // WHERE social_recommendations = 1234
+        * $query->filterBySocialRecommendations(array(12, 34)); // WHERE social_recommendations IN (12, 34)
+        * $query->filterBySocialRecommendations(array('min' => 12)); // WHERE social_recommendations > 12
+        * </code>
+    *
+    * @param     mixed $value The value to use as filter.
+    *              Use scalar values for equality.
+    *              Use array values for in_array() equivalent.
+    *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+    * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+    *
+    * @return $this|ChildCategoryQuery The current query, for fluid interface
+    */
+    public function filterBySocialRecommendations($value = null, $comparison = null)
+    {
+        return $this->useResourceQuery()->filterBySocialRecommendations($value, $comparison)->endUse();
+    }
+
+    /**
+    * Adds an ORDER BY clause to the query
+    * Usability layer on top of Criteria::addAscendingOrderByColumn() and Criteria::addDescendingOrderByColumn()
+    * Infers $column and $order from $columnName and some optional arguments
+    * Examples:
+    *   $c->orderBy('Book.CreatedAt')
+    *    => $c->addAscendingOrderByColumn(BookTableMap::CREATED_AT)
+    *   $c->orderBy('Book.CategoryId', 'desc')
+    *    => $c->addDescendingOrderByColumn(BookTableMap::CATEGORY_ID)
+    *
+    * @param string $order      The sorting order. Criteria::ASC by default, also accepts Criteria::DESC
+    *
+    * @return $this|ModelCriteria The current object, for fluid interface
+    */
+    public function orderBySocialRecommendations($order = Criteria::ASC)
+    {
+        return $this->useResourceQuery()->orderBySocialRecommendations($order)->endUse();
     }
 
     /**

@@ -7,12 +7,16 @@ use \Exception;
 use \PDO;
 use App\Propel\DeliveryPeriodic as ChildDeliveryPeriodic;
 use App\Propel\DeliveryPeriodicQuery as ChildDeliveryPeriodicQuery;
+use App\Propel\File as ChildFile;
+use App\Propel\FileQuery as ChildFileQuery;
 use App\Propel\PeriodicPlan as ChildPeriodicPlan;
 use App\Propel\PeriodicPlanException as ChildPeriodicPlanException;
 use App\Propel\PeriodicPlanExceptionQuery as ChildPeriodicPlanExceptionQuery;
 use App\Propel\PeriodicPlanQuery as ChildPeriodicPlanQuery;
 use App\Propel\PeriodicType as ChildPeriodicType;
 use App\Propel\PeriodicTypeQuery as ChildPeriodicTypeQuery;
+use App\Propel\Resource as ChildResource;
+use App\Propel\ResourceQuery as ChildResourceQuery;
 use App\Propel\UserPeriodicPlan as ChildUserPeriodicPlan;
 use App\Propel\UserPeriodicPlanQuery as ChildUserPeriodicPlanQuery;
 use App\Propel\Map\DeliveryPeriodicTableMap;
@@ -82,6 +86,13 @@ abstract class PeriodicPlan implements ActiveRecordInterface
     protected $periodic_plan_id;
 
     /**
+     * The value for the resource_id field.
+     *
+     * @var        int
+     */
+    protected $resource_id;
+
+    /**
      * The value for the periodic_plan_name field.
      *
      * @var        string
@@ -110,6 +121,13 @@ abstract class PeriodicPlan implements ActiveRecordInterface
     protected $delievery_periodic_weekday;
 
     /**
+     * The value for the periodic_plan_pic field.
+     *
+     * @var        int
+     */
+    protected $periodic_plan_pic;
+
+    /**
      * The value for the created_at field.
      *
      * @var        \DateTime
@@ -124,9 +142,19 @@ abstract class PeriodicPlan implements ActiveRecordInterface
     protected $updated_at;
 
     /**
+     * @var        ChildResource
+     */
+    protected $aResource;
+
+    /**
      * @var        ChildPeriodicType
      */
     protected $aPeriodicType;
+
+    /**
+     * @var        ChildFile
+     */
+    protected $aFile;
 
     /**
      * @var        ObjectCollection|ChildDeliveryPeriodic[] Collection to store aggregation of ChildDeliveryPeriodic objects.
@@ -408,6 +436,16 @@ abstract class PeriodicPlan implements ActiveRecordInterface
     }
 
     /**
+     * Get the [resource_id] column value.
+     *
+     * @return int
+     */
+    public function getResourceId()
+    {
+        return $this->resource_id;
+    }
+
+    /**
      * Get the [periodic_plan_name] column value.
      *
      * @return string
@@ -445,6 +483,16 @@ abstract class PeriodicPlan implements ActiveRecordInterface
     public function getDelieveryPeriodicWeekday()
     {
         return $this->delievery_periodic_weekday;
+    }
+
+    /**
+     * Get the [periodic_plan_pic] column value.
+     *
+     * @return int
+     */
+    public function getPeriodicPlanPic()
+    {
+        return $this->periodic_plan_pic;
     }
 
     /**
@@ -506,6 +554,30 @@ abstract class PeriodicPlan implements ActiveRecordInterface
 
         return $this;
     } // setPeriodicPlanId()
+
+    /**
+     * Set the value of [resource_id] column.
+     *
+     * @param int $v new value
+     * @return $this|\App\Propel\PeriodicPlan The current object (for fluent API support)
+     */
+    public function setResourceId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->resource_id !== $v) {
+            $this->resource_id = $v;
+            $this->modifiedColumns[PeriodicPlanTableMap::COL_RESOURCE_ID] = true;
+        }
+
+        if ($this->aResource !== null && $this->aResource->getResourceId() !== $v) {
+            $this->aResource = null;
+        }
+
+        return $this;
+    } // setResourceId()
 
     /**
      * Set the value of [periodic_plan_name] column.
@@ -592,6 +664,30 @@ abstract class PeriodicPlan implements ActiveRecordInterface
     } // setDelieveryPeriodicWeekday()
 
     /**
+     * Set the value of [periodic_plan_pic] column.
+     *
+     * @param int $v new value
+     * @return $this|\App\Propel\PeriodicPlan The current object (for fluent API support)
+     */
+    public function setPeriodicPlanPic($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->periodic_plan_pic !== $v) {
+            $this->periodic_plan_pic = $v;
+            $this->modifiedColumns[PeriodicPlanTableMap::COL_PERIODIC_PLAN_PIC] = true;
+        }
+
+        if ($this->aFile !== null && $this->aFile->getFileId() !== $v) {
+            $this->aFile = null;
+        }
+
+        return $this;
+    } // setPeriodicPlanPic()
+
+    /**
      * Sets the value of [created_at] column to a normalized version of the date/time value specified.
      *
      * @param  mixed $v string, integer (timestamp), or \DateTime value.
@@ -670,25 +766,31 @@ abstract class PeriodicPlan implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : PeriodicPlanTableMap::translateFieldName('PeriodicPlanId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->periodic_plan_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : PeriodicPlanTableMap::translateFieldName('PeriodicPlanName', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : PeriodicPlanTableMap::translateFieldName('ResourceId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->resource_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : PeriodicPlanTableMap::translateFieldName('PeriodicPlanName', TableMap::TYPE_PHPNAME, $indexType)];
             $this->periodic_plan_name = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : PeriodicPlanTableMap::translateFieldName('PeriodicPlanPoint', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : PeriodicPlanTableMap::translateFieldName('PeriodicPlanPoint', TableMap::TYPE_PHPNAME, $indexType)];
             $this->periodic_plan_point = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : PeriodicPlanTableMap::translateFieldName('PeriodicTypeId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : PeriodicPlanTableMap::translateFieldName('PeriodicTypeId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->periodic_type_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : PeriodicPlanTableMap::translateFieldName('DelieveryPeriodicWeekday', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : PeriodicPlanTableMap::translateFieldName('DelieveryPeriodicWeekday', TableMap::TYPE_PHPNAME, $indexType)];
             $this->delievery_periodic_weekday = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : PeriodicPlanTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : PeriodicPlanTableMap::translateFieldName('PeriodicPlanPic', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->periodic_plan_pic = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : PeriodicPlanTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : PeriodicPlanTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : PeriodicPlanTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -701,7 +803,7 @@ abstract class PeriodicPlan implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 7; // 7 = PeriodicPlanTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 9; // 9 = PeriodicPlanTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\App\\Propel\\PeriodicPlan'), 0, $e);
@@ -723,8 +825,14 @@ abstract class PeriodicPlan implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
+        if ($this->aResource !== null && $this->resource_id !== $this->aResource->getResourceId()) {
+            $this->aResource = null;
+        }
         if ($this->aPeriodicType !== null && $this->periodic_type_id !== $this->aPeriodicType->getPeriodicTypeId()) {
             $this->aPeriodicType = null;
+        }
+        if ($this->aFile !== null && $this->periodic_plan_pic !== $this->aFile->getFileId()) {
+            $this->aFile = null;
         }
     } // ensureConsistency
 
@@ -765,7 +873,9 @@ abstract class PeriodicPlan implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->aResource = null;
             $this->aPeriodicType = null;
+            $this->aFile = null;
             $this->collDeliveryPeriodics = null;
 
             $this->collPeriodicPlanExceptions = null;
@@ -888,11 +998,25 @@ abstract class PeriodicPlan implements ActiveRecordInterface
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
+            if ($this->aResource !== null) {
+                if ($this->aResource->isModified() || $this->aResource->isNew()) {
+                    $affectedRows += $this->aResource->save($con);
+                }
+                $this->setResource($this->aResource);
+            }
+
             if ($this->aPeriodicType !== null) {
                 if ($this->aPeriodicType->isModified() || $this->aPeriodicType->isNew()) {
                     $affectedRows += $this->aPeriodicType->save($con);
                 }
                 $this->setPeriodicType($this->aPeriodicType);
+            }
+
+            if ($this->aFile !== null) {
+                if ($this->aFile->isModified() || $this->aFile->isNew()) {
+                    $affectedRows += $this->aFile->save($con);
+                }
+                $this->setFile($this->aFile);
             }
 
             if ($this->isNew() || $this->isModified()) {
@@ -986,6 +1110,9 @@ abstract class PeriodicPlan implements ActiveRecordInterface
         if ($this->isColumnModified(PeriodicPlanTableMap::COL_PERIODIC_PLAN_ID)) {
             $modifiedColumns[':p' . $index++]  = 'periodic_plan_id';
         }
+        if ($this->isColumnModified(PeriodicPlanTableMap::COL_RESOURCE_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'resource_id';
+        }
         if ($this->isColumnModified(PeriodicPlanTableMap::COL_PERIODIC_PLAN_NAME)) {
             $modifiedColumns[':p' . $index++]  = 'periodic_plan_name';
         }
@@ -997,6 +1124,9 @@ abstract class PeriodicPlan implements ActiveRecordInterface
         }
         if ($this->isColumnModified(PeriodicPlanTableMap::COL_DELIEVERY_PERIODIC_WEEKDAY)) {
             $modifiedColumns[':p' . $index++]  = 'delievery_periodic_weekday';
+        }
+        if ($this->isColumnModified(PeriodicPlanTableMap::COL_PERIODIC_PLAN_PIC)) {
+            $modifiedColumns[':p' . $index++]  = 'periodic_plan_pic';
         }
         if ($this->isColumnModified(PeriodicPlanTableMap::COL_CREATED_AT)) {
             $modifiedColumns[':p' . $index++]  = 'created_at';
@@ -1018,6 +1148,9 @@ abstract class PeriodicPlan implements ActiveRecordInterface
                     case 'periodic_plan_id':
                         $stmt->bindValue($identifier, $this->periodic_plan_id, PDO::PARAM_INT);
                         break;
+                    case 'resource_id':
+                        $stmt->bindValue($identifier, $this->resource_id, PDO::PARAM_INT);
+                        break;
                     case 'periodic_plan_name':
                         $stmt->bindValue($identifier, $this->periodic_plan_name, PDO::PARAM_STR);
                         break;
@@ -1029,6 +1162,9 @@ abstract class PeriodicPlan implements ActiveRecordInterface
                         break;
                     case 'delievery_periodic_weekday':
                         $stmt->bindValue($identifier, $this->delievery_periodic_weekday, PDO::PARAM_INT);
+                        break;
+                    case 'periodic_plan_pic':
+                        $stmt->bindValue($identifier, $this->periodic_plan_pic, PDO::PARAM_INT);
                         break;
                     case 'created_at':
                         $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
@@ -1102,21 +1238,27 @@ abstract class PeriodicPlan implements ActiveRecordInterface
                 return $this->getPeriodicPlanId();
                 break;
             case 1:
-                return $this->getPeriodicPlanName();
+                return $this->getResourceId();
                 break;
             case 2:
-                return $this->getPeriodicPlanPoint();
+                return $this->getPeriodicPlanName();
                 break;
             case 3:
-                return $this->getPeriodicTypeId();
+                return $this->getPeriodicPlanPoint();
                 break;
             case 4:
-                return $this->getDelieveryPeriodicWeekday();
+                return $this->getPeriodicTypeId();
                 break;
             case 5:
-                return $this->getCreatedAt();
+                return $this->getDelieveryPeriodicWeekday();
                 break;
             case 6:
+                return $this->getPeriodicPlanPic();
+                break;
+            case 7:
+                return $this->getCreatedAt();
+                break;
+            case 8:
                 return $this->getUpdatedAt();
                 break;
             default:
@@ -1150,19 +1292,21 @@ abstract class PeriodicPlan implements ActiveRecordInterface
         $keys = PeriodicPlanTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getPeriodicPlanId(),
-            $keys[1] => $this->getPeriodicPlanName(),
-            $keys[2] => $this->getPeriodicPlanPoint(),
-            $keys[3] => $this->getPeriodicTypeId(),
-            $keys[4] => $this->getDelieveryPeriodicWeekday(),
-            $keys[5] => $this->getCreatedAt(),
-            $keys[6] => $this->getUpdatedAt(),
+            $keys[1] => $this->getResourceId(),
+            $keys[2] => $this->getPeriodicPlanName(),
+            $keys[3] => $this->getPeriodicPlanPoint(),
+            $keys[4] => $this->getPeriodicTypeId(),
+            $keys[5] => $this->getDelieveryPeriodicWeekday(),
+            $keys[6] => $this->getPeriodicPlanPic(),
+            $keys[7] => $this->getCreatedAt(),
+            $keys[8] => $this->getUpdatedAt(),
         );
-        if ($result[$keys[5]] instanceof \DateTime) {
-            $result[$keys[5]] = $result[$keys[5]]->format('c');
+        if ($result[$keys[7]] instanceof \DateTime) {
+            $result[$keys[7]] = $result[$keys[7]]->format('c');
         }
 
-        if ($result[$keys[6]] instanceof \DateTime) {
-            $result[$keys[6]] = $result[$keys[6]]->format('c');
+        if ($result[$keys[8]] instanceof \DateTime) {
+            $result[$keys[8]] = $result[$keys[8]]->format('c');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1171,6 +1315,21 @@ abstract class PeriodicPlan implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
+            if (null !== $this->aResource) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'resource';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'resource';
+                        break;
+                    default:
+                        $key = 'Resource';
+                }
+
+                $result[$key] = $this->aResource->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
             if (null !== $this->aPeriodicType) {
 
                 switch ($keyType) {
@@ -1185,6 +1344,21 @@ abstract class PeriodicPlan implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->aPeriodicType->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aFile) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'file';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'file';
+                        break;
+                    default:
+                        $key = 'File';
+                }
+
+                $result[$key] = $this->aFile->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->collDeliveryPeriodics) {
 
@@ -1269,21 +1443,27 @@ abstract class PeriodicPlan implements ActiveRecordInterface
                 $this->setPeriodicPlanId($value);
                 break;
             case 1:
-                $this->setPeriodicPlanName($value);
+                $this->setResourceId($value);
                 break;
             case 2:
-                $this->setPeriodicPlanPoint($value);
+                $this->setPeriodicPlanName($value);
                 break;
             case 3:
-                $this->setPeriodicTypeId($value);
+                $this->setPeriodicPlanPoint($value);
                 break;
             case 4:
-                $this->setDelieveryPeriodicWeekday($value);
+                $this->setPeriodicTypeId($value);
                 break;
             case 5:
-                $this->setCreatedAt($value);
+                $this->setDelieveryPeriodicWeekday($value);
                 break;
             case 6:
+                $this->setPeriodicPlanPic($value);
+                break;
+            case 7:
+                $this->setCreatedAt($value);
+                break;
+            case 8:
                 $this->setUpdatedAt($value);
                 break;
         } // switch()
@@ -1316,22 +1496,28 @@ abstract class PeriodicPlan implements ActiveRecordInterface
             $this->setPeriodicPlanId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setPeriodicPlanName($arr[$keys[1]]);
+            $this->setResourceId($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setPeriodicPlanPoint($arr[$keys[2]]);
+            $this->setPeriodicPlanName($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setPeriodicTypeId($arr[$keys[3]]);
+            $this->setPeriodicPlanPoint($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setDelieveryPeriodicWeekday($arr[$keys[4]]);
+            $this->setPeriodicTypeId($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setCreatedAt($arr[$keys[5]]);
+            $this->setDelieveryPeriodicWeekday($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setUpdatedAt($arr[$keys[6]]);
+            $this->setPeriodicPlanPic($arr[$keys[6]]);
+        }
+        if (array_key_exists($keys[7], $arr)) {
+            $this->setCreatedAt($arr[$keys[7]]);
+        }
+        if (array_key_exists($keys[8], $arr)) {
+            $this->setUpdatedAt($arr[$keys[8]]);
         }
     }
 
@@ -1377,6 +1563,9 @@ abstract class PeriodicPlan implements ActiveRecordInterface
         if ($this->isColumnModified(PeriodicPlanTableMap::COL_PERIODIC_PLAN_ID)) {
             $criteria->add(PeriodicPlanTableMap::COL_PERIODIC_PLAN_ID, $this->periodic_plan_id);
         }
+        if ($this->isColumnModified(PeriodicPlanTableMap::COL_RESOURCE_ID)) {
+            $criteria->add(PeriodicPlanTableMap::COL_RESOURCE_ID, $this->resource_id);
+        }
         if ($this->isColumnModified(PeriodicPlanTableMap::COL_PERIODIC_PLAN_NAME)) {
             $criteria->add(PeriodicPlanTableMap::COL_PERIODIC_PLAN_NAME, $this->periodic_plan_name);
         }
@@ -1388,6 +1577,9 @@ abstract class PeriodicPlan implements ActiveRecordInterface
         }
         if ($this->isColumnModified(PeriodicPlanTableMap::COL_DELIEVERY_PERIODIC_WEEKDAY)) {
             $criteria->add(PeriodicPlanTableMap::COL_DELIEVERY_PERIODIC_WEEKDAY, $this->delievery_periodic_weekday);
+        }
+        if ($this->isColumnModified(PeriodicPlanTableMap::COL_PERIODIC_PLAN_PIC)) {
+            $criteria->add(PeriodicPlanTableMap::COL_PERIODIC_PLAN_PIC, $this->periodic_plan_pic);
         }
         if ($this->isColumnModified(PeriodicPlanTableMap::COL_CREATED_AT)) {
             $criteria->add(PeriodicPlanTableMap::COL_CREATED_AT, $this->created_at);
@@ -1481,10 +1673,12 @@ abstract class PeriodicPlan implements ActiveRecordInterface
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
+        $copyObj->setResourceId($this->getResourceId());
         $copyObj->setPeriodicPlanName($this->getPeriodicPlanName());
         $copyObj->setPeriodicPlanPoint($this->getPeriodicPlanPoint());
         $copyObj->setPeriodicTypeId($this->getPeriodicTypeId());
         $copyObj->setDelieveryPeriodicWeekday($this->getDelieveryPeriodicWeekday());
+        $copyObj->setPeriodicPlanPic($this->getPeriodicPlanPic());
         $copyObj->setCreatedAt($this->getCreatedAt());
         $copyObj->setUpdatedAt($this->getUpdatedAt());
 
@@ -1542,6 +1736,57 @@ abstract class PeriodicPlan implements ActiveRecordInterface
     }
 
     /**
+     * Declares an association between this object and a ChildResource object.
+     *
+     * @param  ChildResource $v
+     * @return $this|\App\Propel\PeriodicPlan The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setResource(ChildResource $v = null)
+    {
+        if ($v === null) {
+            $this->setResourceId(NULL);
+        } else {
+            $this->setResourceId($v->getResourceId());
+        }
+
+        $this->aResource = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildResource object, it will not be re-added.
+        if ($v !== null) {
+            $v->addPeriodicPlan($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildResource object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildResource The associated ChildResource object.
+     * @throws PropelException
+     */
+    public function getResource(ConnectionInterface $con = null)
+    {
+        if ($this->aResource === null && ($this->resource_id !== null)) {
+            $this->aResource = ChildResourceQuery::create()->findPk($this->resource_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aResource->addPeriodicPlans($this);
+             */
+        }
+
+        return $this->aResource;
+    }
+
+    /**
      * Declares an association between this object and a ChildPeriodicType object.
      *
      * @param  ChildPeriodicType $v
@@ -1590,6 +1835,57 @@ abstract class PeriodicPlan implements ActiveRecordInterface
         }
 
         return $this->aPeriodicType;
+    }
+
+    /**
+     * Declares an association between this object and a ChildFile object.
+     *
+     * @param  ChildFile $v
+     * @return $this|\App\Propel\PeriodicPlan The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setFile(ChildFile $v = null)
+    {
+        if ($v === null) {
+            $this->setPeriodicPlanPic(NULL);
+        } else {
+            $this->setPeriodicPlanPic($v->getFileId());
+        }
+
+        $this->aFile = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildFile object, it will not be re-added.
+        if ($v !== null) {
+            $v->addPeriodicPlan($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildFile object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildFile The associated ChildFile object.
+     * @throws PropelException
+     */
+    public function getFile(ConnectionInterface $con = null)
+    {
+        if ($this->aFile === null && ($this->periodic_plan_pic !== null)) {
+            $this->aFile = ChildFileQuery::create()->findPk($this->periodic_plan_pic, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aFile->addPeriodicPlans($this);
+             */
+        }
+
+        return $this->aFile;
     }
 
 
@@ -2346,14 +2642,22 @@ abstract class PeriodicPlan implements ActiveRecordInterface
      */
     public function clear()
     {
+        if (null !== $this->aResource) {
+            $this->aResource->removePeriodicPlan($this);
+        }
         if (null !== $this->aPeriodicType) {
             $this->aPeriodicType->removePeriodicPlan($this);
         }
+        if (null !== $this->aFile) {
+            $this->aFile->removePeriodicPlan($this);
+        }
         $this->periodic_plan_id = null;
+        $this->resource_id = null;
         $this->periodic_plan_name = null;
         $this->periodic_plan_point = null;
         $this->periodic_type_id = null;
         $this->delievery_periodic_weekday = null;
+        $this->periodic_plan_pic = null;
         $this->created_at = null;
         $this->updated_at = null;
         $this->alreadyInSave = false;
@@ -2394,7 +2698,9 @@ abstract class PeriodicPlan implements ActiveRecordInterface
         $this->collDeliveryPeriodics = null;
         $this->collPeriodicPlanExceptions = null;
         $this->collUserPeriodicPlans = null;
+        $this->aResource = null;
         $this->aPeriodicType = null;
+        $this->aFile = null;
     }
 
     /**

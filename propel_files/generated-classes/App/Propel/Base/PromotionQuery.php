@@ -25,6 +25,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPromotionQuery orderByPromotionTypeId($order = Criteria::ASC) Order by the promotion_type_id column
  * @method     ChildPromotionQuery orderByPromotionValue($order = Criteria::ASC) Order by the promotion_value column
  * @method     ChildPromotionQuery orderByPromotionGift($order = Criteria::ASC) Order by the promotion_gift column
+ * @method     ChildPromotionQuery orderByPromotionDescription($order = Criteria::ASC) Order by the promotion_description column
  * @method     ChildPromotionQuery orderByPromotionStartingPoint($order = Criteria::ASC) Order by the promotion_starting_point column
  * @method     ChildPromotionQuery orderByPromotionStartingDate($order = Criteria::ASC) Order by the promotion_starting_date column
  * @method     ChildPromotionQuery orderByPromotionEndingDate($order = Criteria::ASC) Order by the promotion_ending_date column
@@ -37,6 +38,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPromotionQuery groupByPromotionTypeId() Group by the promotion_type_id column
  * @method     ChildPromotionQuery groupByPromotionValue() Group by the promotion_value column
  * @method     ChildPromotionQuery groupByPromotionGift() Group by the promotion_gift column
+ * @method     ChildPromotionQuery groupByPromotionDescription() Group by the promotion_description column
  * @method     ChildPromotionQuery groupByPromotionStartingPoint() Group by the promotion_starting_point column
  * @method     ChildPromotionQuery groupByPromotionStartingDate() Group by the promotion_starting_date column
  * @method     ChildPromotionQuery groupByPromotionEndingDate() Group by the promotion_ending_date column
@@ -82,6 +84,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPromotion findOneByPromotionTypeId(int $promotion_type_id) Return the first ChildPromotion filtered by the promotion_type_id column
  * @method     ChildPromotion findOneByPromotionValue(string $promotion_value) Return the first ChildPromotion filtered by the promotion_value column
  * @method     ChildPromotion findOneByPromotionGift(int $promotion_gift) Return the first ChildPromotion filtered by the promotion_gift column
+ * @method     ChildPromotion findOneByPromotionDescription(string $promotion_description) Return the first ChildPromotion filtered by the promotion_description column
  * @method     ChildPromotion findOneByPromotionStartingPoint(int $promotion_starting_point) Return the first ChildPromotion filtered by the promotion_starting_point column
  * @method     ChildPromotion findOneByPromotionStartingDate(string $promotion_starting_date) Return the first ChildPromotion filtered by the promotion_starting_date column
  * @method     ChildPromotion findOneByPromotionEndingDate(string $promotion_ending_date) Return the first ChildPromotion filtered by the promotion_ending_date column
@@ -97,6 +100,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPromotion requireOneByPromotionTypeId(int $promotion_type_id) Return the first ChildPromotion filtered by the promotion_type_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPromotion requireOneByPromotionValue(string $promotion_value) Return the first ChildPromotion filtered by the promotion_value column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPromotion requireOneByPromotionGift(int $promotion_gift) Return the first ChildPromotion filtered by the promotion_gift column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildPromotion requireOneByPromotionDescription(string $promotion_description) Return the first ChildPromotion filtered by the promotion_description column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPromotion requireOneByPromotionStartingPoint(int $promotion_starting_point) Return the first ChildPromotion filtered by the promotion_starting_point column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPromotion requireOneByPromotionStartingDate(string $promotion_starting_date) Return the first ChildPromotion filtered by the promotion_starting_date column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPromotion requireOneByPromotionEndingDate(string $promotion_ending_date) Return the first ChildPromotion filtered by the promotion_ending_date column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -110,6 +114,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPromotion[]|ObjectCollection findByPromotionTypeId(int $promotion_type_id) Return ChildPromotion objects filtered by the promotion_type_id column
  * @method     ChildPromotion[]|ObjectCollection findByPromotionValue(string $promotion_value) Return ChildPromotion objects filtered by the promotion_value column
  * @method     ChildPromotion[]|ObjectCollection findByPromotionGift(int $promotion_gift) Return ChildPromotion objects filtered by the promotion_gift column
+ * @method     ChildPromotion[]|ObjectCollection findByPromotionDescription(string $promotion_description) Return ChildPromotion objects filtered by the promotion_description column
  * @method     ChildPromotion[]|ObjectCollection findByPromotionStartingPoint(int $promotion_starting_point) Return ChildPromotion objects filtered by the promotion_starting_point column
  * @method     ChildPromotion[]|ObjectCollection findByPromotionStartingDate(string $promotion_starting_date) Return ChildPromotion objects filtered by the promotion_starting_date column
  * @method     ChildPromotion[]|ObjectCollection findByPromotionEndingDate(string $promotion_ending_date) Return ChildPromotion objects filtered by the promotion_ending_date column
@@ -126,6 +131,12 @@ abstract class PromotionQuery extends ModelCriteria
 
     protected $delegatedFields = [
         'ResourceTypeId' => 'Resource',
+        'SocialViews' => 'Resource',
+        'SocialLikes' => 'Resource',
+        'SocialDislikes' => 'Resource',
+        'SocialComments' => 'Resource',
+        'SocialFavourites' => 'Resource',
+        'SocialRecommendations' => 'Resource',
     ];
 
 protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
@@ -215,7 +226,7 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT promotion_id, resource_id, promotion_type_id, promotion_value, promotion_gift, promotion_starting_point, promotion_starting_date, promotion_ending_date, promotion_is_active, created_at, updated_at FROM promotion WHERE promotion_id = :p0';
+        $sql = 'SELECT promotion_id, resource_id, promotion_type_id, promotion_value, promotion_gift, promotion_description, promotion_starting_point, promotion_starting_date, promotion_ending_date, promotion_is_active, created_at, updated_at FROM promotion WHERE promotion_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -512,6 +523,35 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
         }
 
         return $this->addUsingAlias(PromotionTableMap::COL_PROMOTION_GIFT, $promotionGift, $comparison);
+    }
+
+    /**
+     * Filter the query on the promotion_description column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByPromotionDescription('fooValue');   // WHERE promotion_description = 'fooValue'
+     * $query->filterByPromotionDescription('%fooValue%'); // WHERE promotion_description LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $promotionDescription The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildPromotionQuery The current query, for fluid interface
+     */
+    public function filterByPromotionDescription($promotionDescription = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($promotionDescription)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $promotionDescription)) {
+                $promotionDescription = str_replace('*', '%', $promotionDescription);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(PromotionTableMap::COL_PROMOTION_DESCRIPTION, $promotionDescription, $comparison);
     }
 
     /**
@@ -1026,6 +1066,252 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
     public function orderByResourceTypeId($order = Criteria::ASC)
     {
         return $this->useResourceQuery()->orderByResourceTypeId($order)->endUse();
+    }
+    /**
+    * Filter the query by social_views column
+    *
+    * Example usage:
+    * <code>
+        * $query->filterBySocialViews(1234); // WHERE social_views = 1234
+        * $query->filterBySocialViews(array(12, 34)); // WHERE social_views IN (12, 34)
+        * $query->filterBySocialViews(array('min' => 12)); // WHERE social_views > 12
+        * </code>
+    *
+    * @param     mixed $value The value to use as filter.
+    *              Use scalar values for equality.
+    *              Use array values for in_array() equivalent.
+    *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+    * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+    *
+    * @return $this|ChildPromotionQuery The current query, for fluid interface
+    */
+    public function filterBySocialViews($value = null, $comparison = null)
+    {
+        return $this->useResourceQuery()->filterBySocialViews($value, $comparison)->endUse();
+    }
+
+    /**
+    * Adds an ORDER BY clause to the query
+    * Usability layer on top of Criteria::addAscendingOrderByColumn() and Criteria::addDescendingOrderByColumn()
+    * Infers $column and $order from $columnName and some optional arguments
+    * Examples:
+    *   $c->orderBy('Book.CreatedAt')
+    *    => $c->addAscendingOrderByColumn(BookTableMap::CREATED_AT)
+    *   $c->orderBy('Book.CategoryId', 'desc')
+    *    => $c->addDescendingOrderByColumn(BookTableMap::CATEGORY_ID)
+    *
+    * @param string $order      The sorting order. Criteria::ASC by default, also accepts Criteria::DESC
+    *
+    * @return $this|ModelCriteria The current object, for fluid interface
+    */
+    public function orderBySocialViews($order = Criteria::ASC)
+    {
+        return $this->useResourceQuery()->orderBySocialViews($order)->endUse();
+    }
+    /**
+    * Filter the query by social_likes column
+    *
+    * Example usage:
+    * <code>
+        * $query->filterBySocialLikes(1234); // WHERE social_likes = 1234
+        * $query->filterBySocialLikes(array(12, 34)); // WHERE social_likes IN (12, 34)
+        * $query->filterBySocialLikes(array('min' => 12)); // WHERE social_likes > 12
+        * </code>
+    *
+    * @param     mixed $value The value to use as filter.
+    *              Use scalar values for equality.
+    *              Use array values for in_array() equivalent.
+    *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+    * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+    *
+    * @return $this|ChildPromotionQuery The current query, for fluid interface
+    */
+    public function filterBySocialLikes($value = null, $comparison = null)
+    {
+        return $this->useResourceQuery()->filterBySocialLikes($value, $comparison)->endUse();
+    }
+
+    /**
+    * Adds an ORDER BY clause to the query
+    * Usability layer on top of Criteria::addAscendingOrderByColumn() and Criteria::addDescendingOrderByColumn()
+    * Infers $column and $order from $columnName and some optional arguments
+    * Examples:
+    *   $c->orderBy('Book.CreatedAt')
+    *    => $c->addAscendingOrderByColumn(BookTableMap::CREATED_AT)
+    *   $c->orderBy('Book.CategoryId', 'desc')
+    *    => $c->addDescendingOrderByColumn(BookTableMap::CATEGORY_ID)
+    *
+    * @param string $order      The sorting order. Criteria::ASC by default, also accepts Criteria::DESC
+    *
+    * @return $this|ModelCriteria The current object, for fluid interface
+    */
+    public function orderBySocialLikes($order = Criteria::ASC)
+    {
+        return $this->useResourceQuery()->orderBySocialLikes($order)->endUse();
+    }
+    /**
+    * Filter the query by social_dislikes column
+    *
+    * Example usage:
+    * <code>
+        * $query->filterBySocialDislikes(1234); // WHERE social_dislikes = 1234
+        * $query->filterBySocialDislikes(array(12, 34)); // WHERE social_dislikes IN (12, 34)
+        * $query->filterBySocialDislikes(array('min' => 12)); // WHERE social_dislikes > 12
+        * </code>
+    *
+    * @param     mixed $value The value to use as filter.
+    *              Use scalar values for equality.
+    *              Use array values for in_array() equivalent.
+    *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+    * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+    *
+    * @return $this|ChildPromotionQuery The current query, for fluid interface
+    */
+    public function filterBySocialDislikes($value = null, $comparison = null)
+    {
+        return $this->useResourceQuery()->filterBySocialDislikes($value, $comparison)->endUse();
+    }
+
+    /**
+    * Adds an ORDER BY clause to the query
+    * Usability layer on top of Criteria::addAscendingOrderByColumn() and Criteria::addDescendingOrderByColumn()
+    * Infers $column and $order from $columnName and some optional arguments
+    * Examples:
+    *   $c->orderBy('Book.CreatedAt')
+    *    => $c->addAscendingOrderByColumn(BookTableMap::CREATED_AT)
+    *   $c->orderBy('Book.CategoryId', 'desc')
+    *    => $c->addDescendingOrderByColumn(BookTableMap::CATEGORY_ID)
+    *
+    * @param string $order      The sorting order. Criteria::ASC by default, also accepts Criteria::DESC
+    *
+    * @return $this|ModelCriteria The current object, for fluid interface
+    */
+    public function orderBySocialDislikes($order = Criteria::ASC)
+    {
+        return $this->useResourceQuery()->orderBySocialDislikes($order)->endUse();
+    }
+    /**
+    * Filter the query by social_comments column
+    *
+    * Example usage:
+    * <code>
+        * $query->filterBySocialComments(1234); // WHERE social_comments = 1234
+        * $query->filterBySocialComments(array(12, 34)); // WHERE social_comments IN (12, 34)
+        * $query->filterBySocialComments(array('min' => 12)); // WHERE social_comments > 12
+        * </code>
+    *
+    * @param     mixed $value The value to use as filter.
+    *              Use scalar values for equality.
+    *              Use array values for in_array() equivalent.
+    *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+    * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+    *
+    * @return $this|ChildPromotionQuery The current query, for fluid interface
+    */
+    public function filterBySocialComments($value = null, $comparison = null)
+    {
+        return $this->useResourceQuery()->filterBySocialComments($value, $comparison)->endUse();
+    }
+
+    /**
+    * Adds an ORDER BY clause to the query
+    * Usability layer on top of Criteria::addAscendingOrderByColumn() and Criteria::addDescendingOrderByColumn()
+    * Infers $column and $order from $columnName and some optional arguments
+    * Examples:
+    *   $c->orderBy('Book.CreatedAt')
+    *    => $c->addAscendingOrderByColumn(BookTableMap::CREATED_AT)
+    *   $c->orderBy('Book.CategoryId', 'desc')
+    *    => $c->addDescendingOrderByColumn(BookTableMap::CATEGORY_ID)
+    *
+    * @param string $order      The sorting order. Criteria::ASC by default, also accepts Criteria::DESC
+    *
+    * @return $this|ModelCriteria The current object, for fluid interface
+    */
+    public function orderBySocialComments($order = Criteria::ASC)
+    {
+        return $this->useResourceQuery()->orderBySocialComments($order)->endUse();
+    }
+    /**
+    * Filter the query by social_favourites column
+    *
+    * Example usage:
+    * <code>
+        * $query->filterBySocialFavourites(1234); // WHERE social_favourites = 1234
+        * $query->filterBySocialFavourites(array(12, 34)); // WHERE social_favourites IN (12, 34)
+        * $query->filterBySocialFavourites(array('min' => 12)); // WHERE social_favourites > 12
+        * </code>
+    *
+    * @param     mixed $value The value to use as filter.
+    *              Use scalar values for equality.
+    *              Use array values for in_array() equivalent.
+    *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+    * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+    *
+    * @return $this|ChildPromotionQuery The current query, for fluid interface
+    */
+    public function filterBySocialFavourites($value = null, $comparison = null)
+    {
+        return $this->useResourceQuery()->filterBySocialFavourites($value, $comparison)->endUse();
+    }
+
+    /**
+    * Adds an ORDER BY clause to the query
+    * Usability layer on top of Criteria::addAscendingOrderByColumn() and Criteria::addDescendingOrderByColumn()
+    * Infers $column and $order from $columnName and some optional arguments
+    * Examples:
+    *   $c->orderBy('Book.CreatedAt')
+    *    => $c->addAscendingOrderByColumn(BookTableMap::CREATED_AT)
+    *   $c->orderBy('Book.CategoryId', 'desc')
+    *    => $c->addDescendingOrderByColumn(BookTableMap::CATEGORY_ID)
+    *
+    * @param string $order      The sorting order. Criteria::ASC by default, also accepts Criteria::DESC
+    *
+    * @return $this|ModelCriteria The current object, for fluid interface
+    */
+    public function orderBySocialFavourites($order = Criteria::ASC)
+    {
+        return $this->useResourceQuery()->orderBySocialFavourites($order)->endUse();
+    }
+    /**
+    * Filter the query by social_recommendations column
+    *
+    * Example usage:
+    * <code>
+        * $query->filterBySocialRecommendations(1234); // WHERE social_recommendations = 1234
+        * $query->filterBySocialRecommendations(array(12, 34)); // WHERE social_recommendations IN (12, 34)
+        * $query->filterBySocialRecommendations(array('min' => 12)); // WHERE social_recommendations > 12
+        * </code>
+    *
+    * @param     mixed $value The value to use as filter.
+    *              Use scalar values for equality.
+    *              Use array values for in_array() equivalent.
+    *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+    * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+    *
+    * @return $this|ChildPromotionQuery The current query, for fluid interface
+    */
+    public function filterBySocialRecommendations($value = null, $comparison = null)
+    {
+        return $this->useResourceQuery()->filterBySocialRecommendations($value, $comparison)->endUse();
+    }
+
+    /**
+    * Adds an ORDER BY clause to the query
+    * Usability layer on top of Criteria::addAscendingOrderByColumn() and Criteria::addDescendingOrderByColumn()
+    * Infers $column and $order from $columnName and some optional arguments
+    * Examples:
+    *   $c->orderBy('Book.CreatedAt')
+    *    => $c->addAscendingOrderByColumn(BookTableMap::CREATED_AT)
+    *   $c->orderBy('Book.CategoryId', 'desc')
+    *    => $c->addDescendingOrderByColumn(BookTableMap::CATEGORY_ID)
+    *
+    * @param string $order      The sorting order. Criteria::ASC by default, also accepts Criteria::DESC
+    *
+    * @return $this|ModelCriteria The current object, for fluid interface
+    */
+    public function orderBySocialRecommendations($order = Criteria::ASC)
+    {
+        return $this->useResourceQuery()->orderBySocialRecommendations($order)->endUse();
     }
 
     /**

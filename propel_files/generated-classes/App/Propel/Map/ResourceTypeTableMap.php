@@ -86,15 +86,6 @@ class ResourceTypeTableMap extends TableMap
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
 
-    // i18n behavior
-
-    /**
-     * The default locale to use for translations.
-     *
-     * @var string
-     */
-    const DEFAULT_LOCALE = 'en_US';
-
     /**
      * holds an array of fieldnames
      *
@@ -156,36 +147,7 @@ class ResourceTypeTableMap extends TableMap
     1 => ':resource_type_id',
   ),
 ), null, 'CASCADE', 'Resources', false);
-        $this->addRelation('ResourceTypeI18n', '\\App\\Propel\\ResourceTypeI18n', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':resource_type_id',
-    1 => ':resource_type_id',
-  ),
-), 'CASCADE', null, 'ResourceTypeI18ns', false);
     } // buildRelations()
-
-    /**
-     *
-     * Gets the list of behaviors registered for this table
-     *
-     * @return array Associative array (name => parameters) of behaviors
-     */
-    public function getBehaviors()
-    {
-        return array(
-            'i18n' => array('i18n_table' => '%TABLE%_i18n', 'i18n_phpname' => '%PHPNAME%I18n', 'i18n_columns' => 'resource_type_name', 'i18n_pk_column' => '', 'locale_column' => 'locale', 'locale_length' => '5', 'default_locale' => '', 'locale_alias' => '', ),
-        );
-    } // getBehaviors()
-    /**
-     * Method to invalidate the instance pool of all tables related to resource_type     * by a foreign key with ON DELETE CASCADE
-     */
-    public static function clearRelatedInstancePool()
-    {
-        // Invalidate objects in related instance pools,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        ResourceTypeI18nTableMap::clearInstancePool();
-    }
 
     /**
      * Retrieves a string version of the primary key from the DB resultset row that can be used to uniquely identify a row in this table.

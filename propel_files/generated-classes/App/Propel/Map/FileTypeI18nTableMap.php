@@ -136,7 +136,7 @@ class FileTypeI18nTableMap extends TableMap
         $this->setPackage('App.Propel');
         $this->setUseIdGenerator(false);
         // columns
-        $this->addForeignPrimaryKey('file_type_id', 'FileTypeId', 'SMALLINT' , 'file_type', 'file_type_id', true, 8, null);
+        $this->addForeignPrimaryKey('file_type_id', 'FileTypeId', 'SMALLINT' , 'file_type', 'file_type_id', true, 5, null);
         $this->addPrimaryKey('locale', 'Locale', 'VARCHAR', true, 5, 'en_US');
         $this->addColumn('file_type_name', 'FileTypeName', 'VARCHAR', true, 60, null);
     } // initialize()

@@ -7,11 +7,8 @@ use \PDO;
 use App\Propel\Resource as ChildResource;
 use App\Propel\ResourceQuery as ChildResourceQuery;
 use App\Propel\ResourceType as ChildResourceType;
-use App\Propel\ResourceTypeI18n as ChildResourceTypeI18n;
-use App\Propel\ResourceTypeI18nQuery as ChildResourceTypeI18nQuery;
 use App\Propel\ResourceTypeQuery as ChildResourceTypeQuery;
 use App\Propel\Map\ResourceTableMap;
-use App\Propel\Map\ResourceTypeI18nTableMap;
 use App\Propel\Map\ResourceTypeTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
@@ -88,12 +85,6 @@ abstract class ResourceType implements ActiveRecordInterface
     protected $collResourcesPartial;
 
     /**
-     * @var        ObjectCollection|ChildResourceTypeI18n[] Collection to store aggregation of ChildResourceTypeI18n objects.
-     */
-    protected $collResourceTypeI18ns;
-    protected $collResourceTypeI18nsPartial;
-
-    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
@@ -101,31 +92,11 @@ abstract class ResourceType implements ActiveRecordInterface
      */
     protected $alreadyInSave = false;
 
-    // i18n behavior
-
-    /**
-     * Current locale
-     * @var        string
-     */
-    protected $currentLocale = 'en_US';
-
-    /**
-     * Current translation objects
-     * @var        array[ChildResourceTypeI18n]
-     */
-    protected $currentTranslations;
-
     /**
      * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildResource[]
      */
     protected $resourcesScheduledForDeletion = null;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildResourceTypeI18n[]
-     */
-    protected $resourceTypeI18nsScheduledForDeletion = null;
 
     /**
      * Initializes internal state of App\Propel\Base\ResourceType object.
@@ -524,8 +495,6 @@ abstract class ResourceType implements ActiveRecordInterface
 
             $this->collResources = null;
 
-            $this->collResourceTypeI18ns = null;
-
         } // if (deep)
     }
 
@@ -647,23 +616,6 @@ abstract class ResourceType implements ActiveRecordInterface
 
             if ($this->collResources !== null) {
                 foreach ($this->collResources as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
-            if ($this->resourceTypeI18nsScheduledForDeletion !== null) {
-                if (!$this->resourceTypeI18nsScheduledForDeletion->isEmpty()) {
-                    \App\Propel\ResourceTypeI18nQuery::create()
-                        ->filterByPrimaryKeys($this->resourceTypeI18nsScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->resourceTypeI18nsScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collResourceTypeI18ns !== null) {
-                foreach ($this->collResourceTypeI18ns as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -840,21 +792,6 @@ abstract class ResourceType implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->collResources->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
-            if (null !== $this->collResourceTypeI18ns) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'resourceTypeI18ns';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'resource_type_i18ns';
-                        break;
-                    default:
-                        $key = 'ResourceTypeI18ns';
-                }
-
-                $result[$key] = $this->collResourceTypeI18ns->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1074,12 +1011,6 @@ abstract class ResourceType implements ActiveRecordInterface
                 }
             }
 
-            foreach ($this->getResourceTypeI18ns() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addResourceTypeI18n($relObj->copy($deepCopy));
-                }
-            }
-
         } // if ($deepCopy)
 
         if ($makeNew) {
@@ -1123,9 +1054,6 @@ abstract class ResourceType implements ActiveRecordInterface
     {
         if ('Resource' == $relationName) {
             return $this->initResources();
-        }
-        if ('ResourceTypeI18n' == $relationName) {
-            return $this->initResourceTypeI18ns();
         }
     }
 
@@ -1355,238 +1283,6 @@ abstract class ResourceType implements ActiveRecordInterface
     }
 
     /**
-     * Clears out the collResourceTypeI18ns collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return void
-     * @see        addResourceTypeI18ns()
-     */
-    public function clearResourceTypeI18ns()
-    {
-        $this->collResourceTypeI18ns = null; // important to set this to NULL since that means it is uninitialized
-    }
-
-    /**
-     * Reset is the collResourceTypeI18ns collection loaded partially.
-     */
-    public function resetPartialResourceTypeI18ns($v = true)
-    {
-        $this->collResourceTypeI18nsPartial = $v;
-    }
-
-    /**
-     * Initializes the collResourceTypeI18ns collection.
-     *
-     * By default this just sets the collResourceTypeI18ns collection to an empty array (like clearcollResourceTypeI18ns());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initResourceTypeI18ns($overrideExisting = true)
-    {
-        if (null !== $this->collResourceTypeI18ns && !$overrideExisting) {
-            return;
-        }
-
-        $collectionClassName = ResourceTypeI18nTableMap::getTableMap()->getCollectionClassName();
-
-        $this->collResourceTypeI18ns = new $collectionClassName;
-        $this->collResourceTypeI18ns->setModel('\App\Propel\ResourceTypeI18n');
-    }
-
-    /**
-     * Gets an array of ChildResourceTypeI18n objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildResourceType is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildResourceTypeI18n[] List of ChildResourceTypeI18n objects
-     * @throws PropelException
-     */
-    public function getResourceTypeI18ns(Criteria $criteria = null, ConnectionInterface $con = null)
-    {
-        $partial = $this->collResourceTypeI18nsPartial && !$this->isNew();
-        if (null === $this->collResourceTypeI18ns || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collResourceTypeI18ns) {
-                // return empty collection
-                $this->initResourceTypeI18ns();
-            } else {
-                $collResourceTypeI18ns = ChildResourceTypeI18nQuery::create(null, $criteria)
-                    ->filterByResourceType($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collResourceTypeI18nsPartial && count($collResourceTypeI18ns)) {
-                        $this->initResourceTypeI18ns(false);
-
-                        foreach ($collResourceTypeI18ns as $obj) {
-                            if (false == $this->collResourceTypeI18ns->contains($obj)) {
-                                $this->collResourceTypeI18ns->append($obj);
-                            }
-                        }
-
-                        $this->collResourceTypeI18nsPartial = true;
-                    }
-
-                    return $collResourceTypeI18ns;
-                }
-
-                if ($partial && $this->collResourceTypeI18ns) {
-                    foreach ($this->collResourceTypeI18ns as $obj) {
-                        if ($obj->isNew()) {
-                            $collResourceTypeI18ns[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collResourceTypeI18ns = $collResourceTypeI18ns;
-                $this->collResourceTypeI18nsPartial = false;
-            }
-        }
-
-        return $this->collResourceTypeI18ns;
-    }
-
-    /**
-     * Sets a collection of ChildResourceTypeI18n objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param      Collection $resourceTypeI18ns A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return $this|ChildResourceType The current object (for fluent API support)
-     */
-    public function setResourceTypeI18ns(Collection $resourceTypeI18ns, ConnectionInterface $con = null)
-    {
-        /** @var ChildResourceTypeI18n[] $resourceTypeI18nsToDelete */
-        $resourceTypeI18nsToDelete = $this->getResourceTypeI18ns(new Criteria(), $con)->diff($resourceTypeI18ns);
-
-
-        //since at least one column in the foreign key is at the same time a PK
-        //we can not just set a PK to NULL in the lines below. We have to store
-        //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
-        $this->resourceTypeI18nsScheduledForDeletion = clone $resourceTypeI18nsToDelete;
-
-        foreach ($resourceTypeI18nsToDelete as $resourceTypeI18nRemoved) {
-            $resourceTypeI18nRemoved->setResourceType(null);
-        }
-
-        $this->collResourceTypeI18ns = null;
-        foreach ($resourceTypeI18ns as $resourceTypeI18n) {
-            $this->addResourceTypeI18n($resourceTypeI18n);
-        }
-
-        $this->collResourceTypeI18ns = $resourceTypeI18ns;
-        $this->collResourceTypeI18nsPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related ResourceTypeI18n objects.
-     *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related ResourceTypeI18n objects.
-     * @throws PropelException
-     */
-    public function countResourceTypeI18ns(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
-    {
-        $partial = $this->collResourceTypeI18nsPartial && !$this->isNew();
-        if (null === $this->collResourceTypeI18ns || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collResourceTypeI18ns) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getResourceTypeI18ns());
-            }
-
-            $query = ChildResourceTypeI18nQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByResourceType($this)
-                ->count($con);
-        }
-
-        return count($this->collResourceTypeI18ns);
-    }
-
-    /**
-     * Method called to associate a ChildResourceTypeI18n object to this object
-     * through the ChildResourceTypeI18n foreign key attribute.
-     *
-     * @param  ChildResourceTypeI18n $l ChildResourceTypeI18n
-     * @return $this|\App\Propel\ResourceType The current object (for fluent API support)
-     */
-    public function addResourceTypeI18n(ChildResourceTypeI18n $l)
-    {
-        if ($l && $locale = $l->getLocale()) {
-            $this->setLocale($locale);
-            $this->currentTranslations[$locale] = $l;
-        }
-        if ($this->collResourceTypeI18ns === null) {
-            $this->initResourceTypeI18ns();
-            $this->collResourceTypeI18nsPartial = true;
-        }
-
-        if (!$this->collResourceTypeI18ns->contains($l)) {
-            $this->doAddResourceTypeI18n($l);
-
-            if ($this->resourceTypeI18nsScheduledForDeletion and $this->resourceTypeI18nsScheduledForDeletion->contains($l)) {
-                $this->resourceTypeI18nsScheduledForDeletion->remove($this->resourceTypeI18nsScheduledForDeletion->search($l));
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ChildResourceTypeI18n $resourceTypeI18n The ChildResourceTypeI18n object to add.
-     */
-    protected function doAddResourceTypeI18n(ChildResourceTypeI18n $resourceTypeI18n)
-    {
-        $this->collResourceTypeI18ns[]= $resourceTypeI18n;
-        $resourceTypeI18n->setResourceType($this);
-    }
-
-    /**
-     * @param  ChildResourceTypeI18n $resourceTypeI18n The ChildResourceTypeI18n object to remove.
-     * @return $this|ChildResourceType The current object (for fluent API support)
-     */
-    public function removeResourceTypeI18n(ChildResourceTypeI18n $resourceTypeI18n)
-    {
-        if ($this->getResourceTypeI18ns()->contains($resourceTypeI18n)) {
-            $pos = $this->collResourceTypeI18ns->search($resourceTypeI18n);
-            $this->collResourceTypeI18ns->remove($pos);
-            if (null === $this->resourceTypeI18nsScheduledForDeletion) {
-                $this->resourceTypeI18nsScheduledForDeletion = clone $this->collResourceTypeI18ns;
-                $this->resourceTypeI18nsScheduledForDeletion->clear();
-            }
-            $this->resourceTypeI18nsScheduledForDeletion[]= clone $resourceTypeI18n;
-            $resourceTypeI18n->setResourceType(null);
-        }
-
-        return $this;
-    }
-
-    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
@@ -1618,19 +1314,9 @@ abstract class ResourceType implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->collResourceTypeI18ns) {
-                foreach ($this->collResourceTypeI18ns as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
         } // if ($deep)
 
-        // i18n behavior
-        $this->currentLocale = 'en_US';
-        $this->currentTranslations = null;
-
         $this->collResources = null;
-        $this->collResourceTypeI18ns = null;
     }
 
     /**
@@ -1641,129 +1327,6 @@ abstract class ResourceType implements ActiveRecordInterface
     public function __toString()
     {
         return (string) $this->exportTo(ResourceTypeTableMap::DEFAULT_STRING_FORMAT);
-    }
-
-    // i18n behavior
-
-    /**
-     * Sets the locale for translations
-     *
-     * @param     string $locale Locale to use for the translation, e.g. 'fr_FR'
-     *
-     * @return    $this|ChildResourceType The current object (for fluent API support)
-     */
-    public function setLocale($locale = 'en_US')
-    {
-        $this->currentLocale = $locale;
-
-        return $this;
-    }
-
-    /**
-     * Gets the locale for translations
-     *
-     * @return    string $locale Locale to use for the translation, e.g. 'fr_FR'
-     */
-    public function getLocale()
-    {
-        return $this->currentLocale;
-    }
-
-    /**
-     * Returns the current translation for a given locale
-     *
-     * @param     string $locale Locale to use for the translation, e.g. 'fr_FR'
-     * @param     ConnectionInterface $con an optional connection object
-     *
-     * @return ChildResourceTypeI18n */
-    public function getTranslation($locale = 'en_US', ConnectionInterface $con = null)
-    {
-        if (!isset($this->currentTranslations[$locale])) {
-            if (null !== $this->collResourceTypeI18ns) {
-                foreach ($this->collResourceTypeI18ns as $translation) {
-                    if ($translation->getLocale() == $locale) {
-                        $this->currentTranslations[$locale] = $translation;
-
-                        return $translation;
-                    }
-                }
-            }
-            if ($this->isNew()) {
-                $translation = new ChildResourceTypeI18n();
-                $translation->setLocale($locale);
-            } else {
-                $translation = ChildResourceTypeI18nQuery::create()
-                    ->filterByPrimaryKey(array($this->getPrimaryKey(), $locale))
-                    ->findOneOrCreate($con);
-                $this->currentTranslations[$locale] = $translation;
-            }
-            $this->addResourceTypeI18n($translation);
-        }
-
-        return $this->currentTranslations[$locale];
-    }
-
-    /**
-     * Remove the translation for a given locale
-     *
-     * @param     string $locale Locale to use for the translation, e.g. 'fr_FR'
-     * @param     ConnectionInterface $con an optional connection object
-     *
-     * @return    $this|ChildResourceType The current object (for fluent API support)
-     */
-    public function removeTranslation($locale = 'en_US', ConnectionInterface $con = null)
-    {
-        if (!$this->isNew()) {
-            ChildResourceTypeI18nQuery::create()
-                ->filterByPrimaryKey(array($this->getPrimaryKey(), $locale))
-                ->delete($con);
-        }
-        if (isset($this->currentTranslations[$locale])) {
-            unset($this->currentTranslations[$locale]);
-        }
-        foreach ($this->collResourceTypeI18ns as $key => $translation) {
-            if ($translation->getLocale() == $locale) {
-                unset($this->collResourceTypeI18ns[$key]);
-                break;
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * Returns the current translation
-     *
-     * @param     ConnectionInterface $con an optional connection object
-     *
-     * @return ChildResourceTypeI18n */
-    public function getCurrentTranslation(ConnectionInterface $con = null)
-    {
-        return $this->getTranslation($this->getLocale(), $con);
-    }
-
-
-        /**
-         * Get the [resource_type_name] column value.
-         *
-         * @return string
-         */
-        public function getResourceTypeName()
-        {
-        return $this->getCurrentTranslation()->getResourceTypeName();
-    }
-
-
-        /**
-         * Set the value of [resource_type_name] column.
-         *
-         * @param string $v new value
-         * @return $this|\App\Propel\ResourceTypeI18n The current object (for fluent API support)
-         */
-        public function setResourceTypeName($v)
-        {    $this->getCurrentTranslation()->setResourceTypeName($v);
-
-        return $this;
     }
 
     /**

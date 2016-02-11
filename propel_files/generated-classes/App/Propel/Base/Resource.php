@@ -6,23 +6,47 @@ use \Exception;
 use \PDO;
 use App\Propel\Category as ChildCategory;
 use App\Propel\CategoryQuery as ChildCategoryQuery;
+use App\Propel\News as ChildNews;
+use App\Propel\NewsQuery as ChildNewsQuery;
+use App\Propel\PeriodicPlan as ChildPeriodicPlan;
+use App\Propel\PeriodicPlanQuery as ChildPeriodicPlanQuery;
 use App\Propel\Product as ChildProduct;
+use App\Propel\ProductHighlighted as ChildProductHighlighted;
+use App\Propel\ProductHighlightedQuery as ChildProductHighlightedQuery;
 use App\Propel\ProductQuery as ChildProductQuery;
 use App\Propel\Promotion as ChildPromotion;
 use App\Propel\PromotionQuery as ChildPromotionQuery;
+use App\Propel\Provider as ChildProvider;
+use App\Propel\ProviderQuery as ChildProviderQuery;
 use App\Propel\Resource as ChildResource;
 use App\Propel\ResourceFile as ChildResourceFile;
 use App\Propel\ResourceFileQuery as ChildResourceFileQuery;
 use App\Propel\ResourceQuery as ChildResourceQuery;
 use App\Propel\ResourceType as ChildResourceType;
 use App\Propel\ResourceTypeQuery as ChildResourceTypeQuery;
+use App\Propel\SocialComment as ChildSocialComment;
+use App\Propel\SocialCommentQuery as ChildSocialCommentQuery;
+use App\Propel\SocialLike as ChildSocialLike;
+use App\Propel\SocialLikeQuery as ChildSocialLikeQuery;
+use App\Propel\SocialRecommendation as ChildSocialRecommendation;
+use App\Propel\SocialRecommendationQuery as ChildSocialRecommendationQuery;
+use App\Propel\SocialView as ChildSocialView;
+use App\Propel\SocialViewQuery as ChildSocialViewQuery;
 use App\Propel\User as ChildUser;
 use App\Propel\UserQuery as ChildUserQuery;
 use App\Propel\Map\CategoryTableMap;
+use App\Propel\Map\NewsTableMap;
+use App\Propel\Map\PeriodicPlanTableMap;
+use App\Propel\Map\ProductHighlightedTableMap;
 use App\Propel\Map\ProductTableMap;
 use App\Propel\Map\PromotionTableMap;
+use App\Propel\Map\ProviderTableMap;
 use App\Propel\Map\ResourceFileTableMap;
 use App\Propel\Map\ResourceTableMap;
+use App\Propel\Map\SocialCommentTableMap;
+use App\Propel\Map\SocialLikeTableMap;
+use App\Propel\Map\SocialRecommendationTableMap;
+use App\Propel\Map\SocialViewTableMap;
 use App\Propel\Map\UserTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
@@ -93,6 +117,54 @@ abstract class Resource implements ActiveRecordInterface
     protected $resource_type_id;
 
     /**
+     * The value for the social_views field.
+     *
+     * Note: this column has a database default value of: 0
+     * @var        int
+     */
+    protected $social_views;
+
+    /**
+     * The value for the social_likes field.
+     *
+     * Note: this column has a database default value of: 0
+     * @var        int
+     */
+    protected $social_likes;
+
+    /**
+     * The value for the social_dislikes field.
+     *
+     * Note: this column has a database default value of: 0
+     * @var        int
+     */
+    protected $social_dislikes;
+
+    /**
+     * The value for the social_comments field.
+     *
+     * Note: this column has a database default value of: 0
+     * @var        int
+     */
+    protected $social_comments;
+
+    /**
+     * The value for the social_favourites field.
+     *
+     * Note: this column has a database default value of: 0
+     * @var        int
+     */
+    protected $social_favourites;
+
+    /**
+     * The value for the social_recommendations field.
+     *
+     * Note: this column has a database default value of: 0
+     * @var        int
+     */
+    protected $social_recommendations;
+
+    /**
      * @var        ChildResourceType
      */
     protected $aResourceType;
@@ -104,10 +176,34 @@ abstract class Resource implements ActiveRecordInterface
     protected $collCategoriesPartial;
 
     /**
+     * @var        ObjectCollection|ChildNews[] Collection to store aggregation of ChildNews objects.
+     */
+    protected $collNewsRelatedByResourceId;
+    protected $collNewsRelatedByResourceIdPartial;
+
+    /**
+     * @var        ObjectCollection|ChildNews[] Collection to store aggregation of ChildNews objects.
+     */
+    protected $collNewsRelatedByNewsFor;
+    protected $collNewsRelatedByNewsForPartial;
+
+    /**
+     * @var        ObjectCollection|ChildPeriodicPlan[] Collection to store aggregation of ChildPeriodicPlan objects.
+     */
+    protected $collPeriodicPlans;
+    protected $collPeriodicPlansPartial;
+
+    /**
      * @var        ObjectCollection|ChildProduct[] Collection to store aggregation of ChildProduct objects.
      */
     protected $collProducts;
     protected $collProductsPartial;
+
+    /**
+     * @var        ObjectCollection|ChildProductHighlighted[] Collection to store aggregation of ChildProductHighlighted objects.
+     */
+    protected $collProductHighlighteds;
+    protected $collProductHighlightedsPartial;
 
     /**
      * @var        ObjectCollection|ChildPromotion[] Collection to store aggregation of ChildPromotion objects.
@@ -116,10 +212,40 @@ abstract class Resource implements ActiveRecordInterface
     protected $collPromotionsPartial;
 
     /**
+     * @var        ObjectCollection|ChildProvider[] Collection to store aggregation of ChildProvider objects.
+     */
+    protected $collProviders;
+    protected $collProvidersPartial;
+
+    /**
      * @var        ObjectCollection|ChildResourceFile[] Collection to store aggregation of ChildResourceFile objects.
      */
     protected $collResourceFiles;
     protected $collResourceFilesPartial;
+
+    /**
+     * @var        ObjectCollection|ChildSocialView[] Collection to store aggregation of ChildSocialView objects.
+     */
+    protected $collSocialViews;
+    protected $collSocialViewsPartial;
+
+    /**
+     * @var        ObjectCollection|ChildSocialLike[] Collection to store aggregation of ChildSocialLike objects.
+     */
+    protected $collSocialLikes;
+    protected $collSocialLikesPartial;
+
+    /**
+     * @var        ObjectCollection|ChildSocialComment[] Collection to store aggregation of ChildSocialComment objects.
+     */
+    protected $collSocialComments;
+    protected $collSocialCommentsPartial;
+
+    /**
+     * @var        ObjectCollection|ChildSocialRecommendation[] Collection to store aggregation of ChildSocialRecommendation objects.
+     */
+    protected $collSocialRecommendations;
+    protected $collSocialRecommendationsPartial;
 
     /**
      * @var        ObjectCollection|ChildUser[] Collection to store aggregation of ChildUser objects.
@@ -143,9 +269,33 @@ abstract class Resource implements ActiveRecordInterface
 
     /**
      * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildNews[]
+     */
+    protected $newsRelatedByResourceIdScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildNews[]
+     */
+    protected $newsRelatedByNewsForScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildPeriodicPlan[]
+     */
+    protected $periodicPlansScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildProduct[]
      */
     protected $productsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildProductHighlighted[]
+     */
+    protected $productHighlightedsScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -155,9 +305,39 @@ abstract class Resource implements ActiveRecordInterface
 
     /**
      * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildProvider[]
+     */
+    protected $providersScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildResourceFile[]
      */
     protected $resourceFilesScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildSocialView[]
+     */
+    protected $socialViewsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildSocialLike[]
+     */
+    protected $socialLikesScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildSocialComment[]
+     */
+    protected $socialCommentsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildSocialRecommendation[]
+     */
+    protected $socialRecommendationsScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -166,10 +346,28 @@ abstract class Resource implements ActiveRecordInterface
     protected $usersScheduledForDeletion = null;
 
     /**
+     * Applies default values to this object.
+     * This method should be called from the object's constructor (or
+     * equivalent initialization method).
+     * @see __construct()
+     */
+    public function applyDefaultValues()
+    {
+        $this->social_views = 0;
+        $this->social_likes = 0;
+        $this->social_dislikes = 0;
+        $this->social_comments = 0;
+        $this->social_favourites = 0;
+        $this->social_recommendations = 0;
+    }
+
+    /**
      * Initializes internal state of App\Propel\Base\Resource object.
+     * @see applyDefaults()
      */
     public function __construct()
     {
+        $this->applyDefaultValues();
     }
 
     /**
@@ -411,6 +609,66 @@ abstract class Resource implements ActiveRecordInterface
     }
 
     /**
+     * Get the [social_views] column value.
+     *
+     * @return int
+     */
+    public function getSocialViews()
+    {
+        return $this->social_views;
+    }
+
+    /**
+     * Get the [social_likes] column value.
+     *
+     * @return int
+     */
+    public function getSocialLikes()
+    {
+        return $this->social_likes;
+    }
+
+    /**
+     * Get the [social_dislikes] column value.
+     *
+     * @return int
+     */
+    public function getSocialDislikes()
+    {
+        return $this->social_dislikes;
+    }
+
+    /**
+     * Get the [social_comments] column value.
+     *
+     * @return int
+     */
+    public function getSocialComments()
+    {
+        return $this->social_comments;
+    }
+
+    /**
+     * Get the [social_favourites] column value.
+     *
+     * @return int
+     */
+    public function getSocialFavourites()
+    {
+        return $this->social_favourites;
+    }
+
+    /**
+     * Get the [social_recommendations] column value.
+     *
+     * @return int
+     */
+    public function getSocialRecommendations()
+    {
+        return $this->social_recommendations;
+    }
+
+    /**
      * Set the value of [resource_id] column.
      *
      * @param int $v new value
@@ -455,6 +713,126 @@ abstract class Resource implements ActiveRecordInterface
     } // setResourceTypeId()
 
     /**
+     * Set the value of [social_views] column.
+     *
+     * @param int $v new value
+     * @return $this|\App\Propel\Resource The current object (for fluent API support)
+     */
+    public function setSocialViews($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->social_views !== $v) {
+            $this->social_views = $v;
+            $this->modifiedColumns[ResourceTableMap::COL_SOCIAL_VIEWS] = true;
+        }
+
+        return $this;
+    } // setSocialViews()
+
+    /**
+     * Set the value of [social_likes] column.
+     *
+     * @param int $v new value
+     * @return $this|\App\Propel\Resource The current object (for fluent API support)
+     */
+    public function setSocialLikes($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->social_likes !== $v) {
+            $this->social_likes = $v;
+            $this->modifiedColumns[ResourceTableMap::COL_SOCIAL_LIKES] = true;
+        }
+
+        return $this;
+    } // setSocialLikes()
+
+    /**
+     * Set the value of [social_dislikes] column.
+     *
+     * @param int $v new value
+     * @return $this|\App\Propel\Resource The current object (for fluent API support)
+     */
+    public function setSocialDislikes($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->social_dislikes !== $v) {
+            $this->social_dislikes = $v;
+            $this->modifiedColumns[ResourceTableMap::COL_SOCIAL_DISLIKES] = true;
+        }
+
+        return $this;
+    } // setSocialDislikes()
+
+    /**
+     * Set the value of [social_comments] column.
+     *
+     * @param int $v new value
+     * @return $this|\App\Propel\Resource The current object (for fluent API support)
+     */
+    public function setSocialComments($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->social_comments !== $v) {
+            $this->social_comments = $v;
+            $this->modifiedColumns[ResourceTableMap::COL_SOCIAL_COMMENTS] = true;
+        }
+
+        return $this;
+    } // setSocialComments()
+
+    /**
+     * Set the value of [social_favourites] column.
+     *
+     * @param int $v new value
+     * @return $this|\App\Propel\Resource The current object (for fluent API support)
+     */
+    public function setSocialFavourites($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->social_favourites !== $v) {
+            $this->social_favourites = $v;
+            $this->modifiedColumns[ResourceTableMap::COL_SOCIAL_FAVOURITES] = true;
+        }
+
+        return $this;
+    } // setSocialFavourites()
+
+    /**
+     * Set the value of [social_recommendations] column.
+     *
+     * @param int $v new value
+     * @return $this|\App\Propel\Resource The current object (for fluent API support)
+     */
+    public function setSocialRecommendations($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->social_recommendations !== $v) {
+            $this->social_recommendations = $v;
+            $this->modifiedColumns[ResourceTableMap::COL_SOCIAL_RECOMMENDATIONS] = true;
+        }
+
+        return $this;
+    } // setSocialRecommendations()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -464,6 +842,30 @@ abstract class Resource implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues()
     {
+            if ($this->social_views !== 0) {
+                return false;
+            }
+
+            if ($this->social_likes !== 0) {
+                return false;
+            }
+
+            if ($this->social_dislikes !== 0) {
+                return false;
+            }
+
+            if ($this->social_comments !== 0) {
+                return false;
+            }
+
+            if ($this->social_favourites !== 0) {
+                return false;
+            }
+
+            if ($this->social_recommendations !== 0) {
+                return false;
+            }
+
         // otherwise, everything was equal, so return TRUE
         return true;
     } // hasOnlyDefaultValues()
@@ -495,6 +897,24 @@ abstract class Resource implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : ResourceTableMap::translateFieldName('ResourceTypeId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->resource_type_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : ResourceTableMap::translateFieldName('SocialViews', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->social_views = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : ResourceTableMap::translateFieldName('SocialLikes', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->social_likes = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : ResourceTableMap::translateFieldName('SocialDislikes', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->social_dislikes = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : ResourceTableMap::translateFieldName('SocialComments', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->social_comments = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : ResourceTableMap::translateFieldName('SocialFavourites', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->social_favourites = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : ResourceTableMap::translateFieldName('SocialRecommendations', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->social_recommendations = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -503,7 +923,7 @@ abstract class Resource implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 2; // 2 = ResourceTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 8; // 8 = ResourceTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\App\\Propel\\Resource'), 0, $e);
@@ -570,11 +990,29 @@ abstract class Resource implements ActiveRecordInterface
             $this->aResourceType = null;
             $this->collCategories = null;
 
+            $this->collNewsRelatedByResourceId = null;
+
+            $this->collNewsRelatedByNewsFor = null;
+
+            $this->collPeriodicPlans = null;
+
             $this->collProducts = null;
+
+            $this->collProductHighlighteds = null;
 
             $this->collPromotions = null;
 
+            $this->collProviders = null;
+
             $this->collResourceFiles = null;
+
+            $this->collSocialViews = null;
+
+            $this->collSocialLikes = null;
+
+            $this->collSocialComments = null;
+
+            $this->collSocialRecommendations = null;
 
             $this->collUsers = null;
 
@@ -717,6 +1155,58 @@ abstract class Resource implements ActiveRecordInterface
                 }
             }
 
+            if ($this->newsRelatedByResourceIdScheduledForDeletion !== null) {
+                if (!$this->newsRelatedByResourceIdScheduledForDeletion->isEmpty()) {
+                    \App\Propel\NewsQuery::create()
+                        ->filterByPrimaryKeys($this->newsRelatedByResourceIdScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->newsRelatedByResourceIdScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collNewsRelatedByResourceId !== null) {
+                foreach ($this->collNewsRelatedByResourceId as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->newsRelatedByNewsForScheduledForDeletion !== null) {
+                if (!$this->newsRelatedByNewsForScheduledForDeletion->isEmpty()) {
+                    foreach ($this->newsRelatedByNewsForScheduledForDeletion as $newsRelatedByNewsFor) {
+                        // need to save related object because we set the relation to null
+                        $newsRelatedByNewsFor->save($con);
+                    }
+                    $this->newsRelatedByNewsForScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collNewsRelatedByNewsFor !== null) {
+                foreach ($this->collNewsRelatedByNewsFor as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->periodicPlansScheduledForDeletion !== null) {
+                if (!$this->periodicPlansScheduledForDeletion->isEmpty()) {
+                    \App\Propel\PeriodicPlanQuery::create()
+                        ->filterByPrimaryKeys($this->periodicPlansScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->periodicPlansScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collPeriodicPlans !== null) {
+                foreach ($this->collPeriodicPlans as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
             if ($this->productsScheduledForDeletion !== null) {
                 if (!$this->productsScheduledForDeletion->isEmpty()) {
                     \App\Propel\ProductQuery::create()
@@ -728,6 +1218,24 @@ abstract class Resource implements ActiveRecordInterface
 
             if ($this->collProducts !== null) {
                 foreach ($this->collProducts as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->productHighlightedsScheduledForDeletion !== null) {
+                if (!$this->productHighlightedsScheduledForDeletion->isEmpty()) {
+                    foreach ($this->productHighlightedsScheduledForDeletion as $productHighlighted) {
+                        // need to save related object because we set the relation to null
+                        $productHighlighted->save($con);
+                    }
+                    $this->productHighlightedsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collProductHighlighteds !== null) {
+                foreach ($this->collProductHighlighteds as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -751,6 +1259,23 @@ abstract class Resource implements ActiveRecordInterface
                 }
             }
 
+            if ($this->providersScheduledForDeletion !== null) {
+                if (!$this->providersScheduledForDeletion->isEmpty()) {
+                    \App\Propel\ProviderQuery::create()
+                        ->filterByPrimaryKeys($this->providersScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->providersScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collProviders !== null) {
+                foreach ($this->collProviders as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
             if ($this->resourceFilesScheduledForDeletion !== null) {
                 if (!$this->resourceFilesScheduledForDeletion->isEmpty()) {
                     \App\Propel\ResourceFileQuery::create()
@@ -762,6 +1287,74 @@ abstract class Resource implements ActiveRecordInterface
 
             if ($this->collResourceFiles !== null) {
                 foreach ($this->collResourceFiles as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->socialViewsScheduledForDeletion !== null) {
+                if (!$this->socialViewsScheduledForDeletion->isEmpty()) {
+                    \App\Propel\SocialViewQuery::create()
+                        ->filterByPrimaryKeys($this->socialViewsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->socialViewsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collSocialViews !== null) {
+                foreach ($this->collSocialViews as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->socialLikesScheduledForDeletion !== null) {
+                if (!$this->socialLikesScheduledForDeletion->isEmpty()) {
+                    \App\Propel\SocialLikeQuery::create()
+                        ->filterByPrimaryKeys($this->socialLikesScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->socialLikesScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collSocialLikes !== null) {
+                foreach ($this->collSocialLikes as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->socialCommentsScheduledForDeletion !== null) {
+                if (!$this->socialCommentsScheduledForDeletion->isEmpty()) {
+                    \App\Propel\SocialCommentQuery::create()
+                        ->filterByPrimaryKeys($this->socialCommentsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->socialCommentsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collSocialComments !== null) {
+                foreach ($this->collSocialComments as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->socialRecommendationsScheduledForDeletion !== null) {
+                if (!$this->socialRecommendationsScheduledForDeletion->isEmpty()) {
+                    \App\Propel\SocialRecommendationQuery::create()
+                        ->filterByPrimaryKeys($this->socialRecommendationsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->socialRecommendationsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collSocialRecommendations !== null) {
+                foreach ($this->collSocialRecommendations as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -817,6 +1410,24 @@ abstract class Resource implements ActiveRecordInterface
         if ($this->isColumnModified(ResourceTableMap::COL_RESOURCE_TYPE_ID)) {
             $modifiedColumns[':p' . $index++]  = 'resource_type_id';
         }
+        if ($this->isColumnModified(ResourceTableMap::COL_SOCIAL_VIEWS)) {
+            $modifiedColumns[':p' . $index++]  = 'social_views';
+        }
+        if ($this->isColumnModified(ResourceTableMap::COL_SOCIAL_LIKES)) {
+            $modifiedColumns[':p' . $index++]  = 'social_likes';
+        }
+        if ($this->isColumnModified(ResourceTableMap::COL_SOCIAL_DISLIKES)) {
+            $modifiedColumns[':p' . $index++]  = 'social_dislikes';
+        }
+        if ($this->isColumnModified(ResourceTableMap::COL_SOCIAL_COMMENTS)) {
+            $modifiedColumns[':p' . $index++]  = 'social_comments';
+        }
+        if ($this->isColumnModified(ResourceTableMap::COL_SOCIAL_FAVOURITES)) {
+            $modifiedColumns[':p' . $index++]  = 'social_favourites';
+        }
+        if ($this->isColumnModified(ResourceTableMap::COL_SOCIAL_RECOMMENDATIONS)) {
+            $modifiedColumns[':p' . $index++]  = 'social_recommendations';
+        }
 
         $sql = sprintf(
             'INSERT INTO resource (%s) VALUES (%s)',
@@ -833,6 +1444,24 @@ abstract class Resource implements ActiveRecordInterface
                         break;
                     case 'resource_type_id':
                         $stmt->bindValue($identifier, $this->resource_type_id, PDO::PARAM_INT);
+                        break;
+                    case 'social_views':
+                        $stmt->bindValue($identifier, $this->social_views, PDO::PARAM_INT);
+                        break;
+                    case 'social_likes':
+                        $stmt->bindValue($identifier, $this->social_likes, PDO::PARAM_INT);
+                        break;
+                    case 'social_dislikes':
+                        $stmt->bindValue($identifier, $this->social_dislikes, PDO::PARAM_INT);
+                        break;
+                    case 'social_comments':
+                        $stmt->bindValue($identifier, $this->social_comments, PDO::PARAM_INT);
+                        break;
+                    case 'social_favourites':
+                        $stmt->bindValue($identifier, $this->social_favourites, PDO::PARAM_INT);
+                        break;
+                    case 'social_recommendations':
+                        $stmt->bindValue($identifier, $this->social_recommendations, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -902,6 +1531,24 @@ abstract class Resource implements ActiveRecordInterface
             case 1:
                 return $this->getResourceTypeId();
                 break;
+            case 2:
+                return $this->getSocialViews();
+                break;
+            case 3:
+                return $this->getSocialLikes();
+                break;
+            case 4:
+                return $this->getSocialDislikes();
+                break;
+            case 5:
+                return $this->getSocialComments();
+                break;
+            case 6:
+                return $this->getSocialFavourites();
+                break;
+            case 7:
+                return $this->getSocialRecommendations();
+                break;
             default:
                 return null;
                 break;
@@ -934,6 +1581,12 @@ abstract class Resource implements ActiveRecordInterface
         $result = array(
             $keys[0] => $this->getResourceId(),
             $keys[1] => $this->getResourceTypeId(),
+            $keys[2] => $this->getSocialViews(),
+            $keys[3] => $this->getSocialLikes(),
+            $keys[4] => $this->getSocialDislikes(),
+            $keys[5] => $this->getSocialComments(),
+            $keys[6] => $this->getSocialFavourites(),
+            $keys[7] => $this->getSocialRecommendations(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -971,6 +1624,51 @@ abstract class Resource implements ActiveRecordInterface
 
                 $result[$key] = $this->collCategories->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
+            if (null !== $this->collNewsRelatedByResourceId) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'news';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'news';
+                        break;
+                    default:
+                        $key = 'News';
+                }
+
+                $result[$key] = $this->collNewsRelatedByResourceId->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collNewsRelatedByNewsFor) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'news';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'news';
+                        break;
+                    default:
+                        $key = 'News';
+                }
+
+                $result[$key] = $this->collNewsRelatedByNewsFor->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collPeriodicPlans) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'periodicPlans';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'periodic_plans';
+                        break;
+                    default:
+                        $key = 'PeriodicPlans';
+                }
+
+                $result[$key] = $this->collPeriodicPlans->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
             if (null !== $this->collProducts) {
 
                 switch ($keyType) {
@@ -985,6 +1683,21 @@ abstract class Resource implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->collProducts->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collProductHighlighteds) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'productHighlighteds';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'product_highlighteds';
+                        break;
+                    default:
+                        $key = 'ProductHighlighteds';
+                }
+
+                $result[$key] = $this->collProductHighlighteds->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collPromotions) {
 
@@ -1001,6 +1714,21 @@ abstract class Resource implements ActiveRecordInterface
 
                 $result[$key] = $this->collPromotions->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
+            if (null !== $this->collProviders) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'providers';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'providers';
+                        break;
+                    default:
+                        $key = 'Providers';
+                }
+
+                $result[$key] = $this->collProviders->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
             if (null !== $this->collResourceFiles) {
 
                 switch ($keyType) {
@@ -1015,6 +1743,66 @@ abstract class Resource implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->collResourceFiles->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collSocialViews) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'socialViews';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'social_views';
+                        break;
+                    default:
+                        $key = 'SocialViews';
+                }
+
+                $result[$key] = $this->collSocialViews->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collSocialLikes) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'socialLikes';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'social_likes';
+                        break;
+                    default:
+                        $key = 'SocialLikes';
+                }
+
+                $result[$key] = $this->collSocialLikes->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collSocialComments) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'socialComments';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'social_comments';
+                        break;
+                    default:
+                        $key = 'SocialComments';
+                }
+
+                $result[$key] = $this->collSocialComments->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collSocialRecommendations) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'socialRecommendations';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'social_recommendations';
+                        break;
+                    default:
+                        $key = 'SocialRecommendations';
+                }
+
+                $result[$key] = $this->collSocialRecommendations->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collUsers) {
 
@@ -1071,6 +1859,24 @@ abstract class Resource implements ActiveRecordInterface
             case 1:
                 $this->setResourceTypeId($value);
                 break;
+            case 2:
+                $this->setSocialViews($value);
+                break;
+            case 3:
+                $this->setSocialLikes($value);
+                break;
+            case 4:
+                $this->setSocialDislikes($value);
+                break;
+            case 5:
+                $this->setSocialComments($value);
+                break;
+            case 6:
+                $this->setSocialFavourites($value);
+                break;
+            case 7:
+                $this->setSocialRecommendations($value);
+                break;
         } // switch()
 
         return $this;
@@ -1102,6 +1908,24 @@ abstract class Resource implements ActiveRecordInterface
         }
         if (array_key_exists($keys[1], $arr)) {
             $this->setResourceTypeId($arr[$keys[1]]);
+        }
+        if (array_key_exists($keys[2], $arr)) {
+            $this->setSocialViews($arr[$keys[2]]);
+        }
+        if (array_key_exists($keys[3], $arr)) {
+            $this->setSocialLikes($arr[$keys[3]]);
+        }
+        if (array_key_exists($keys[4], $arr)) {
+            $this->setSocialDislikes($arr[$keys[4]]);
+        }
+        if (array_key_exists($keys[5], $arr)) {
+            $this->setSocialComments($arr[$keys[5]]);
+        }
+        if (array_key_exists($keys[6], $arr)) {
+            $this->setSocialFavourites($arr[$keys[6]]);
+        }
+        if (array_key_exists($keys[7], $arr)) {
+            $this->setSocialRecommendations($arr[$keys[7]]);
         }
     }
 
@@ -1149,6 +1973,24 @@ abstract class Resource implements ActiveRecordInterface
         }
         if ($this->isColumnModified(ResourceTableMap::COL_RESOURCE_TYPE_ID)) {
             $criteria->add(ResourceTableMap::COL_RESOURCE_TYPE_ID, $this->resource_type_id);
+        }
+        if ($this->isColumnModified(ResourceTableMap::COL_SOCIAL_VIEWS)) {
+            $criteria->add(ResourceTableMap::COL_SOCIAL_VIEWS, $this->social_views);
+        }
+        if ($this->isColumnModified(ResourceTableMap::COL_SOCIAL_LIKES)) {
+            $criteria->add(ResourceTableMap::COL_SOCIAL_LIKES, $this->social_likes);
+        }
+        if ($this->isColumnModified(ResourceTableMap::COL_SOCIAL_DISLIKES)) {
+            $criteria->add(ResourceTableMap::COL_SOCIAL_DISLIKES, $this->social_dislikes);
+        }
+        if ($this->isColumnModified(ResourceTableMap::COL_SOCIAL_COMMENTS)) {
+            $criteria->add(ResourceTableMap::COL_SOCIAL_COMMENTS, $this->social_comments);
+        }
+        if ($this->isColumnModified(ResourceTableMap::COL_SOCIAL_FAVOURITES)) {
+            $criteria->add(ResourceTableMap::COL_SOCIAL_FAVOURITES, $this->social_favourites);
+        }
+        if ($this->isColumnModified(ResourceTableMap::COL_SOCIAL_RECOMMENDATIONS)) {
+            $criteria->add(ResourceTableMap::COL_SOCIAL_RECOMMENDATIONS, $this->social_recommendations);
         }
 
         return $criteria;
@@ -1237,6 +2079,12 @@ abstract class Resource implements ActiveRecordInterface
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
         $copyObj->setResourceTypeId($this->getResourceTypeId());
+        $copyObj->setSocialViews($this->getSocialViews());
+        $copyObj->setSocialLikes($this->getSocialLikes());
+        $copyObj->setSocialDislikes($this->getSocialDislikes());
+        $copyObj->setSocialComments($this->getSocialComments());
+        $copyObj->setSocialFavourites($this->getSocialFavourites());
+        $copyObj->setSocialRecommendations($this->getSocialRecommendations());
 
         if ($deepCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1249,9 +2097,33 @@ abstract class Resource implements ActiveRecordInterface
                 }
             }
 
+            foreach ($this->getNewsRelatedByResourceId() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addNewsRelatedByResourceId($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getNewsRelatedByNewsFor() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addNewsRelatedByNewsFor($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getPeriodicPlans() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addPeriodicPlan($relObj->copy($deepCopy));
+                }
+            }
+
             foreach ($this->getProducts() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addProduct($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getProductHighlighteds() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addProductHighlighted($relObj->copy($deepCopy));
                 }
             }
 
@@ -1261,9 +2133,39 @@ abstract class Resource implements ActiveRecordInterface
                 }
             }
 
+            foreach ($this->getProviders() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addProvider($relObj->copy($deepCopy));
+                }
+            }
+
             foreach ($this->getResourceFiles() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addResourceFile($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getSocialViews() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addSocialView($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getSocialLikes() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addSocialLike($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getSocialComments() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addSocialComment($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getSocialRecommendations() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addSocialRecommendation($relObj->copy($deepCopy));
                 }
             }
 
@@ -1368,14 +2270,41 @@ abstract class Resource implements ActiveRecordInterface
         if ('Category' == $relationName) {
             return $this->initCategories();
         }
+        if ('NewsRelatedByResourceId' == $relationName) {
+            return $this->initNewsRelatedByResourceId();
+        }
+        if ('NewsRelatedByNewsFor' == $relationName) {
+            return $this->initNewsRelatedByNewsFor();
+        }
+        if ('PeriodicPlan' == $relationName) {
+            return $this->initPeriodicPlans();
+        }
         if ('Product' == $relationName) {
             return $this->initProducts();
+        }
+        if ('ProductHighlighted' == $relationName) {
+            return $this->initProductHighlighteds();
         }
         if ('Promotion' == $relationName) {
             return $this->initPromotions();
         }
+        if ('Provider' == $relationName) {
+            return $this->initProviders();
+        }
         if ('ResourceFile' == $relationName) {
             return $this->initResourceFiles();
+        }
+        if ('SocialView' == $relationName) {
+            return $this->initSocialViews();
+        }
+        if ('SocialLike' == $relationName) {
+            return $this->initSocialLikes();
+        }
+        if ('SocialComment' == $relationName) {
+            return $this->initSocialComments();
+        }
+        if ('SocialRecommendation' == $relationName) {
+            return $this->initSocialRecommendations();
         }
         if ('User' == $relationName) {
             return $this->initUsers();
@@ -1630,6 +2559,781 @@ abstract class Resource implements ActiveRecordInterface
         $query->joinWith('File', $joinBehavior);
 
         return $this->getCategories($query, $con);
+    }
+
+    /**
+     * Clears out the collNewsRelatedByResourceId collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addNewsRelatedByResourceId()
+     */
+    public function clearNewsRelatedByResourceId()
+    {
+        $this->collNewsRelatedByResourceId = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collNewsRelatedByResourceId collection loaded partially.
+     */
+    public function resetPartialNewsRelatedByResourceId($v = true)
+    {
+        $this->collNewsRelatedByResourceIdPartial = $v;
+    }
+
+    /**
+     * Initializes the collNewsRelatedByResourceId collection.
+     *
+     * By default this just sets the collNewsRelatedByResourceId collection to an empty array (like clearcollNewsRelatedByResourceId());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initNewsRelatedByResourceId($overrideExisting = true)
+    {
+        if (null !== $this->collNewsRelatedByResourceId && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = NewsTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collNewsRelatedByResourceId = new $collectionClassName;
+        $this->collNewsRelatedByResourceId->setModel('\App\Propel\News');
+    }
+
+    /**
+     * Gets an array of ChildNews objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildResource is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildNews[] List of ChildNews objects
+     * @throws PropelException
+     */
+    public function getNewsRelatedByResourceId(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collNewsRelatedByResourceIdPartial && !$this->isNew();
+        if (null === $this->collNewsRelatedByResourceId || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collNewsRelatedByResourceId) {
+                // return empty collection
+                $this->initNewsRelatedByResourceId();
+            } else {
+                $collNewsRelatedByResourceId = ChildNewsQuery::create(null, $criteria)
+                    ->filterByResourceRelatedByResourceId($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collNewsRelatedByResourceIdPartial && count($collNewsRelatedByResourceId)) {
+                        $this->initNewsRelatedByResourceId(false);
+
+                        foreach ($collNewsRelatedByResourceId as $obj) {
+                            if (false == $this->collNewsRelatedByResourceId->contains($obj)) {
+                                $this->collNewsRelatedByResourceId->append($obj);
+                            }
+                        }
+
+                        $this->collNewsRelatedByResourceIdPartial = true;
+                    }
+
+                    return $collNewsRelatedByResourceId;
+                }
+
+                if ($partial && $this->collNewsRelatedByResourceId) {
+                    foreach ($this->collNewsRelatedByResourceId as $obj) {
+                        if ($obj->isNew()) {
+                            $collNewsRelatedByResourceId[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collNewsRelatedByResourceId = $collNewsRelatedByResourceId;
+                $this->collNewsRelatedByResourceIdPartial = false;
+            }
+        }
+
+        return $this->collNewsRelatedByResourceId;
+    }
+
+    /**
+     * Sets a collection of ChildNews objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $newsRelatedByResourceId A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildResource The current object (for fluent API support)
+     */
+    public function setNewsRelatedByResourceId(Collection $newsRelatedByResourceId, ConnectionInterface $con = null)
+    {
+        /** @var ChildNews[] $newsRelatedByResourceIdToDelete */
+        $newsRelatedByResourceIdToDelete = $this->getNewsRelatedByResourceId(new Criteria(), $con)->diff($newsRelatedByResourceId);
+
+
+        $this->newsRelatedByResourceIdScheduledForDeletion = $newsRelatedByResourceIdToDelete;
+
+        foreach ($newsRelatedByResourceIdToDelete as $newsRelatedByResourceIdRemoved) {
+            $newsRelatedByResourceIdRemoved->setResourceRelatedByResourceId(null);
+        }
+
+        $this->collNewsRelatedByResourceId = null;
+        foreach ($newsRelatedByResourceId as $newsRelatedByResourceId) {
+            $this->addNewsRelatedByResourceId($newsRelatedByResourceId);
+        }
+
+        $this->collNewsRelatedByResourceId = $newsRelatedByResourceId;
+        $this->collNewsRelatedByResourceIdPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related News objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related News objects.
+     * @throws PropelException
+     */
+    public function countNewsRelatedByResourceId(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collNewsRelatedByResourceIdPartial && !$this->isNew();
+        if (null === $this->collNewsRelatedByResourceId || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collNewsRelatedByResourceId) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getNewsRelatedByResourceId());
+            }
+
+            $query = ChildNewsQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByResourceRelatedByResourceId($this)
+                ->count($con);
+        }
+
+        return count($this->collNewsRelatedByResourceId);
+    }
+
+    /**
+     * Method called to associate a ChildNews object to this object
+     * through the ChildNews foreign key attribute.
+     *
+     * @param  ChildNews $l ChildNews
+     * @return $this|\App\Propel\Resource The current object (for fluent API support)
+     */
+    public function addNewsRelatedByResourceId(ChildNews $l)
+    {
+        if ($this->collNewsRelatedByResourceId === null) {
+            $this->initNewsRelatedByResourceId();
+            $this->collNewsRelatedByResourceIdPartial = true;
+        }
+
+        if (!$this->collNewsRelatedByResourceId->contains($l)) {
+            $this->doAddNewsRelatedByResourceId($l);
+
+            if ($this->newsRelatedByResourceIdScheduledForDeletion and $this->newsRelatedByResourceIdScheduledForDeletion->contains($l)) {
+                $this->newsRelatedByResourceIdScheduledForDeletion->remove($this->newsRelatedByResourceIdScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildNews $newsRelatedByResourceId The ChildNews object to add.
+     */
+    protected function doAddNewsRelatedByResourceId(ChildNews $newsRelatedByResourceId)
+    {
+        $this->collNewsRelatedByResourceId[]= $newsRelatedByResourceId;
+        $newsRelatedByResourceId->setResourceRelatedByResourceId($this);
+    }
+
+    /**
+     * @param  ChildNews $newsRelatedByResourceId The ChildNews object to remove.
+     * @return $this|ChildResource The current object (for fluent API support)
+     */
+    public function removeNewsRelatedByResourceId(ChildNews $newsRelatedByResourceId)
+    {
+        if ($this->getNewsRelatedByResourceId()->contains($newsRelatedByResourceId)) {
+            $pos = $this->collNewsRelatedByResourceId->search($newsRelatedByResourceId);
+            $this->collNewsRelatedByResourceId->remove($pos);
+            if (null === $this->newsRelatedByResourceIdScheduledForDeletion) {
+                $this->newsRelatedByResourceIdScheduledForDeletion = clone $this->collNewsRelatedByResourceId;
+                $this->newsRelatedByResourceIdScheduledForDeletion->clear();
+            }
+            $this->newsRelatedByResourceIdScheduledForDeletion[]= clone $newsRelatedByResourceId;
+            $newsRelatedByResourceId->setResourceRelatedByResourceId(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Resource is new, it will return
+     * an empty collection; or if this Resource has previously
+     * been saved, it will retrieve related NewsRelatedByResourceId from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Resource.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildNews[] List of ChildNews objects
+     */
+    public function getNewsRelatedByResourceIdJoinFile(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildNewsQuery::create(null, $criteria);
+        $query->joinWith('File', $joinBehavior);
+
+        return $this->getNewsRelatedByResourceId($query, $con);
+    }
+
+    /**
+     * Clears out the collNewsRelatedByNewsFor collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addNewsRelatedByNewsFor()
+     */
+    public function clearNewsRelatedByNewsFor()
+    {
+        $this->collNewsRelatedByNewsFor = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collNewsRelatedByNewsFor collection loaded partially.
+     */
+    public function resetPartialNewsRelatedByNewsFor($v = true)
+    {
+        $this->collNewsRelatedByNewsForPartial = $v;
+    }
+
+    /**
+     * Initializes the collNewsRelatedByNewsFor collection.
+     *
+     * By default this just sets the collNewsRelatedByNewsFor collection to an empty array (like clearcollNewsRelatedByNewsFor());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initNewsRelatedByNewsFor($overrideExisting = true)
+    {
+        if (null !== $this->collNewsRelatedByNewsFor && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = NewsTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collNewsRelatedByNewsFor = new $collectionClassName;
+        $this->collNewsRelatedByNewsFor->setModel('\App\Propel\News');
+    }
+
+    /**
+     * Gets an array of ChildNews objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildResource is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildNews[] List of ChildNews objects
+     * @throws PropelException
+     */
+    public function getNewsRelatedByNewsFor(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collNewsRelatedByNewsForPartial && !$this->isNew();
+        if (null === $this->collNewsRelatedByNewsFor || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collNewsRelatedByNewsFor) {
+                // return empty collection
+                $this->initNewsRelatedByNewsFor();
+            } else {
+                $collNewsRelatedByNewsFor = ChildNewsQuery::create(null, $criteria)
+                    ->filterByResourceRelatedByNewsFor($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collNewsRelatedByNewsForPartial && count($collNewsRelatedByNewsFor)) {
+                        $this->initNewsRelatedByNewsFor(false);
+
+                        foreach ($collNewsRelatedByNewsFor as $obj) {
+                            if (false == $this->collNewsRelatedByNewsFor->contains($obj)) {
+                                $this->collNewsRelatedByNewsFor->append($obj);
+                            }
+                        }
+
+                        $this->collNewsRelatedByNewsForPartial = true;
+                    }
+
+                    return $collNewsRelatedByNewsFor;
+                }
+
+                if ($partial && $this->collNewsRelatedByNewsFor) {
+                    foreach ($this->collNewsRelatedByNewsFor as $obj) {
+                        if ($obj->isNew()) {
+                            $collNewsRelatedByNewsFor[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collNewsRelatedByNewsFor = $collNewsRelatedByNewsFor;
+                $this->collNewsRelatedByNewsForPartial = false;
+            }
+        }
+
+        return $this->collNewsRelatedByNewsFor;
+    }
+
+    /**
+     * Sets a collection of ChildNews objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $newsRelatedByNewsFor A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildResource The current object (for fluent API support)
+     */
+    public function setNewsRelatedByNewsFor(Collection $newsRelatedByNewsFor, ConnectionInterface $con = null)
+    {
+        /** @var ChildNews[] $newsRelatedByNewsForToDelete */
+        $newsRelatedByNewsForToDelete = $this->getNewsRelatedByNewsFor(new Criteria(), $con)->diff($newsRelatedByNewsFor);
+
+
+        $this->newsRelatedByNewsForScheduledForDeletion = $newsRelatedByNewsForToDelete;
+
+        foreach ($newsRelatedByNewsForToDelete as $newsRelatedByNewsForRemoved) {
+            $newsRelatedByNewsForRemoved->setResourceRelatedByNewsFor(null);
+        }
+
+        $this->collNewsRelatedByNewsFor = null;
+        foreach ($newsRelatedByNewsFor as $newsRelatedByNewsFor) {
+            $this->addNewsRelatedByNewsFor($newsRelatedByNewsFor);
+        }
+
+        $this->collNewsRelatedByNewsFor = $newsRelatedByNewsFor;
+        $this->collNewsRelatedByNewsForPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related News objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related News objects.
+     * @throws PropelException
+     */
+    public function countNewsRelatedByNewsFor(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collNewsRelatedByNewsForPartial && !$this->isNew();
+        if (null === $this->collNewsRelatedByNewsFor || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collNewsRelatedByNewsFor) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getNewsRelatedByNewsFor());
+            }
+
+            $query = ChildNewsQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByResourceRelatedByNewsFor($this)
+                ->count($con);
+        }
+
+        return count($this->collNewsRelatedByNewsFor);
+    }
+
+    /**
+     * Method called to associate a ChildNews object to this object
+     * through the ChildNews foreign key attribute.
+     *
+     * @param  ChildNews $l ChildNews
+     * @return $this|\App\Propel\Resource The current object (for fluent API support)
+     */
+    public function addNewsRelatedByNewsFor(ChildNews $l)
+    {
+        if ($this->collNewsRelatedByNewsFor === null) {
+            $this->initNewsRelatedByNewsFor();
+            $this->collNewsRelatedByNewsForPartial = true;
+        }
+
+        if (!$this->collNewsRelatedByNewsFor->contains($l)) {
+            $this->doAddNewsRelatedByNewsFor($l);
+
+            if ($this->newsRelatedByNewsForScheduledForDeletion and $this->newsRelatedByNewsForScheduledForDeletion->contains($l)) {
+                $this->newsRelatedByNewsForScheduledForDeletion->remove($this->newsRelatedByNewsForScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildNews $newsRelatedByNewsFor The ChildNews object to add.
+     */
+    protected function doAddNewsRelatedByNewsFor(ChildNews $newsRelatedByNewsFor)
+    {
+        $this->collNewsRelatedByNewsFor[]= $newsRelatedByNewsFor;
+        $newsRelatedByNewsFor->setResourceRelatedByNewsFor($this);
+    }
+
+    /**
+     * @param  ChildNews $newsRelatedByNewsFor The ChildNews object to remove.
+     * @return $this|ChildResource The current object (for fluent API support)
+     */
+    public function removeNewsRelatedByNewsFor(ChildNews $newsRelatedByNewsFor)
+    {
+        if ($this->getNewsRelatedByNewsFor()->contains($newsRelatedByNewsFor)) {
+            $pos = $this->collNewsRelatedByNewsFor->search($newsRelatedByNewsFor);
+            $this->collNewsRelatedByNewsFor->remove($pos);
+            if (null === $this->newsRelatedByNewsForScheduledForDeletion) {
+                $this->newsRelatedByNewsForScheduledForDeletion = clone $this->collNewsRelatedByNewsFor;
+                $this->newsRelatedByNewsForScheduledForDeletion->clear();
+            }
+            $this->newsRelatedByNewsForScheduledForDeletion[]= $newsRelatedByNewsFor;
+            $newsRelatedByNewsFor->setResourceRelatedByNewsFor(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Resource is new, it will return
+     * an empty collection; or if this Resource has previously
+     * been saved, it will retrieve related NewsRelatedByNewsFor from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Resource.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildNews[] List of ChildNews objects
+     */
+    public function getNewsRelatedByNewsForJoinFile(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildNewsQuery::create(null, $criteria);
+        $query->joinWith('File', $joinBehavior);
+
+        return $this->getNewsRelatedByNewsFor($query, $con);
+    }
+
+    /**
+     * Clears out the collPeriodicPlans collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addPeriodicPlans()
+     */
+    public function clearPeriodicPlans()
+    {
+        $this->collPeriodicPlans = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collPeriodicPlans collection loaded partially.
+     */
+    public function resetPartialPeriodicPlans($v = true)
+    {
+        $this->collPeriodicPlansPartial = $v;
+    }
+
+    /**
+     * Initializes the collPeriodicPlans collection.
+     *
+     * By default this just sets the collPeriodicPlans collection to an empty array (like clearcollPeriodicPlans());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initPeriodicPlans($overrideExisting = true)
+    {
+        if (null !== $this->collPeriodicPlans && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = PeriodicPlanTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collPeriodicPlans = new $collectionClassName;
+        $this->collPeriodicPlans->setModel('\App\Propel\PeriodicPlan');
+    }
+
+    /**
+     * Gets an array of ChildPeriodicPlan objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildResource is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildPeriodicPlan[] List of ChildPeriodicPlan objects
+     * @throws PropelException
+     */
+    public function getPeriodicPlans(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPeriodicPlansPartial && !$this->isNew();
+        if (null === $this->collPeriodicPlans || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collPeriodicPlans) {
+                // return empty collection
+                $this->initPeriodicPlans();
+            } else {
+                $collPeriodicPlans = ChildPeriodicPlanQuery::create(null, $criteria)
+                    ->filterByResource($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collPeriodicPlansPartial && count($collPeriodicPlans)) {
+                        $this->initPeriodicPlans(false);
+
+                        foreach ($collPeriodicPlans as $obj) {
+                            if (false == $this->collPeriodicPlans->contains($obj)) {
+                                $this->collPeriodicPlans->append($obj);
+                            }
+                        }
+
+                        $this->collPeriodicPlansPartial = true;
+                    }
+
+                    return $collPeriodicPlans;
+                }
+
+                if ($partial && $this->collPeriodicPlans) {
+                    foreach ($this->collPeriodicPlans as $obj) {
+                        if ($obj->isNew()) {
+                            $collPeriodicPlans[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collPeriodicPlans = $collPeriodicPlans;
+                $this->collPeriodicPlansPartial = false;
+            }
+        }
+
+        return $this->collPeriodicPlans;
+    }
+
+    /**
+     * Sets a collection of ChildPeriodicPlan objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $periodicPlans A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildResource The current object (for fluent API support)
+     */
+    public function setPeriodicPlans(Collection $periodicPlans, ConnectionInterface $con = null)
+    {
+        /** @var ChildPeriodicPlan[] $periodicPlansToDelete */
+        $periodicPlansToDelete = $this->getPeriodicPlans(new Criteria(), $con)->diff($periodicPlans);
+
+
+        $this->periodicPlansScheduledForDeletion = $periodicPlansToDelete;
+
+        foreach ($periodicPlansToDelete as $periodicPlanRemoved) {
+            $periodicPlanRemoved->setResource(null);
+        }
+
+        $this->collPeriodicPlans = null;
+        foreach ($periodicPlans as $periodicPlan) {
+            $this->addPeriodicPlan($periodicPlan);
+        }
+
+        $this->collPeriodicPlans = $periodicPlans;
+        $this->collPeriodicPlansPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related PeriodicPlan objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related PeriodicPlan objects.
+     * @throws PropelException
+     */
+    public function countPeriodicPlans(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPeriodicPlansPartial && !$this->isNew();
+        if (null === $this->collPeriodicPlans || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collPeriodicPlans) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getPeriodicPlans());
+            }
+
+            $query = ChildPeriodicPlanQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByResource($this)
+                ->count($con);
+        }
+
+        return count($this->collPeriodicPlans);
+    }
+
+    /**
+     * Method called to associate a ChildPeriodicPlan object to this object
+     * through the ChildPeriodicPlan foreign key attribute.
+     *
+     * @param  ChildPeriodicPlan $l ChildPeriodicPlan
+     * @return $this|\App\Propel\Resource The current object (for fluent API support)
+     */
+    public function addPeriodicPlan(ChildPeriodicPlan $l)
+    {
+        if ($this->collPeriodicPlans === null) {
+            $this->initPeriodicPlans();
+            $this->collPeriodicPlansPartial = true;
+        }
+
+        if (!$this->collPeriodicPlans->contains($l)) {
+            $this->doAddPeriodicPlan($l);
+
+            if ($this->periodicPlansScheduledForDeletion and $this->periodicPlansScheduledForDeletion->contains($l)) {
+                $this->periodicPlansScheduledForDeletion->remove($this->periodicPlansScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildPeriodicPlan $periodicPlan The ChildPeriodicPlan object to add.
+     */
+    protected function doAddPeriodicPlan(ChildPeriodicPlan $periodicPlan)
+    {
+        $this->collPeriodicPlans[]= $periodicPlan;
+        $periodicPlan->setResource($this);
+    }
+
+    /**
+     * @param  ChildPeriodicPlan $periodicPlan The ChildPeriodicPlan object to remove.
+     * @return $this|ChildResource The current object (for fluent API support)
+     */
+    public function removePeriodicPlan(ChildPeriodicPlan $periodicPlan)
+    {
+        if ($this->getPeriodicPlans()->contains($periodicPlan)) {
+            $pos = $this->collPeriodicPlans->search($periodicPlan);
+            $this->collPeriodicPlans->remove($pos);
+            if (null === $this->periodicPlansScheduledForDeletion) {
+                $this->periodicPlansScheduledForDeletion = clone $this->collPeriodicPlans;
+                $this->periodicPlansScheduledForDeletion->clear();
+            }
+            $this->periodicPlansScheduledForDeletion[]= clone $periodicPlan;
+            $periodicPlan->setResource(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Resource is new, it will return
+     * an empty collection; or if this Resource has previously
+     * been saved, it will retrieve related PeriodicPlans from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Resource.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildPeriodicPlan[] List of ChildPeriodicPlan objects
+     */
+    public function getPeriodicPlansJoinPeriodicType(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildPeriodicPlanQuery::create(null, $criteria);
+        $query->joinWith('PeriodicType', $joinBehavior);
+
+        return $this->getPeriodicPlans($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Resource is new, it will return
+     * an empty collection; or if this Resource has previously
+     * been saved, it will retrieve related PeriodicPlans from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Resource.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildPeriodicPlan[] List of ChildPeriodicPlan objects
+     */
+    public function getPeriodicPlansJoinFile(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildPeriodicPlanQuery::create(null, $criteria);
+        $query->joinWith('File', $joinBehavior);
+
+        return $this->getPeriodicPlans($query, $con);
     }
 
     /**
@@ -1899,6 +3603,31 @@ abstract class Resource implements ActiveRecordInterface
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildProduct[] List of ChildProduct objects
      */
+    public function getProductsJoinProvider(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildProductQuery::create(null, $criteria);
+        $query->joinWith('Provider', $joinBehavior);
+
+        return $this->getProducts($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Resource is new, it will return
+     * an empty collection; or if this Resource has previously
+     * been saved, it will retrieve related Products from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Resource.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildProduct[] List of ChildProduct objects
+     */
     public function getProductsJoinUnit(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildProductQuery::create(null, $criteria);
@@ -1930,6 +3659,256 @@ abstract class Resource implements ActiveRecordInterface
         $query->joinWith('File', $joinBehavior);
 
         return $this->getProducts($query, $con);
+    }
+
+    /**
+     * Clears out the collProductHighlighteds collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addProductHighlighteds()
+     */
+    public function clearProductHighlighteds()
+    {
+        $this->collProductHighlighteds = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collProductHighlighteds collection loaded partially.
+     */
+    public function resetPartialProductHighlighteds($v = true)
+    {
+        $this->collProductHighlightedsPartial = $v;
+    }
+
+    /**
+     * Initializes the collProductHighlighteds collection.
+     *
+     * By default this just sets the collProductHighlighteds collection to an empty array (like clearcollProductHighlighteds());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initProductHighlighteds($overrideExisting = true)
+    {
+        if (null !== $this->collProductHighlighteds && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = ProductHighlightedTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collProductHighlighteds = new $collectionClassName;
+        $this->collProductHighlighteds->setModel('\App\Propel\ProductHighlighted');
+    }
+
+    /**
+     * Gets an array of ChildProductHighlighted objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildResource is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildProductHighlighted[] List of ChildProductHighlighted objects
+     * @throws PropelException
+     */
+    public function getProductHighlighteds(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collProductHighlightedsPartial && !$this->isNew();
+        if (null === $this->collProductHighlighteds || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collProductHighlighteds) {
+                // return empty collection
+                $this->initProductHighlighteds();
+            } else {
+                $collProductHighlighteds = ChildProductHighlightedQuery::create(null, $criteria)
+                    ->filterByResource($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collProductHighlightedsPartial && count($collProductHighlighteds)) {
+                        $this->initProductHighlighteds(false);
+
+                        foreach ($collProductHighlighteds as $obj) {
+                            if (false == $this->collProductHighlighteds->contains($obj)) {
+                                $this->collProductHighlighteds->append($obj);
+                            }
+                        }
+
+                        $this->collProductHighlightedsPartial = true;
+                    }
+
+                    return $collProductHighlighteds;
+                }
+
+                if ($partial && $this->collProductHighlighteds) {
+                    foreach ($this->collProductHighlighteds as $obj) {
+                        if ($obj->isNew()) {
+                            $collProductHighlighteds[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collProductHighlighteds = $collProductHighlighteds;
+                $this->collProductHighlightedsPartial = false;
+            }
+        }
+
+        return $this->collProductHighlighteds;
+    }
+
+    /**
+     * Sets a collection of ChildProductHighlighted objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $productHighlighteds A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildResource The current object (for fluent API support)
+     */
+    public function setProductHighlighteds(Collection $productHighlighteds, ConnectionInterface $con = null)
+    {
+        /** @var ChildProductHighlighted[] $productHighlightedsToDelete */
+        $productHighlightedsToDelete = $this->getProductHighlighteds(new Criteria(), $con)->diff($productHighlighteds);
+
+
+        $this->productHighlightedsScheduledForDeletion = $productHighlightedsToDelete;
+
+        foreach ($productHighlightedsToDelete as $productHighlightedRemoved) {
+            $productHighlightedRemoved->setResource(null);
+        }
+
+        $this->collProductHighlighteds = null;
+        foreach ($productHighlighteds as $productHighlighted) {
+            $this->addProductHighlighted($productHighlighted);
+        }
+
+        $this->collProductHighlighteds = $productHighlighteds;
+        $this->collProductHighlightedsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related ProductHighlighted objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related ProductHighlighted objects.
+     * @throws PropelException
+     */
+    public function countProductHighlighteds(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collProductHighlightedsPartial && !$this->isNew();
+        if (null === $this->collProductHighlighteds || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collProductHighlighteds) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getProductHighlighteds());
+            }
+
+            $query = ChildProductHighlightedQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByResource($this)
+                ->count($con);
+        }
+
+        return count($this->collProductHighlighteds);
+    }
+
+    /**
+     * Method called to associate a ChildProductHighlighted object to this object
+     * through the ChildProductHighlighted foreign key attribute.
+     *
+     * @param  ChildProductHighlighted $l ChildProductHighlighted
+     * @return $this|\App\Propel\Resource The current object (for fluent API support)
+     */
+    public function addProductHighlighted(ChildProductHighlighted $l)
+    {
+        if ($this->collProductHighlighteds === null) {
+            $this->initProductHighlighteds();
+            $this->collProductHighlightedsPartial = true;
+        }
+
+        if (!$this->collProductHighlighteds->contains($l)) {
+            $this->doAddProductHighlighted($l);
+
+            if ($this->productHighlightedsScheduledForDeletion and $this->productHighlightedsScheduledForDeletion->contains($l)) {
+                $this->productHighlightedsScheduledForDeletion->remove($this->productHighlightedsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildProductHighlighted $productHighlighted The ChildProductHighlighted object to add.
+     */
+    protected function doAddProductHighlighted(ChildProductHighlighted $productHighlighted)
+    {
+        $this->collProductHighlighteds[]= $productHighlighted;
+        $productHighlighted->setResource($this);
+    }
+
+    /**
+     * @param  ChildProductHighlighted $productHighlighted The ChildProductHighlighted object to remove.
+     * @return $this|ChildResource The current object (for fluent API support)
+     */
+    public function removeProductHighlighted(ChildProductHighlighted $productHighlighted)
+    {
+        if ($this->getProductHighlighteds()->contains($productHighlighted)) {
+            $pos = $this->collProductHighlighteds->search($productHighlighted);
+            $this->collProductHighlighteds->remove($pos);
+            if (null === $this->productHighlightedsScheduledForDeletion) {
+                $this->productHighlightedsScheduledForDeletion = clone $this->collProductHighlighteds;
+                $this->productHighlightedsScheduledForDeletion->clear();
+            }
+            $this->productHighlightedsScheduledForDeletion[]= $productHighlighted;
+            $productHighlighted->setResource(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Resource is new, it will return
+     * an empty collection; or if this Resource has previously
+     * been saved, it will retrieve related ProductHighlighteds from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Resource.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildProductHighlighted[] List of ChildProductHighlighted objects
+     */
+    public function getProductHighlightedsJoinProduct(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildProductHighlightedQuery::create(null, $criteria);
+        $query->joinWith('Product', $joinBehavior);
+
+        return $this->getProductHighlighteds($query, $con);
     }
 
     /**
@@ -2183,6 +4162,256 @@ abstract class Resource implements ActiveRecordInterface
     }
 
     /**
+     * Clears out the collProviders collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addProviders()
+     */
+    public function clearProviders()
+    {
+        $this->collProviders = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collProviders collection loaded partially.
+     */
+    public function resetPartialProviders($v = true)
+    {
+        $this->collProvidersPartial = $v;
+    }
+
+    /**
+     * Initializes the collProviders collection.
+     *
+     * By default this just sets the collProviders collection to an empty array (like clearcollProviders());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initProviders($overrideExisting = true)
+    {
+        if (null !== $this->collProviders && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = ProviderTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collProviders = new $collectionClassName;
+        $this->collProviders->setModel('\App\Propel\Provider');
+    }
+
+    /**
+     * Gets an array of ChildProvider objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildResource is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildProvider[] List of ChildProvider objects
+     * @throws PropelException
+     */
+    public function getProviders(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collProvidersPartial && !$this->isNew();
+        if (null === $this->collProviders || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collProviders) {
+                // return empty collection
+                $this->initProviders();
+            } else {
+                $collProviders = ChildProviderQuery::create(null, $criteria)
+                    ->filterByResource($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collProvidersPartial && count($collProviders)) {
+                        $this->initProviders(false);
+
+                        foreach ($collProviders as $obj) {
+                            if (false == $this->collProviders->contains($obj)) {
+                                $this->collProviders->append($obj);
+                            }
+                        }
+
+                        $this->collProvidersPartial = true;
+                    }
+
+                    return $collProviders;
+                }
+
+                if ($partial && $this->collProviders) {
+                    foreach ($this->collProviders as $obj) {
+                        if ($obj->isNew()) {
+                            $collProviders[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collProviders = $collProviders;
+                $this->collProvidersPartial = false;
+            }
+        }
+
+        return $this->collProviders;
+    }
+
+    /**
+     * Sets a collection of ChildProvider objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $providers A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildResource The current object (for fluent API support)
+     */
+    public function setProviders(Collection $providers, ConnectionInterface $con = null)
+    {
+        /** @var ChildProvider[] $providersToDelete */
+        $providersToDelete = $this->getProviders(new Criteria(), $con)->diff($providers);
+
+
+        $this->providersScheduledForDeletion = $providersToDelete;
+
+        foreach ($providersToDelete as $providerRemoved) {
+            $providerRemoved->setResource(null);
+        }
+
+        $this->collProviders = null;
+        foreach ($providers as $provider) {
+            $this->addProvider($provider);
+        }
+
+        $this->collProviders = $providers;
+        $this->collProvidersPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Provider objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Provider objects.
+     * @throws PropelException
+     */
+    public function countProviders(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collProvidersPartial && !$this->isNew();
+        if (null === $this->collProviders || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collProviders) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getProviders());
+            }
+
+            $query = ChildProviderQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByResource($this)
+                ->count($con);
+        }
+
+        return count($this->collProviders);
+    }
+
+    /**
+     * Method called to associate a ChildProvider object to this object
+     * through the ChildProvider foreign key attribute.
+     *
+     * @param  ChildProvider $l ChildProvider
+     * @return $this|\App\Propel\Resource The current object (for fluent API support)
+     */
+    public function addProvider(ChildProvider $l)
+    {
+        if ($this->collProviders === null) {
+            $this->initProviders();
+            $this->collProvidersPartial = true;
+        }
+
+        if (!$this->collProviders->contains($l)) {
+            $this->doAddProvider($l);
+
+            if ($this->providersScheduledForDeletion and $this->providersScheduledForDeletion->contains($l)) {
+                $this->providersScheduledForDeletion->remove($this->providersScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildProvider $provider The ChildProvider object to add.
+     */
+    protected function doAddProvider(ChildProvider $provider)
+    {
+        $this->collProviders[]= $provider;
+        $provider->setResource($this);
+    }
+
+    /**
+     * @param  ChildProvider $provider The ChildProvider object to remove.
+     * @return $this|ChildResource The current object (for fluent API support)
+     */
+    public function removeProvider(ChildProvider $provider)
+    {
+        if ($this->getProviders()->contains($provider)) {
+            $pos = $this->collProviders->search($provider);
+            $this->collProviders->remove($pos);
+            if (null === $this->providersScheduledForDeletion) {
+                $this->providersScheduledForDeletion = clone $this->collProviders;
+                $this->providersScheduledForDeletion->clear();
+            }
+            $this->providersScheduledForDeletion[]= clone $provider;
+            $provider->setResource(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Resource is new, it will return
+     * an empty collection; or if this Resource has previously
+     * been saved, it will retrieve related Providers from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Resource.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildProvider[] List of ChildProvider objects
+     */
+    public function getProvidersJoinFile(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildProviderQuery::create(null, $criteria);
+        $query->joinWith('File', $joinBehavior);
+
+        return $this->getProviders($query, $con);
+    }
+
+    /**
      * Clears out the collResourceFiles collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
@@ -2430,6 +4659,1031 @@ abstract class Resource implements ActiveRecordInterface
         $query->joinWith('File', $joinBehavior);
 
         return $this->getResourceFiles($query, $con);
+    }
+
+    /**
+     * Clears out the collSocialViews collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addSocialViews()
+     */
+    public function clearSocialViews()
+    {
+        $this->collSocialViews = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collSocialViews collection loaded partially.
+     */
+    public function resetPartialSocialViews($v = true)
+    {
+        $this->collSocialViewsPartial = $v;
+    }
+
+    /**
+     * Initializes the collSocialViews collection.
+     *
+     * By default this just sets the collSocialViews collection to an empty array (like clearcollSocialViews());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initSocialViews($overrideExisting = true)
+    {
+        if (null !== $this->collSocialViews && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = SocialViewTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collSocialViews = new $collectionClassName;
+        $this->collSocialViews->setModel('\App\Propel\SocialView');
+    }
+
+    /**
+     * Gets an array of ChildSocialView objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildResource is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildSocialView[] List of ChildSocialView objects
+     * @throws PropelException
+     */
+    public function getSocialViews(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collSocialViewsPartial && !$this->isNew();
+        if (null === $this->collSocialViews || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collSocialViews) {
+                // return empty collection
+                $this->initSocialViews();
+            } else {
+                $collSocialViews = ChildSocialViewQuery::create(null, $criteria)
+                    ->filterByResource($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collSocialViewsPartial && count($collSocialViews)) {
+                        $this->initSocialViews(false);
+
+                        foreach ($collSocialViews as $obj) {
+                            if (false == $this->collSocialViews->contains($obj)) {
+                                $this->collSocialViews->append($obj);
+                            }
+                        }
+
+                        $this->collSocialViewsPartial = true;
+                    }
+
+                    return $collSocialViews;
+                }
+
+                if ($partial && $this->collSocialViews) {
+                    foreach ($this->collSocialViews as $obj) {
+                        if ($obj->isNew()) {
+                            $collSocialViews[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collSocialViews = $collSocialViews;
+                $this->collSocialViewsPartial = false;
+            }
+        }
+
+        return $this->collSocialViews;
+    }
+
+    /**
+     * Sets a collection of ChildSocialView objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $socialViews A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildResource The current object (for fluent API support)
+     */
+    public function setSocialViews(Collection $socialViews, ConnectionInterface $con = null)
+    {
+        /** @var ChildSocialView[] $socialViewsToDelete */
+        $socialViewsToDelete = $this->getSocialViews(new Criteria(), $con)->diff($socialViews);
+
+
+        $this->socialViewsScheduledForDeletion = $socialViewsToDelete;
+
+        foreach ($socialViewsToDelete as $socialViewRemoved) {
+            $socialViewRemoved->setResource(null);
+        }
+
+        $this->collSocialViews = null;
+        foreach ($socialViews as $socialView) {
+            $this->addSocialView($socialView);
+        }
+
+        $this->collSocialViews = $socialViews;
+        $this->collSocialViewsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related SocialView objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related SocialView objects.
+     * @throws PropelException
+     */
+    public function countSocialViews(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collSocialViewsPartial && !$this->isNew();
+        if (null === $this->collSocialViews || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collSocialViews) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getSocialViews());
+            }
+
+            $query = ChildSocialViewQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByResource($this)
+                ->count($con);
+        }
+
+        return count($this->collSocialViews);
+    }
+
+    /**
+     * Method called to associate a ChildSocialView object to this object
+     * through the ChildSocialView foreign key attribute.
+     *
+     * @param  ChildSocialView $l ChildSocialView
+     * @return $this|\App\Propel\Resource The current object (for fluent API support)
+     */
+    public function addSocialView(ChildSocialView $l)
+    {
+        if ($this->collSocialViews === null) {
+            $this->initSocialViews();
+            $this->collSocialViewsPartial = true;
+        }
+
+        if (!$this->collSocialViews->contains($l)) {
+            $this->doAddSocialView($l);
+
+            if ($this->socialViewsScheduledForDeletion and $this->socialViewsScheduledForDeletion->contains($l)) {
+                $this->socialViewsScheduledForDeletion->remove($this->socialViewsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildSocialView $socialView The ChildSocialView object to add.
+     */
+    protected function doAddSocialView(ChildSocialView $socialView)
+    {
+        $this->collSocialViews[]= $socialView;
+        $socialView->setResource($this);
+    }
+
+    /**
+     * @param  ChildSocialView $socialView The ChildSocialView object to remove.
+     * @return $this|ChildResource The current object (for fluent API support)
+     */
+    public function removeSocialView(ChildSocialView $socialView)
+    {
+        if ($this->getSocialViews()->contains($socialView)) {
+            $pos = $this->collSocialViews->search($socialView);
+            $this->collSocialViews->remove($pos);
+            if (null === $this->socialViewsScheduledForDeletion) {
+                $this->socialViewsScheduledForDeletion = clone $this->collSocialViews;
+                $this->socialViewsScheduledForDeletion->clear();
+            }
+            $this->socialViewsScheduledForDeletion[]= clone $socialView;
+            $socialView->setResource(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Resource is new, it will return
+     * an empty collection; or if this Resource has previously
+     * been saved, it will retrieve related SocialViews from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Resource.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildSocialView[] List of ChildSocialView objects
+     */
+    public function getSocialViewsJoinUser(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildSocialViewQuery::create(null, $criteria);
+        $query->joinWith('User', $joinBehavior);
+
+        return $this->getSocialViews($query, $con);
+    }
+
+    /**
+     * Clears out the collSocialLikes collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addSocialLikes()
+     */
+    public function clearSocialLikes()
+    {
+        $this->collSocialLikes = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collSocialLikes collection loaded partially.
+     */
+    public function resetPartialSocialLikes($v = true)
+    {
+        $this->collSocialLikesPartial = $v;
+    }
+
+    /**
+     * Initializes the collSocialLikes collection.
+     *
+     * By default this just sets the collSocialLikes collection to an empty array (like clearcollSocialLikes());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initSocialLikes($overrideExisting = true)
+    {
+        if (null !== $this->collSocialLikes && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = SocialLikeTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collSocialLikes = new $collectionClassName;
+        $this->collSocialLikes->setModel('\App\Propel\SocialLike');
+    }
+
+    /**
+     * Gets an array of ChildSocialLike objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildResource is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildSocialLike[] List of ChildSocialLike objects
+     * @throws PropelException
+     */
+    public function getSocialLikes(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collSocialLikesPartial && !$this->isNew();
+        if (null === $this->collSocialLikes || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collSocialLikes) {
+                // return empty collection
+                $this->initSocialLikes();
+            } else {
+                $collSocialLikes = ChildSocialLikeQuery::create(null, $criteria)
+                    ->filterByResource($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collSocialLikesPartial && count($collSocialLikes)) {
+                        $this->initSocialLikes(false);
+
+                        foreach ($collSocialLikes as $obj) {
+                            if (false == $this->collSocialLikes->contains($obj)) {
+                                $this->collSocialLikes->append($obj);
+                            }
+                        }
+
+                        $this->collSocialLikesPartial = true;
+                    }
+
+                    return $collSocialLikes;
+                }
+
+                if ($partial && $this->collSocialLikes) {
+                    foreach ($this->collSocialLikes as $obj) {
+                        if ($obj->isNew()) {
+                            $collSocialLikes[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collSocialLikes = $collSocialLikes;
+                $this->collSocialLikesPartial = false;
+            }
+        }
+
+        return $this->collSocialLikes;
+    }
+
+    /**
+     * Sets a collection of ChildSocialLike objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $socialLikes A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildResource The current object (for fluent API support)
+     */
+    public function setSocialLikes(Collection $socialLikes, ConnectionInterface $con = null)
+    {
+        /** @var ChildSocialLike[] $socialLikesToDelete */
+        $socialLikesToDelete = $this->getSocialLikes(new Criteria(), $con)->diff($socialLikes);
+
+
+        $this->socialLikesScheduledForDeletion = $socialLikesToDelete;
+
+        foreach ($socialLikesToDelete as $socialLikeRemoved) {
+            $socialLikeRemoved->setResource(null);
+        }
+
+        $this->collSocialLikes = null;
+        foreach ($socialLikes as $socialLike) {
+            $this->addSocialLike($socialLike);
+        }
+
+        $this->collSocialLikes = $socialLikes;
+        $this->collSocialLikesPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related SocialLike objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related SocialLike objects.
+     * @throws PropelException
+     */
+    public function countSocialLikes(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collSocialLikesPartial && !$this->isNew();
+        if (null === $this->collSocialLikes || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collSocialLikes) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getSocialLikes());
+            }
+
+            $query = ChildSocialLikeQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByResource($this)
+                ->count($con);
+        }
+
+        return count($this->collSocialLikes);
+    }
+
+    /**
+     * Method called to associate a ChildSocialLike object to this object
+     * through the ChildSocialLike foreign key attribute.
+     *
+     * @param  ChildSocialLike $l ChildSocialLike
+     * @return $this|\App\Propel\Resource The current object (for fluent API support)
+     */
+    public function addSocialLike(ChildSocialLike $l)
+    {
+        if ($this->collSocialLikes === null) {
+            $this->initSocialLikes();
+            $this->collSocialLikesPartial = true;
+        }
+
+        if (!$this->collSocialLikes->contains($l)) {
+            $this->doAddSocialLike($l);
+
+            if ($this->socialLikesScheduledForDeletion and $this->socialLikesScheduledForDeletion->contains($l)) {
+                $this->socialLikesScheduledForDeletion->remove($this->socialLikesScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildSocialLike $socialLike The ChildSocialLike object to add.
+     */
+    protected function doAddSocialLike(ChildSocialLike $socialLike)
+    {
+        $this->collSocialLikes[]= $socialLike;
+        $socialLike->setResource($this);
+    }
+
+    /**
+     * @param  ChildSocialLike $socialLike The ChildSocialLike object to remove.
+     * @return $this|ChildResource The current object (for fluent API support)
+     */
+    public function removeSocialLike(ChildSocialLike $socialLike)
+    {
+        if ($this->getSocialLikes()->contains($socialLike)) {
+            $pos = $this->collSocialLikes->search($socialLike);
+            $this->collSocialLikes->remove($pos);
+            if (null === $this->socialLikesScheduledForDeletion) {
+                $this->socialLikesScheduledForDeletion = clone $this->collSocialLikes;
+                $this->socialLikesScheduledForDeletion->clear();
+            }
+            $this->socialLikesScheduledForDeletion[]= clone $socialLike;
+            $socialLike->setResource(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Resource is new, it will return
+     * an empty collection; or if this Resource has previously
+     * been saved, it will retrieve related SocialLikes from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Resource.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildSocialLike[] List of ChildSocialLike objects
+     */
+    public function getSocialLikesJoinUser(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildSocialLikeQuery::create(null, $criteria);
+        $query->joinWith('User', $joinBehavior);
+
+        return $this->getSocialLikes($query, $con);
+    }
+
+    /**
+     * Clears out the collSocialComments collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addSocialComments()
+     */
+    public function clearSocialComments()
+    {
+        $this->collSocialComments = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collSocialComments collection loaded partially.
+     */
+    public function resetPartialSocialComments($v = true)
+    {
+        $this->collSocialCommentsPartial = $v;
+    }
+
+    /**
+     * Initializes the collSocialComments collection.
+     *
+     * By default this just sets the collSocialComments collection to an empty array (like clearcollSocialComments());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initSocialComments($overrideExisting = true)
+    {
+        if (null !== $this->collSocialComments && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = SocialCommentTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collSocialComments = new $collectionClassName;
+        $this->collSocialComments->setModel('\App\Propel\SocialComment');
+    }
+
+    /**
+     * Gets an array of ChildSocialComment objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildResource is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildSocialComment[] List of ChildSocialComment objects
+     * @throws PropelException
+     */
+    public function getSocialComments(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collSocialCommentsPartial && !$this->isNew();
+        if (null === $this->collSocialComments || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collSocialComments) {
+                // return empty collection
+                $this->initSocialComments();
+            } else {
+                $collSocialComments = ChildSocialCommentQuery::create(null, $criteria)
+                    ->filterByResource($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collSocialCommentsPartial && count($collSocialComments)) {
+                        $this->initSocialComments(false);
+
+                        foreach ($collSocialComments as $obj) {
+                            if (false == $this->collSocialComments->contains($obj)) {
+                                $this->collSocialComments->append($obj);
+                            }
+                        }
+
+                        $this->collSocialCommentsPartial = true;
+                    }
+
+                    return $collSocialComments;
+                }
+
+                if ($partial && $this->collSocialComments) {
+                    foreach ($this->collSocialComments as $obj) {
+                        if ($obj->isNew()) {
+                            $collSocialComments[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collSocialComments = $collSocialComments;
+                $this->collSocialCommentsPartial = false;
+            }
+        }
+
+        return $this->collSocialComments;
+    }
+
+    /**
+     * Sets a collection of ChildSocialComment objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $socialComments A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildResource The current object (for fluent API support)
+     */
+    public function setSocialComments(Collection $socialComments, ConnectionInterface $con = null)
+    {
+        /** @var ChildSocialComment[] $socialCommentsToDelete */
+        $socialCommentsToDelete = $this->getSocialComments(new Criteria(), $con)->diff($socialComments);
+
+
+        $this->socialCommentsScheduledForDeletion = $socialCommentsToDelete;
+
+        foreach ($socialCommentsToDelete as $socialCommentRemoved) {
+            $socialCommentRemoved->setResource(null);
+        }
+
+        $this->collSocialComments = null;
+        foreach ($socialComments as $socialComment) {
+            $this->addSocialComment($socialComment);
+        }
+
+        $this->collSocialComments = $socialComments;
+        $this->collSocialCommentsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related SocialComment objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related SocialComment objects.
+     * @throws PropelException
+     */
+    public function countSocialComments(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collSocialCommentsPartial && !$this->isNew();
+        if (null === $this->collSocialComments || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collSocialComments) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getSocialComments());
+            }
+
+            $query = ChildSocialCommentQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByResource($this)
+                ->count($con);
+        }
+
+        return count($this->collSocialComments);
+    }
+
+    /**
+     * Method called to associate a ChildSocialComment object to this object
+     * through the ChildSocialComment foreign key attribute.
+     *
+     * @param  ChildSocialComment $l ChildSocialComment
+     * @return $this|\App\Propel\Resource The current object (for fluent API support)
+     */
+    public function addSocialComment(ChildSocialComment $l)
+    {
+        if ($this->collSocialComments === null) {
+            $this->initSocialComments();
+            $this->collSocialCommentsPartial = true;
+        }
+
+        if (!$this->collSocialComments->contains($l)) {
+            $this->doAddSocialComment($l);
+
+            if ($this->socialCommentsScheduledForDeletion and $this->socialCommentsScheduledForDeletion->contains($l)) {
+                $this->socialCommentsScheduledForDeletion->remove($this->socialCommentsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildSocialComment $socialComment The ChildSocialComment object to add.
+     */
+    protected function doAddSocialComment(ChildSocialComment $socialComment)
+    {
+        $this->collSocialComments[]= $socialComment;
+        $socialComment->setResource($this);
+    }
+
+    /**
+     * @param  ChildSocialComment $socialComment The ChildSocialComment object to remove.
+     * @return $this|ChildResource The current object (for fluent API support)
+     */
+    public function removeSocialComment(ChildSocialComment $socialComment)
+    {
+        if ($this->getSocialComments()->contains($socialComment)) {
+            $pos = $this->collSocialComments->search($socialComment);
+            $this->collSocialComments->remove($pos);
+            if (null === $this->socialCommentsScheduledForDeletion) {
+                $this->socialCommentsScheduledForDeletion = clone $this->collSocialComments;
+                $this->socialCommentsScheduledForDeletion->clear();
+            }
+            $this->socialCommentsScheduledForDeletion[]= clone $socialComment;
+            $socialComment->setResource(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Resource is new, it will return
+     * an empty collection; or if this Resource has previously
+     * been saved, it will retrieve related SocialComments from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Resource.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildSocialComment[] List of ChildSocialComment objects
+     */
+    public function getSocialCommentsJoinUser(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildSocialCommentQuery::create(null, $criteria);
+        $query->joinWith('User', $joinBehavior);
+
+        return $this->getSocialComments($query, $con);
+    }
+
+    /**
+     * Clears out the collSocialRecommendations collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addSocialRecommendations()
+     */
+    public function clearSocialRecommendations()
+    {
+        $this->collSocialRecommendations = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collSocialRecommendations collection loaded partially.
+     */
+    public function resetPartialSocialRecommendations($v = true)
+    {
+        $this->collSocialRecommendationsPartial = $v;
+    }
+
+    /**
+     * Initializes the collSocialRecommendations collection.
+     *
+     * By default this just sets the collSocialRecommendations collection to an empty array (like clearcollSocialRecommendations());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initSocialRecommendations($overrideExisting = true)
+    {
+        if (null !== $this->collSocialRecommendations && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = SocialRecommendationTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collSocialRecommendations = new $collectionClassName;
+        $this->collSocialRecommendations->setModel('\App\Propel\SocialRecommendation');
+    }
+
+    /**
+     * Gets an array of ChildSocialRecommendation objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildResource is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildSocialRecommendation[] List of ChildSocialRecommendation objects
+     * @throws PropelException
+     */
+    public function getSocialRecommendations(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collSocialRecommendationsPartial && !$this->isNew();
+        if (null === $this->collSocialRecommendations || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collSocialRecommendations) {
+                // return empty collection
+                $this->initSocialRecommendations();
+            } else {
+                $collSocialRecommendations = ChildSocialRecommendationQuery::create(null, $criteria)
+                    ->filterByResource($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collSocialRecommendationsPartial && count($collSocialRecommendations)) {
+                        $this->initSocialRecommendations(false);
+
+                        foreach ($collSocialRecommendations as $obj) {
+                            if (false == $this->collSocialRecommendations->contains($obj)) {
+                                $this->collSocialRecommendations->append($obj);
+                            }
+                        }
+
+                        $this->collSocialRecommendationsPartial = true;
+                    }
+
+                    return $collSocialRecommendations;
+                }
+
+                if ($partial && $this->collSocialRecommendations) {
+                    foreach ($this->collSocialRecommendations as $obj) {
+                        if ($obj->isNew()) {
+                            $collSocialRecommendations[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collSocialRecommendations = $collSocialRecommendations;
+                $this->collSocialRecommendationsPartial = false;
+            }
+        }
+
+        return $this->collSocialRecommendations;
+    }
+
+    /**
+     * Sets a collection of ChildSocialRecommendation objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $socialRecommendations A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildResource The current object (for fluent API support)
+     */
+    public function setSocialRecommendations(Collection $socialRecommendations, ConnectionInterface $con = null)
+    {
+        /** @var ChildSocialRecommendation[] $socialRecommendationsToDelete */
+        $socialRecommendationsToDelete = $this->getSocialRecommendations(new Criteria(), $con)->diff($socialRecommendations);
+
+
+        $this->socialRecommendationsScheduledForDeletion = $socialRecommendationsToDelete;
+
+        foreach ($socialRecommendationsToDelete as $socialRecommendationRemoved) {
+            $socialRecommendationRemoved->setResource(null);
+        }
+
+        $this->collSocialRecommendations = null;
+        foreach ($socialRecommendations as $socialRecommendation) {
+            $this->addSocialRecommendation($socialRecommendation);
+        }
+
+        $this->collSocialRecommendations = $socialRecommendations;
+        $this->collSocialRecommendationsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related SocialRecommendation objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related SocialRecommendation objects.
+     * @throws PropelException
+     */
+    public function countSocialRecommendations(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collSocialRecommendationsPartial && !$this->isNew();
+        if (null === $this->collSocialRecommendations || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collSocialRecommendations) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getSocialRecommendations());
+            }
+
+            $query = ChildSocialRecommendationQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByResource($this)
+                ->count($con);
+        }
+
+        return count($this->collSocialRecommendations);
+    }
+
+    /**
+     * Method called to associate a ChildSocialRecommendation object to this object
+     * through the ChildSocialRecommendation foreign key attribute.
+     *
+     * @param  ChildSocialRecommendation $l ChildSocialRecommendation
+     * @return $this|\App\Propel\Resource The current object (for fluent API support)
+     */
+    public function addSocialRecommendation(ChildSocialRecommendation $l)
+    {
+        if ($this->collSocialRecommendations === null) {
+            $this->initSocialRecommendations();
+            $this->collSocialRecommendationsPartial = true;
+        }
+
+        if (!$this->collSocialRecommendations->contains($l)) {
+            $this->doAddSocialRecommendation($l);
+
+            if ($this->socialRecommendationsScheduledForDeletion and $this->socialRecommendationsScheduledForDeletion->contains($l)) {
+                $this->socialRecommendationsScheduledForDeletion->remove($this->socialRecommendationsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildSocialRecommendation $socialRecommendation The ChildSocialRecommendation object to add.
+     */
+    protected function doAddSocialRecommendation(ChildSocialRecommendation $socialRecommendation)
+    {
+        $this->collSocialRecommendations[]= $socialRecommendation;
+        $socialRecommendation->setResource($this);
+    }
+
+    /**
+     * @param  ChildSocialRecommendation $socialRecommendation The ChildSocialRecommendation object to remove.
+     * @return $this|ChildResource The current object (for fluent API support)
+     */
+    public function removeSocialRecommendation(ChildSocialRecommendation $socialRecommendation)
+    {
+        if ($this->getSocialRecommendations()->contains($socialRecommendation)) {
+            $pos = $this->collSocialRecommendations->search($socialRecommendation);
+            $this->collSocialRecommendations->remove($pos);
+            if (null === $this->socialRecommendationsScheduledForDeletion) {
+                $this->socialRecommendationsScheduledForDeletion = clone $this->collSocialRecommendations;
+                $this->socialRecommendationsScheduledForDeletion->clear();
+            }
+            $this->socialRecommendationsScheduledForDeletion[]= clone $socialRecommendation;
+            $socialRecommendation->setResource(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Resource is new, it will return
+     * an empty collection; or if this Resource has previously
+     * been saved, it will retrieve related SocialRecommendations from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Resource.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildSocialRecommendation[] List of ChildSocialRecommendation objects
+     */
+    public function getSocialRecommendationsJoinUserRelatedByUserId(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildSocialRecommendationQuery::create(null, $criteria);
+        $query->joinWith('UserRelatedByUserId', $joinBehavior);
+
+        return $this->getSocialRecommendations($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Resource is new, it will return
+     * an empty collection; or if this Resource has previously
+     * been saved, it will retrieve related SocialRecommendations from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Resource.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildSocialRecommendation[] List of ChildSocialRecommendation objects
+     */
+    public function getSocialRecommendationsJoinUserRelatedBySocialRecommendationTo(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildSocialRecommendationQuery::create(null, $criteria);
+        $query->joinWith('UserRelatedBySocialRecommendationTo', $joinBehavior);
+
+        return $this->getSocialRecommendations($query, $con);
     }
 
     /**
@@ -2719,8 +5973,15 @@ abstract class Resource implements ActiveRecordInterface
         }
         $this->resource_id = null;
         $this->resource_type_id = null;
+        $this->social_views = null;
+        $this->social_likes = null;
+        $this->social_dislikes = null;
+        $this->social_comments = null;
+        $this->social_favourites = null;
+        $this->social_recommendations = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
+        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);
@@ -2742,8 +6003,28 @@ abstract class Resource implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collNewsRelatedByResourceId) {
+                foreach ($this->collNewsRelatedByResourceId as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collNewsRelatedByNewsFor) {
+                foreach ($this->collNewsRelatedByNewsFor as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collPeriodicPlans) {
+                foreach ($this->collPeriodicPlans as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collProducts) {
                 foreach ($this->collProducts as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collProductHighlighteds) {
+                foreach ($this->collProductHighlighteds as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
@@ -2752,8 +6033,33 @@ abstract class Resource implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collProviders) {
+                foreach ($this->collProviders as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collResourceFiles) {
                 foreach ($this->collResourceFiles as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collSocialViews) {
+                foreach ($this->collSocialViews as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collSocialLikes) {
+                foreach ($this->collSocialLikes as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collSocialComments) {
+                foreach ($this->collSocialComments as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collSocialRecommendations) {
+                foreach ($this->collSocialRecommendations as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
@@ -2765,9 +6071,18 @@ abstract class Resource implements ActiveRecordInterface
         } // if ($deep)
 
         $this->collCategories = null;
+        $this->collNewsRelatedByResourceId = null;
+        $this->collNewsRelatedByNewsFor = null;
+        $this->collPeriodicPlans = null;
         $this->collProducts = null;
+        $this->collProductHighlighteds = null;
         $this->collPromotions = null;
+        $this->collProviders = null;
         $this->collResourceFiles = null;
+        $this->collSocialViews = null;
+        $this->collSocialLikes = null;
+        $this->collSocialComments = null;
+        $this->collSocialRecommendations = null;
         $this->collUsers = null;
         $this->aResourceType = null;
     }

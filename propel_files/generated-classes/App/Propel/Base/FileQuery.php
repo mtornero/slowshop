@@ -60,6 +60,26 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildFileQuery rightJoinWithCategory() Adds a RIGHT JOIN clause and with to the query using the Category relation
  * @method     ChildFileQuery innerJoinWithCategory() Adds a INNER JOIN clause and with to the query using the Category relation
  *
+ * @method     ChildFileQuery leftJoinNews($relationAlias = null) Adds a LEFT JOIN clause to the query using the News relation
+ * @method     ChildFileQuery rightJoinNews($relationAlias = null) Adds a RIGHT JOIN clause to the query using the News relation
+ * @method     ChildFileQuery innerJoinNews($relationAlias = null) Adds a INNER JOIN clause to the query using the News relation
+ *
+ * @method     ChildFileQuery joinWithNews($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the News relation
+ *
+ * @method     ChildFileQuery leftJoinWithNews() Adds a LEFT JOIN clause and with to the query using the News relation
+ * @method     ChildFileQuery rightJoinWithNews() Adds a RIGHT JOIN clause and with to the query using the News relation
+ * @method     ChildFileQuery innerJoinWithNews() Adds a INNER JOIN clause and with to the query using the News relation
+ *
+ * @method     ChildFileQuery leftJoinPeriodicPlan($relationAlias = null) Adds a LEFT JOIN clause to the query using the PeriodicPlan relation
+ * @method     ChildFileQuery rightJoinPeriodicPlan($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PeriodicPlan relation
+ * @method     ChildFileQuery innerJoinPeriodicPlan($relationAlias = null) Adds a INNER JOIN clause to the query using the PeriodicPlan relation
+ *
+ * @method     ChildFileQuery joinWithPeriodicPlan($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the PeriodicPlan relation
+ *
+ * @method     ChildFileQuery leftJoinWithPeriodicPlan() Adds a LEFT JOIN clause and with to the query using the PeriodicPlan relation
+ * @method     ChildFileQuery rightJoinWithPeriodicPlan() Adds a RIGHT JOIN clause and with to the query using the PeriodicPlan relation
+ * @method     ChildFileQuery innerJoinWithPeriodicPlan() Adds a INNER JOIN clause and with to the query using the PeriodicPlan relation
+ *
  * @method     ChildFileQuery leftJoinProduct($relationAlias = null) Adds a LEFT JOIN clause to the query using the Product relation
  * @method     ChildFileQuery rightJoinProduct($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Product relation
  * @method     ChildFileQuery innerJoinProduct($relationAlias = null) Adds a INNER JOIN clause to the query using the Product relation
@@ -69,6 +89,16 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildFileQuery leftJoinWithProduct() Adds a LEFT JOIN clause and with to the query using the Product relation
  * @method     ChildFileQuery rightJoinWithProduct() Adds a RIGHT JOIN clause and with to the query using the Product relation
  * @method     ChildFileQuery innerJoinWithProduct() Adds a INNER JOIN clause and with to the query using the Product relation
+ *
+ * @method     ChildFileQuery leftJoinProvider($relationAlias = null) Adds a LEFT JOIN clause to the query using the Provider relation
+ * @method     ChildFileQuery rightJoinProvider($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Provider relation
+ * @method     ChildFileQuery innerJoinProvider($relationAlias = null) Adds a INNER JOIN clause to the query using the Provider relation
+ *
+ * @method     ChildFileQuery joinWithProvider($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Provider relation
+ *
+ * @method     ChildFileQuery leftJoinWithProvider() Adds a LEFT JOIN clause and with to the query using the Provider relation
+ * @method     ChildFileQuery rightJoinWithProvider() Adds a RIGHT JOIN clause and with to the query using the Provider relation
+ * @method     ChildFileQuery innerJoinWithProvider() Adds a INNER JOIN clause and with to the query using the Provider relation
  *
  * @method     ChildFileQuery leftJoinResourceFile($relationAlias = null) Adds a LEFT JOIN clause to the query using the ResourceFile relation
  * @method     ChildFileQuery rightJoinResourceFile($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ResourceFile relation
@@ -90,7 +120,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildFileQuery rightJoinWithUser() Adds a RIGHT JOIN clause and with to the query using the User relation
  * @method     ChildFileQuery innerJoinWithUser() Adds a INNER JOIN clause and with to the query using the User relation
  *
- * @method     \App\Propel\FileTypeQuery|\App\Propel\CategoryQuery|\App\Propel\ProductQuery|\App\Propel\ResourceFileQuery|\App\Propel\UserQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \App\Propel\FileTypeQuery|\App\Propel\CategoryQuery|\App\Propel\NewsQuery|\App\Propel\PeriodicPlanQuery|\App\Propel\ProductQuery|\App\Propel\ProviderQuery|\App\Propel\ResourceFileQuery|\App\Propel\UserQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildFile findOne(ConnectionInterface $con = null) Return the first ChildFile matching the query
  * @method     ChildFile findOneOrCreate(ConnectionInterface $con = null) Return the first ChildFile matching the query, or a new ChildFile object populated from the query conditions when no match is found
@@ -648,6 +678,152 @@ abstract class FileQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query by a related \App\Propel\News object
+     *
+     * @param \App\Propel\News|ObjectCollection $news the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildFileQuery The current query, for fluid interface
+     */
+    public function filterByNews($news, $comparison = null)
+    {
+        if ($news instanceof \App\Propel\News) {
+            return $this
+                ->addUsingAlias(FileTableMap::COL_FILE_ID, $news->getNewsPic(), $comparison);
+        } elseif ($news instanceof ObjectCollection) {
+            return $this
+                ->useNewsQuery()
+                ->filterByPrimaryKeys($news->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByNews() only accepts arguments of type \App\Propel\News or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the News relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildFileQuery The current query, for fluid interface
+     */
+    public function joinNews($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('News');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'News');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the News relation News object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \App\Propel\NewsQuery A secondary query class using the current class as primary query
+     */
+    public function useNewsQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinNews($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'News', '\App\Propel\NewsQuery');
+    }
+
+    /**
+     * Filter the query by a related \App\Propel\PeriodicPlan object
+     *
+     * @param \App\Propel\PeriodicPlan|ObjectCollection $periodicPlan the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildFileQuery The current query, for fluid interface
+     */
+    public function filterByPeriodicPlan($periodicPlan, $comparison = null)
+    {
+        if ($periodicPlan instanceof \App\Propel\PeriodicPlan) {
+            return $this
+                ->addUsingAlias(FileTableMap::COL_FILE_ID, $periodicPlan->getPeriodicPlanPic(), $comparison);
+        } elseif ($periodicPlan instanceof ObjectCollection) {
+            return $this
+                ->usePeriodicPlanQuery()
+                ->filterByPrimaryKeys($periodicPlan->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByPeriodicPlan() only accepts arguments of type \App\Propel\PeriodicPlan or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the PeriodicPlan relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildFileQuery The current query, for fluid interface
+     */
+    public function joinPeriodicPlan($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('PeriodicPlan');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'PeriodicPlan');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the PeriodicPlan relation PeriodicPlan object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \App\Propel\PeriodicPlanQuery A secondary query class using the current class as primary query
+     */
+    public function usePeriodicPlanQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinPeriodicPlan($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'PeriodicPlan', '\App\Propel\PeriodicPlanQuery');
+    }
+
+    /**
      * Filter the query by a related \App\Propel\Product object
      *
      * @param \App\Propel\Product|ObjectCollection $product the related object to use as filter
@@ -718,6 +894,79 @@ abstract class FileQuery extends ModelCriteria
         return $this
             ->joinProduct($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Product', '\App\Propel\ProductQuery');
+    }
+
+    /**
+     * Filter the query by a related \App\Propel\Provider object
+     *
+     * @param \App\Propel\Provider|ObjectCollection $provider the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildFileQuery The current query, for fluid interface
+     */
+    public function filterByProvider($provider, $comparison = null)
+    {
+        if ($provider instanceof \App\Propel\Provider) {
+            return $this
+                ->addUsingAlias(FileTableMap::COL_FILE_ID, $provider->getProviderPic(), $comparison);
+        } elseif ($provider instanceof ObjectCollection) {
+            return $this
+                ->useProviderQuery()
+                ->filterByPrimaryKeys($provider->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByProvider() only accepts arguments of type \App\Propel\Provider or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Provider relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildFileQuery The current query, for fluid interface
+     */
+    public function joinProvider($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Provider');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Provider');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Provider relation Provider object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \App\Propel\ProviderQuery A secondary query class using the current class as primary query
+     */
+    public function useProviderQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinProvider($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Provider', '\App\Propel\ProviderQuery');
     }
 
     /**

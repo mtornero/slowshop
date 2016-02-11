@@ -147,7 +147,7 @@ class FileTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('file_id', 'FileId', 'INTEGER', true, 10, null);
-        $this->addForeignKey('file_type_id', 'FileTypeId', 'SMALLINT', 'file_type', 'file_type_id', true, 8, null);
+        $this->addForeignKey('file_type_id', 'FileTypeId', 'SMALLINT', 'file_type', 'file_type_id', true, 5, null);
         $this->addColumn('file_path', 'FilePath', 'VARCHAR', true, 45, null);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
@@ -172,6 +172,20 @@ class FileTableMap extends TableMap
     1 => ':file_id',
   ),
 ), null, 'CASCADE', 'Categories', false);
+        $this->addRelation('News', '\\App\\Propel\\News', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':news_pic',
+    1 => ':file_id',
+  ),
+), null, 'CASCADE', 'News', false);
+        $this->addRelation('PeriodicPlan', '\\App\\Propel\\PeriodicPlan', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':periodic_plan_pic',
+    1 => ':file_id',
+  ),
+), null, 'CASCADE', 'PeriodicPlans', false);
         $this->addRelation('Product', '\\App\\Propel\\Product', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
@@ -179,6 +193,13 @@ class FileTableMap extends TableMap
     1 => ':file_id',
   ),
 ), null, 'CASCADE', 'Products', false);
+        $this->addRelation('Provider', '\\App\\Propel\\Provider', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':provider_pic',
+    1 => ':file_id',
+  ),
+), null, 'CASCADE', 'Providers', false);
         $this->addRelation('ResourceFile', '\\App\\Propel\\ResourceFile', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
