@@ -3,6 +3,7 @@
 namespace App\Propel;
 
 use App\Propel\Base\RoleQuery as BaseRoleQuery;
+use App\Parsers\CamelCase;
 
 /**
  * Skeleton subclass for performing query and update operations on the 'role' table.
@@ -16,5 +17,19 @@ use App\Propel\Base\RoleQuery as BaseRoleQuery;
  */
 class RoleQuery extends BaseRoleQuery
 {
-
+    
+    use CamelCase;
+    
+    public function __callStatic($name, $arguments)
+    {
+        $name = preg_replace("/^get/", "", $name);
+        $key = self::from_camel_case($name);
+        
+        $role = self::create()->filterByRoleCode($key)->findOne();
+        
+        if (empty($role)) {
+            return FALSE;
+        }
+        return $role->getRoleId();
+    }
 }

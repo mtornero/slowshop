@@ -1579,7 +1579,7 @@ abstract class Product implements ActiveRecordInterface
             $keys[10] => $this->getProductPic(),
             $keys[11] => $this->getCreatedAt(),
             $keys[12] => $this->getUpdatedAt(),
-            $keys_resource[1] => $this->getResourceTypeId(),
+            $keys_resource[1] => $this->getResourceType(),
             $keys_resource[2] => $this->getSocialViews(),
             $keys_resource[3] => $this->getSocialLikes(),
             $keys_resource[4] => $this->getSocialDislikes(),

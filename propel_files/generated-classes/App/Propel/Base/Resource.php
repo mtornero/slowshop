@@ -22,8 +22,6 @@ use App\Propel\Resource as ChildResource;
 use App\Propel\ResourceFile as ChildResourceFile;
 use App\Propel\ResourceFileQuery as ChildResourceFileQuery;
 use App\Propel\ResourceQuery as ChildResourceQuery;
-use App\Propel\ResourceType as ChildResourceType;
-use App\Propel\ResourceTypeQuery as ChildResourceTypeQuery;
 use App\Propel\SocialComment as ChildSocialComment;
 use App\Propel\SocialCommentQuery as ChildSocialCommentQuery;
 use App\Propel\SocialLike as ChildSocialLike;
@@ -110,11 +108,11 @@ abstract class Resource implements ActiveRecordInterface
     protected $resource_id;
 
     /**
-     * The value for the resource_type_id field.
+     * The value for the resource_type field.
      *
-     * @var        int
+     * @var        string
      */
-    protected $resource_type_id;
+    protected $resource_type;
 
     /**
      * The value for the social_views field.
@@ -163,11 +161,6 @@ abstract class Resource implements ActiveRecordInterface
      * @var        int
      */
     protected $social_recommendations;
-
-    /**
-     * @var        ChildResourceType
-     */
-    protected $aResourceType;
 
     /**
      * @var        ObjectCollection|ChildCategory[] Collection to store aggregation of ChildCategory objects.
@@ -599,13 +592,13 @@ abstract class Resource implements ActiveRecordInterface
     }
 
     /**
-     * Get the [resource_type_id] column value.
+     * Get the [resource_type] column value.
      *
-     * @return int
+     * @return string
      */
-    public function getResourceTypeId()
+    public function getResourceType()
     {
-        return $this->resource_type_id;
+        return $this->resource_type;
     }
 
     /**
@@ -689,28 +682,24 @@ abstract class Resource implements ActiveRecordInterface
     } // setResourceId()
 
     /**
-     * Set the value of [resource_type_id] column.
+     * Set the value of [resource_type] column.
      *
-     * @param int $v new value
+     * @param string $v new value
      * @return $this|\App\Propel\Resource The current object (for fluent API support)
      */
-    public function setResourceTypeId($v)
+    public function setResourceType($v)
     {
         if ($v !== null) {
-            $v = (int) $v;
+            $v = (string) $v;
         }
 
-        if ($this->resource_type_id !== $v) {
-            $this->resource_type_id = $v;
-            $this->modifiedColumns[ResourceTableMap::COL_RESOURCE_TYPE_ID] = true;
-        }
-
-        if ($this->aResourceType !== null && $this->aResourceType->getResourceTypeId() !== $v) {
-            $this->aResourceType = null;
+        if ($this->resource_type !== $v) {
+            $this->resource_type = $v;
+            $this->modifiedColumns[ResourceTableMap::COL_RESOURCE_TYPE] = true;
         }
 
         return $this;
-    } // setResourceTypeId()
+    } // setResourceType()
 
     /**
      * Set the value of [social_views] column.
@@ -895,8 +884,8 @@ abstract class Resource implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : ResourceTableMap::translateFieldName('ResourceId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->resource_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : ResourceTableMap::translateFieldName('ResourceTypeId', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->resource_type_id = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : ResourceTableMap::translateFieldName('ResourceType', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->resource_type = (null !== $col) ? (string) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : ResourceTableMap::translateFieldName('SocialViews', TableMap::TYPE_PHPNAME, $indexType)];
             $this->social_views = (null !== $col) ? (int) $col : null;
@@ -945,9 +934,6 @@ abstract class Resource implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
-        if ($this->aResourceType !== null && $this->resource_type_id !== $this->aResourceType->getResourceTypeId()) {
-            $this->aResourceType = null;
-        }
     } // ensureConsistency
 
     /**
@@ -987,7 +973,6 @@ abstract class Resource implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aResourceType = null;
             $this->collCategories = null;
 
             $this->collNewsRelatedByResourceId = null;
@@ -1114,18 +1099,6 @@ abstract class Resource implements ActiveRecordInterface
         $affectedRows = 0; // initialize var to track total num of affected rows
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
-
-            // We call the save method on the following object(s) if they
-            // were passed to this object by their corresponding set
-            // method.  This object relates to these object(s) by a
-            // foreign key reference.
-
-            if ($this->aResourceType !== null) {
-                if ($this->aResourceType->isModified() || $this->aResourceType->isNew()) {
-                    $affectedRows += $this->aResourceType->save($con);
-                }
-                $this->setResourceType($this->aResourceType);
-            }
 
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
@@ -1407,8 +1380,8 @@ abstract class Resource implements ActiveRecordInterface
         if ($this->isColumnModified(ResourceTableMap::COL_RESOURCE_ID)) {
             $modifiedColumns[':p' . $index++]  = 'resource_id';
         }
-        if ($this->isColumnModified(ResourceTableMap::COL_RESOURCE_TYPE_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'resource_type_id';
+        if ($this->isColumnModified(ResourceTableMap::COL_RESOURCE_TYPE)) {
+            $modifiedColumns[':p' . $index++]  = 'resource_type';
         }
         if ($this->isColumnModified(ResourceTableMap::COL_SOCIAL_VIEWS)) {
             $modifiedColumns[':p' . $index++]  = 'social_views';
@@ -1442,8 +1415,8 @@ abstract class Resource implements ActiveRecordInterface
                     case 'resource_id':
                         $stmt->bindValue($identifier, $this->resource_id, PDO::PARAM_INT);
                         break;
-                    case 'resource_type_id':
-                        $stmt->bindValue($identifier, $this->resource_type_id, PDO::PARAM_INT);
+                    case 'resource_type':
+                        $stmt->bindValue($identifier, $this->resource_type, PDO::PARAM_STR);
                         break;
                     case 'social_views':
                         $stmt->bindValue($identifier, $this->social_views, PDO::PARAM_INT);
@@ -1529,7 +1502,7 @@ abstract class Resource implements ActiveRecordInterface
                 return $this->getResourceId();
                 break;
             case 1:
-                return $this->getResourceTypeId();
+                return $this->getResourceType();
                 break;
             case 2:
                 return $this->getSocialViews();
@@ -1580,7 +1553,7 @@ abstract class Resource implements ActiveRecordInterface
         $keys = ResourceTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getResourceId(),
-            $keys[1] => $this->getResourceTypeId(),
+            $keys[1] => $this->getResourceType(),
             $keys[2] => $this->getSocialViews(),
             $keys[3] => $this->getSocialLikes(),
             $keys[4] => $this->getSocialDislikes(),
@@ -1594,21 +1567,6 @@ abstract class Resource implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->aResourceType) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'resourceType';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'resource_type';
-                        break;
-                    default:
-                        $key = 'ResourceType';
-                }
-
-                $result[$key] = $this->aResourceType->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
-            }
             if (null !== $this->collCategories) {
 
                 switch ($keyType) {
@@ -1857,7 +1815,7 @@ abstract class Resource implements ActiveRecordInterface
                 $this->setResourceId($value);
                 break;
             case 1:
-                $this->setResourceTypeId($value);
+                $this->setResourceType($value);
                 break;
             case 2:
                 $this->setSocialViews($value);
@@ -1907,7 +1865,7 @@ abstract class Resource implements ActiveRecordInterface
             $this->setResourceId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setResourceTypeId($arr[$keys[1]]);
+            $this->setResourceType($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
             $this->setSocialViews($arr[$keys[2]]);
@@ -1971,8 +1929,8 @@ abstract class Resource implements ActiveRecordInterface
         if ($this->isColumnModified(ResourceTableMap::COL_RESOURCE_ID)) {
             $criteria->add(ResourceTableMap::COL_RESOURCE_ID, $this->resource_id);
         }
-        if ($this->isColumnModified(ResourceTableMap::COL_RESOURCE_TYPE_ID)) {
-            $criteria->add(ResourceTableMap::COL_RESOURCE_TYPE_ID, $this->resource_type_id);
+        if ($this->isColumnModified(ResourceTableMap::COL_RESOURCE_TYPE)) {
+            $criteria->add(ResourceTableMap::COL_RESOURCE_TYPE, $this->resource_type);
         }
         if ($this->isColumnModified(ResourceTableMap::COL_SOCIAL_VIEWS)) {
             $criteria->add(ResourceTableMap::COL_SOCIAL_VIEWS, $this->social_views);
@@ -2078,7 +2036,7 @@ abstract class Resource implements ActiveRecordInterface
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setResourceTypeId($this->getResourceTypeId());
+        $copyObj->setResourceType($this->getResourceType());
         $copyObj->setSocialViews($this->getSocialViews());
         $copyObj->setSocialLikes($this->getSocialLikes());
         $copyObj->setSocialDislikes($this->getSocialDislikes());
@@ -2203,57 +2161,6 @@ abstract class Resource implements ActiveRecordInterface
         $this->copyInto($copyObj, $deepCopy);
 
         return $copyObj;
-    }
-
-    /**
-     * Declares an association between this object and a ChildResourceType object.
-     *
-     * @param  ChildResourceType $v
-     * @return $this|\App\Propel\Resource The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setResourceType(ChildResourceType $v = null)
-    {
-        if ($v === null) {
-            $this->setResourceTypeId(NULL);
-        } else {
-            $this->setResourceTypeId($v->getResourceTypeId());
-        }
-
-        $this->aResourceType = $v;
-
-        // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ChildResourceType object, it will not be re-added.
-        if ($v !== null) {
-            $v->addResource($this);
-        }
-
-
-        return $this;
-    }
-
-
-    /**
-     * Get the associated ChildResourceType object
-     *
-     * @param  ConnectionInterface $con Optional Connection object.
-     * @return ChildResourceType The associated ChildResourceType object.
-     * @throws PropelException
-     */
-    public function getResourceType(ConnectionInterface $con = null)
-    {
-        if ($this->aResourceType === null && ($this->resource_type_id !== null)) {
-            $this->aResourceType = ChildResourceTypeQuery::create()->findPk($this->resource_type_id, $con);
-            /* The following can be used additionally to
-                guarantee the related object contains a reference
-                to this object.  This level of coupling may, however, be
-                undesirable since it could result in an only partially populated collection
-                in the referenced object.
-                $this->aResourceType->addResources($this);
-             */
-        }
-
-        return $this->aResourceType;
     }
 
 
@@ -5968,11 +5875,8 @@ abstract class Resource implements ActiveRecordInterface
      */
     public function clear()
     {
-        if (null !== $this->aResourceType) {
-            $this->aResourceType->removeResource($this);
-        }
         $this->resource_id = null;
-        $this->resource_type_id = null;
+        $this->resource_type = null;
         $this->social_views = null;
         $this->social_likes = null;
         $this->social_dislikes = null;
@@ -6084,7 +5988,6 @@ abstract class Resource implements ActiveRecordInterface
         $this->collSocialComments = null;
         $this->collSocialRecommendations = null;
         $this->collUsers = null;
-        $this->aResourceType = null;
     }
 
     /**

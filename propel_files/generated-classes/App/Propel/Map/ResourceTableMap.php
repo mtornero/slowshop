@@ -77,9 +77,9 @@ class ResourceTableMap extends TableMap
     const COL_RESOURCE_ID = 'resource.resource_id';
 
     /**
-     * the column name for the resource_type_id field
+     * the column name for the resource_type field
      */
-    const COL_RESOURCE_TYPE_ID = 'resource.resource_type_id';
+    const COL_RESOURCE_TYPE = 'resource.resource_type';
 
     /**
      * the column name for the social_views field
@@ -116,6 +116,69 @@ class ResourceTableMap extends TableMap
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
 
+    /** A key representing a particular subclass */
+    const CLASSKEY_CATEGORY = 'category';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_RESOURCECATEGORY = '\\App\\Propel\\ResourceCategory';
+
+    /** A class that can be returned by this tableMap. */
+    const CLASSNAME_CATEGORY = '\\App\\Propel\\ResourceCategory';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_NEWS = 'news';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_RESOURCENEWS = '\\App\\Propel\\ResourceNews';
+
+    /** A class that can be returned by this tableMap. */
+    const CLASSNAME_NEWS = '\\App\\Propel\\ResourceNews';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_PRODUCT = 'product';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_RESOURCEPRODUCT = '\\App\\Propel\\ResourceProduct';
+
+    /** A class that can be returned by this tableMap. */
+    const CLASSNAME_PRODUCT = '\\App\\Propel\\ResourceProduct';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_PROMOTION = 'promotion';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_RESOURCEPROMOTION = '\\App\\Propel\\ResourcePromotion';
+
+    /** A class that can be returned by this tableMap. */
+    const CLASSNAME_PROMOTION = '\\App\\Propel\\ResourcePromotion';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_PROVIDER = 'provider';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_RESOURCEPROVIDER = '\\App\\Propel\\ResourceProvider';
+
+    /** A class that can be returned by this tableMap. */
+    const CLASSNAME_PROVIDER = '\\App\\Propel\\ResourceProvider';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_USER = 'user';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_RESOURCEUSER = '\\App\\Propel\\ResourceUser';
+
+    /** A class that can be returned by this tableMap. */
+    const CLASSNAME_USER = '\\App\\Propel\\ResourceUser';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_PERIODIC_PLAN = 'periodic_plan';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_RESOURCEPERIODICPLAN = '\\App\\Propel\\ResourcePeriodicPlan';
+
+    /** A class that can be returned by this tableMap. */
+    const CLASSNAME_PERIODIC_PLAN = '\\App\\Propel\\ResourcePeriodicPlan';
+
     /**
      * holds an array of fieldnames
      *
@@ -123,10 +186,10 @@ class ResourceTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('ResourceId', 'ResourceTypeId', 'SocialViews', 'SocialLikes', 'SocialDislikes', 'SocialComments', 'SocialFavourites', 'SocialRecommendations', ),
-        self::TYPE_CAMELNAME     => array('resourceId', 'resourceTypeId', 'socialViews', 'socialLikes', 'socialDislikes', 'socialComments', 'socialFavourites', 'socialRecommendations', ),
-        self::TYPE_COLNAME       => array(ResourceTableMap::COL_RESOURCE_ID, ResourceTableMap::COL_RESOURCE_TYPE_ID, ResourceTableMap::COL_SOCIAL_VIEWS, ResourceTableMap::COL_SOCIAL_LIKES, ResourceTableMap::COL_SOCIAL_DISLIKES, ResourceTableMap::COL_SOCIAL_COMMENTS, ResourceTableMap::COL_SOCIAL_FAVOURITES, ResourceTableMap::COL_SOCIAL_RECOMMENDATIONS, ),
-        self::TYPE_FIELDNAME     => array('resource_id', 'resource_type_id', 'social_views', 'social_likes', 'social_dislikes', 'social_comments', 'social_favourites', 'social_recommendations', ),
+        self::TYPE_PHPNAME       => array('ResourceId', 'ResourceType', 'SocialViews', 'SocialLikes', 'SocialDislikes', 'SocialComments', 'SocialFavourites', 'SocialRecommendations', ),
+        self::TYPE_CAMELNAME     => array('resourceId', 'resourceType', 'socialViews', 'socialLikes', 'socialDislikes', 'socialComments', 'socialFavourites', 'socialRecommendations', ),
+        self::TYPE_COLNAME       => array(ResourceTableMap::COL_RESOURCE_ID, ResourceTableMap::COL_RESOURCE_TYPE, ResourceTableMap::COL_SOCIAL_VIEWS, ResourceTableMap::COL_SOCIAL_LIKES, ResourceTableMap::COL_SOCIAL_DISLIKES, ResourceTableMap::COL_SOCIAL_COMMENTS, ResourceTableMap::COL_SOCIAL_FAVOURITES, ResourceTableMap::COL_SOCIAL_RECOMMENDATIONS, ),
+        self::TYPE_FIELDNAME     => array('resource_id', 'resource_type', 'social_views', 'social_likes', 'social_dislikes', 'social_comments', 'social_favourites', 'social_recommendations', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
@@ -137,10 +200,10 @@ class ResourceTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('ResourceId' => 0, 'ResourceTypeId' => 1, 'SocialViews' => 2, 'SocialLikes' => 3, 'SocialDislikes' => 4, 'SocialComments' => 5, 'SocialFavourites' => 6, 'SocialRecommendations' => 7, ),
-        self::TYPE_CAMELNAME     => array('resourceId' => 0, 'resourceTypeId' => 1, 'socialViews' => 2, 'socialLikes' => 3, 'socialDislikes' => 4, 'socialComments' => 5, 'socialFavourites' => 6, 'socialRecommendations' => 7, ),
-        self::TYPE_COLNAME       => array(ResourceTableMap::COL_RESOURCE_ID => 0, ResourceTableMap::COL_RESOURCE_TYPE_ID => 1, ResourceTableMap::COL_SOCIAL_VIEWS => 2, ResourceTableMap::COL_SOCIAL_LIKES => 3, ResourceTableMap::COL_SOCIAL_DISLIKES => 4, ResourceTableMap::COL_SOCIAL_COMMENTS => 5, ResourceTableMap::COL_SOCIAL_FAVOURITES => 6, ResourceTableMap::COL_SOCIAL_RECOMMENDATIONS => 7, ),
-        self::TYPE_FIELDNAME     => array('resource_id' => 0, 'resource_type_id' => 1, 'social_views' => 2, 'social_likes' => 3, 'social_dislikes' => 4, 'social_comments' => 5, 'social_favourites' => 6, 'social_recommendations' => 7, ),
+        self::TYPE_PHPNAME       => array('ResourceId' => 0, 'ResourceType' => 1, 'SocialViews' => 2, 'SocialLikes' => 3, 'SocialDislikes' => 4, 'SocialComments' => 5, 'SocialFavourites' => 6, 'SocialRecommendations' => 7, ),
+        self::TYPE_CAMELNAME     => array('resourceId' => 0, 'resourceType' => 1, 'socialViews' => 2, 'socialLikes' => 3, 'socialDislikes' => 4, 'socialComments' => 5, 'socialFavourites' => 6, 'socialRecommendations' => 7, ),
+        self::TYPE_COLNAME       => array(ResourceTableMap::COL_RESOURCE_ID => 0, ResourceTableMap::COL_RESOURCE_TYPE => 1, ResourceTableMap::COL_SOCIAL_VIEWS => 2, ResourceTableMap::COL_SOCIAL_LIKES => 3, ResourceTableMap::COL_SOCIAL_DISLIKES => 4, ResourceTableMap::COL_SOCIAL_COMMENTS => 5, ResourceTableMap::COL_SOCIAL_FAVOURITES => 6, ResourceTableMap::COL_SOCIAL_RECOMMENDATIONS => 7, ),
+        self::TYPE_FIELDNAME     => array('resource_id' => 0, 'resource_type' => 1, 'social_views' => 2, 'social_likes' => 3, 'social_dislikes' => 4, 'social_comments' => 5, 'social_favourites' => 6, 'social_recommendations' => 7, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
@@ -160,9 +223,10 @@ class ResourceTableMap extends TableMap
         $this->setClassName('\\App\\Propel\\Resource');
         $this->setPackage('App.Propel');
         $this->setUseIdGenerator(true);
+        $this->setSingleTableInheritance(true);
         // columns
         $this->addPrimaryKey('resource_id', 'ResourceId', 'INTEGER', true, 10, null);
-        $this->addForeignKey('resource_type_id', 'ResourceTypeId', 'INTEGER', 'resource_type', 'resource_type_id', true, 10, null);
+        $this->addColumn('resource_type', 'ResourceType', 'CHAR', true, 10, null);
         $this->addColumn('social_views', 'SocialViews', 'INTEGER', true, 10, 0);
         $this->addColumn('social_likes', 'SocialLikes', 'INTEGER', true, 10, 0);
         $this->addColumn('social_dislikes', 'SocialDislikes', 'INTEGER', true, 10, 0);
@@ -176,13 +240,6 @@ class ResourceTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('ResourceType', '\\App\\Propel\\ResourceType', RelationMap::MANY_TO_ONE, array (
-  0 =>
-  array (
-    0 => ':resource_type_id',
-    1 => ':resource_type_id',
-  ),
-), null, 'CASCADE', null, false);
         $this->addRelation('Category', '\\App\\Propel\\Category', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
@@ -328,19 +385,67 @@ class ResourceTableMap extends TableMap
     }
 
     /**
-     * The class that the tableMap will make instances of.
+     * The returned Class will contain objects of the default type or
+     * objects that inherit from the default.
      *
-     * If $withPrefix is true, the returned path
-     * uses a dot-path notation which is translated into a path
-     * relative to a location on the PHP include_path.
-     * (e.g. path.to.MyClass -> 'path/to/MyClass.php')
-     *
+     * @param array   $row ConnectionInterface result row.
+     * @param int     $colnum Column to examine for OM class information (first is 0).
      * @param boolean $withPrefix Whether or not to return the path with the class name
-     * @return string path.to.ClassName
+     * @throws PropelException Any exceptions caught during processing will be
+     *                         rethrown wrapped into a PropelException.
+     *
+     * @return string The OM class
      */
-    public static function getOMClass($withPrefix = true)
+    public static function getOMClass($row, $colnum, $withPrefix = true)
     {
-        return $withPrefix ? ResourceTableMap::CLASS_DEFAULT : ResourceTableMap::OM_CLASS;
+        try {
+
+            $omClass = null;
+            $classKey = $row[$colnum + 1];
+
+            switch ($classKey) {
+
+                case ResourceTableMap::CLASSKEY_CATEGORY:
+                    $omClass = ResourceTableMap::CLASSNAME_CATEGORY;
+                    break;
+
+                case ResourceTableMap::CLASSKEY_NEWS:
+                    $omClass = ResourceTableMap::CLASSNAME_NEWS;
+                    break;
+
+                case ResourceTableMap::CLASSKEY_PRODUCT:
+                    $omClass = ResourceTableMap::CLASSNAME_PRODUCT;
+                    break;
+
+                case ResourceTableMap::CLASSKEY_PROMOTION:
+                    $omClass = ResourceTableMap::CLASSNAME_PROMOTION;
+                    break;
+
+                case ResourceTableMap::CLASSKEY_PROVIDER:
+                    $omClass = ResourceTableMap::CLASSNAME_PROVIDER;
+                    break;
+
+                case ResourceTableMap::CLASSKEY_USER:
+                    $omClass = ResourceTableMap::CLASSNAME_USER;
+                    break;
+
+                case ResourceTableMap::CLASSKEY_PERIODIC_PLAN:
+                    $omClass = ResourceTableMap::CLASSNAME_PERIODIC_PLAN;
+                    break;
+
+                default:
+                    $omClass = ResourceTableMap::CLASS_DEFAULT;
+
+            } // switch
+            if (!$withPrefix) {
+                $omClass = preg_replace('#\.#', '\\', $omClass);
+            }
+
+        } catch (\Exception $e) {
+            throw new PropelException('Unable to get OM class.', $e);
+        }
+
+        return $omClass;
     }
 
     /**
@@ -365,7 +470,7 @@ class ResourceTableMap extends TableMap
             // $obj->hydrate($row, $offset, true); // rehydrate
             $col = $offset + ResourceTableMap::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = ResourceTableMap::OM_CLASS;
+            $cls = static::getOMClass($row, $offset, false);
             /** @var Resource $obj */
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
@@ -388,8 +493,6 @@ class ResourceTableMap extends TableMap
     {
         $results = array();
 
-        // set the class once to avoid overhead in the loop
-        $cls = static::getOMClass(false);
         // populate the object(s)
         while ($row = $dataFetcher->fetch()) {
             $key = ResourceTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
@@ -399,6 +502,9 @@ class ResourceTableMap extends TableMap
                 // $obj->hydrate($row, 0, true); // rehydrate
                 $results[] = $obj;
             } else {
+                // class must be set each time from the record row
+                $cls = static::getOMClass($row, 0);
+                $cls = preg_replace('#\.#', '\\', $cls);
                 /** @var Resource $obj */
                 $obj = new $cls();
                 $obj->hydrate($row);
@@ -425,7 +531,7 @@ class ResourceTableMap extends TableMap
     {
         if (null === $alias) {
             $criteria->addSelectColumn(ResourceTableMap::COL_RESOURCE_ID);
-            $criteria->addSelectColumn(ResourceTableMap::COL_RESOURCE_TYPE_ID);
+            $criteria->addSelectColumn(ResourceTableMap::COL_RESOURCE_TYPE);
             $criteria->addSelectColumn(ResourceTableMap::COL_SOCIAL_VIEWS);
             $criteria->addSelectColumn(ResourceTableMap::COL_SOCIAL_LIKES);
             $criteria->addSelectColumn(ResourceTableMap::COL_SOCIAL_DISLIKES);
@@ -434,7 +540,7 @@ class ResourceTableMap extends TableMap
             $criteria->addSelectColumn(ResourceTableMap::COL_SOCIAL_RECOMMENDATIONS);
         } else {
             $criteria->addSelectColumn($alias . '.resource_id');
-            $criteria->addSelectColumn($alias . '.resource_type_id');
+            $criteria->addSelectColumn($alias . '.resource_type');
             $criteria->addSelectColumn($alias . '.social_views');
             $criteria->addSelectColumn($alias . '.social_likes');
             $criteria->addSelectColumn($alias . '.social_dislikes');

@@ -1323,7 +1323,7 @@ abstract class Category implements ActiveRecordInterface
             $keys[7] => $this->getTreeLeft(),
             $keys[8] => $this->getTreeRight(),
             $keys[9] => $this->getTreeLevel(),
-            $keys_resource[1] => $this->getResourceTypeId(),
+            $keys_resource[1] => $this->getResourceType(),
             $keys_resource[2] => $this->getSocialViews(),
             $keys_resource[3] => $this->getSocialLikes(),
             $keys_resource[4] => $this->getSocialDislikes(),

@@ -130,7 +130,7 @@ abstract class PromotionQuery extends ModelCriteria
     // delegate behavior
 
     protected $delegatedFields = [
-        'ResourceTypeId' => 'Resource',
+        'ResourceType' => 'Resource',
         'SocialViews' => 'Resource',
         'SocialLikes' => 'Resource',
         'SocialDislikes' => 'Resource',
@@ -1027,13 +1027,13 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
 
     // delegate behavior
     /**
-    * Filter the query by resource_type_id column
+    * Filter the query by resource_type column
     *
     * Example usage:
     * <code>
-        * $query->filterByResourceTypeId(1234); // WHERE resource_type_id = 1234
-        * $query->filterByResourceTypeId(array(12, 34)); // WHERE resource_type_id IN (12, 34)
-        * $query->filterByResourceTypeId(array('min' => 12)); // WHERE resource_type_id > 12
+        * $query->filterByResourceType(1234); // WHERE resource_type = 1234
+        * $query->filterByResourceType(array(12, 34)); // WHERE resource_type IN (12, 34)
+        * $query->filterByResourceType(array('min' => 12)); // WHERE resource_type > 12
         * </code>
     *
     * @param     mixed $value The value to use as filter.
@@ -1044,9 +1044,9 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
     *
     * @return $this|ChildPromotionQuery The current query, for fluid interface
     */
-    public function filterByResourceTypeId($value = null, $comparison = null)
+    public function filterByResourceType($value = null, $comparison = null)
     {
-        return $this->useResourceQuery()->filterByResourceTypeId($value, $comparison)->endUse();
+        return $this->useResourceQuery()->filterByResourceType($value, $comparison)->endUse();
     }
 
     /**
@@ -1063,9 +1063,9 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
     *
     * @return $this|ModelCriteria The current object, for fluid interface
     */
-    public function orderByResourceTypeId($order = Criteria::ASC)
+    public function orderByResourceType($order = Criteria::ASC)
     {
-        return $this->useResourceQuery()->orderByResourceTypeId($order)->endUse();
+        return $this->useResourceQuery()->orderByResourceType($order)->endUse();
     }
     /**
     * Filter the query by social_views column

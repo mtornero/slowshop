@@ -175,8 +175,17 @@ abstract class User implements ActiveRecordInterface
     protected $role_id;
 
     /**
+     * The value for the user_is_validated field.
+     *
+     * Note: this column has a database default value of: false
+     * @var        boolean
+     */
+    protected $user_is_validated;
+
+    /**
      * The value for the user_is_active field.
      *
+     * Note: this column has a database default value of: true
      * @var        boolean
      */
     protected $user_is_active;
@@ -322,10 +331,24 @@ abstract class User implements ActiveRecordInterface
     protected $wishlistsScheduledForDeletion = null;
 
     /**
+     * Applies default values to this object.
+     * This method should be called from the object's constructor (or
+     * equivalent initialization method).
+     * @see __construct()
+     */
+    public function applyDefaultValues()
+    {
+        $this->user_is_validated = false;
+        $this->user_is_active = true;
+    }
+
+    /**
      * Initializes internal state of App\Propel\Base\User object.
+     * @see applyDefaults()
      */
     public function __construct()
     {
+        $this->applyDefaultValues();
     }
 
     /**
@@ -667,6 +690,26 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
+     * Get the [user_is_validated] column value.
+     *
+     * @return boolean
+     */
+    public function getUserIsValidated()
+    {
+        return $this->user_is_validated;
+    }
+
+    /**
+     * Get the [user_is_validated] column value.
+     *
+     * @return boolean
+     */
+    public function isUserIsValidated()
+    {
+        return $this->getUserIsValidated();
+    }
+
+    /**
      * Get the [user_is_active] column value.
      *
      * @return boolean
@@ -985,6 +1028,34 @@ abstract class User implements ActiveRecordInterface
     } // setRoleId()
 
     /**
+     * Sets the value of the [user_is_validated] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     *
+     * @param  boolean|integer|string $v The new value
+     * @return $this|\App\Propel\User The current object (for fluent API support)
+     */
+    public function setUserIsValidated($v)
+    {
+        if ($v !== null) {
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
+        }
+
+        if ($this->user_is_validated !== $v) {
+            $this->user_is_validated = $v;
+            $this->modifiedColumns[UserTableMap::COL_USER_IS_VALIDATED] = true;
+        }
+
+        return $this;
+    } // setUserIsValidated()
+
+    /**
      * Sets the value of the [user_is_active] column.
      * Non-boolean arguments are converted using the following rules:
      *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
@@ -1086,6 +1157,14 @@ abstract class User implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues()
     {
+            if ($this->user_is_validated !== false) {
+                return false;
+            }
+
+            if ($this->user_is_active !== true) {
+                return false;
+            }
+
         // otherwise, everything was equal, so return TRUE
         return true;
     } // hasOnlyDefaultValues()
@@ -1148,19 +1227,22 @@ abstract class User implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : UserTableMap::translateFieldName('RoleId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->role_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : UserTableMap::translateFieldName('UserIsActive', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : UserTableMap::translateFieldName('UserIsValidated', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->user_is_validated = (null !== $col) ? (boolean) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : UserTableMap::translateFieldName('UserIsActive', TableMap::TYPE_PHPNAME, $indexType)];
             $this->user_is_active = (null !== $col) ? (boolean) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : UserTableMap::translateFieldName('UserPic', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 14 + $startcol : UserTableMap::translateFieldName('UserPic', TableMap::TYPE_PHPNAME, $indexType)];
             $this->user_pic = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 14 + $startcol : UserTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 15 + $startcol : UserTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 15 + $startcol : UserTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 16 + $startcol : UserTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -1173,7 +1255,7 @@ abstract class User implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 16; // 16 = UserTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 17; // 17 = UserTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\App\\Propel\\User'), 0, $e);
@@ -1608,6 +1690,9 @@ abstract class User implements ActiveRecordInterface
         if ($this->isColumnModified(UserTableMap::COL_ROLE_ID)) {
             $modifiedColumns[':p' . $index++]  = 'role_id';
         }
+        if ($this->isColumnModified(UserTableMap::COL_USER_IS_VALIDATED)) {
+            $modifiedColumns[':p' . $index++]  = 'user_is_validated';
+        }
         if ($this->isColumnModified(UserTableMap::COL_USER_IS_ACTIVE)) {
             $modifiedColumns[':p' . $index++]  = 'user_is_active';
         }
@@ -1666,6 +1751,9 @@ abstract class User implements ActiveRecordInterface
                         break;
                     case 'role_id':
                         $stmt->bindValue($identifier, $this->role_id, PDO::PARAM_INT);
+                        break;
+                    case 'user_is_validated':
+                        $stmt->bindValue($identifier, (int) $this->user_is_validated, PDO::PARAM_INT);
                         break;
                     case 'user_is_active':
                         $stmt->bindValue($identifier, (int) $this->user_is_active, PDO::PARAM_INT);
@@ -1778,15 +1866,18 @@ abstract class User implements ActiveRecordInterface
                 return $this->getRoleId();
                 break;
             case 12:
-                return $this->getUserIsActive();
+                return $this->getUserIsValidated();
                 break;
             case 13:
-                return $this->getUserPic();
+                return $this->getUserIsActive();
                 break;
             case 14:
-                return $this->getCreatedAt();
+                return $this->getUserPic();
                 break;
             case 15:
+                return $this->getCreatedAt();
+                break;
+            case 16:
                 return $this->getUpdatedAt();
                 break;
             default:
@@ -1832,11 +1923,12 @@ abstract class User implements ActiveRecordInterface
             $keys[9] => $this->getUserPhone(),
             $keys[10] => $this->getUserAddress(),
             $keys[11] => $this->getRoleId(),
-            $keys[12] => $this->getUserIsActive(),
-            $keys[13] => $this->getUserPic(),
-            $keys[14] => $this->getCreatedAt(),
-            $keys[15] => $this->getUpdatedAt(),
-            $keys_resource[1] => $this->getResourceTypeId(),
+            $keys[12] => $this->getUserIsValidated(),
+            $keys[13] => $this->getUserIsActive(),
+            $keys[14] => $this->getUserPic(),
+            $keys[15] => $this->getCreatedAt(),
+            $keys[16] => $this->getUpdatedAt(),
+            $keys_resource[1] => $this->getResourceType(),
             $keys_resource[2] => $this->getSocialViews(),
             $keys_resource[3] => $this->getSocialLikes(),
             $keys_resource[4] => $this->getSocialDislikes(),
@@ -1845,12 +1937,12 @@ abstract class User implements ActiveRecordInterface
             $keys_resource[7] => $this->getSocialRecommendations(),
 
         );
-        if ($result[$keys[14]] instanceof \DateTime) {
-            $result[$keys[14]] = $result[$keys[14]]->format('c');
-        }
-
         if ($result[$keys[15]] instanceof \DateTime) {
             $result[$keys[15]] = $result[$keys[15]]->format('c');
+        }
+
+        if ($result[$keys[16]] instanceof \DateTime) {
+            $result[$keys[16]] = $result[$keys[16]]->format('c');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -2095,15 +2187,18 @@ abstract class User implements ActiveRecordInterface
                 $this->setRoleId($value);
                 break;
             case 12:
-                $this->setUserIsActive($value);
+                $this->setUserIsValidated($value);
                 break;
             case 13:
-                $this->setUserPic($value);
+                $this->setUserIsActive($value);
                 break;
             case 14:
-                $this->setCreatedAt($value);
+                $this->setUserPic($value);
                 break;
             case 15:
+                $this->setCreatedAt($value);
+                break;
+            case 16:
                 $this->setUpdatedAt($value);
                 break;
         } // switch()
@@ -2169,16 +2264,19 @@ abstract class User implements ActiveRecordInterface
             $this->setRoleId($arr[$keys[11]]);
         }
         if (array_key_exists($keys[12], $arr)) {
-            $this->setUserIsActive($arr[$keys[12]]);
+            $this->setUserIsValidated($arr[$keys[12]]);
         }
         if (array_key_exists($keys[13], $arr)) {
-            $this->setUserPic($arr[$keys[13]]);
+            $this->setUserIsActive($arr[$keys[13]]);
         }
         if (array_key_exists($keys[14], $arr)) {
-            $this->setCreatedAt($arr[$keys[14]]);
+            $this->setUserPic($arr[$keys[14]]);
         }
         if (array_key_exists($keys[15], $arr)) {
-            $this->setUpdatedAt($arr[$keys[15]]);
+            $this->setCreatedAt($arr[$keys[15]]);
+        }
+        if (array_key_exists($keys[16], $arr)) {
+            $this->setUpdatedAt($arr[$keys[16]]);
         }
     }
 
@@ -2256,6 +2354,9 @@ abstract class User implements ActiveRecordInterface
         }
         if ($this->isColumnModified(UserTableMap::COL_ROLE_ID)) {
             $criteria->add(UserTableMap::COL_ROLE_ID, $this->role_id);
+        }
+        if ($this->isColumnModified(UserTableMap::COL_USER_IS_VALIDATED)) {
+            $criteria->add(UserTableMap::COL_USER_IS_VALIDATED, $this->user_is_validated);
         }
         if ($this->isColumnModified(UserTableMap::COL_USER_IS_ACTIVE)) {
             $criteria->add(UserTableMap::COL_USER_IS_ACTIVE, $this->user_is_active);
@@ -2366,6 +2467,7 @@ abstract class User implements ActiveRecordInterface
         $copyObj->setUserPhone($this->getUserPhone());
         $copyObj->setUserAddress($this->getUserAddress());
         $copyObj->setRoleId($this->getRoleId());
+        $copyObj->setUserIsValidated($this->getUserIsValidated());
         $copyObj->setUserIsActive($this->getUserIsActive());
         $copyObj->setUserPic($this->getUserPic());
         $copyObj->setCreatedAt($this->getCreatedAt());
@@ -4647,12 +4749,14 @@ abstract class User implements ActiveRecordInterface
         $this->user_phone = null;
         $this->user_address = null;
         $this->role_id = null;
+        $this->user_is_validated = null;
         $this->user_is_active = null;
         $this->user_pic = null;
         $this->created_at = null;
         $this->updated_at = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
+        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);

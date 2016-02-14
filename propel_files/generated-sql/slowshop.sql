@@ -35,6 +35,41 @@ CREATE TABLE `category`
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
+-- config
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `config`;
+
+CREATE TABLE `config`
+(
+    `config_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+    `config_category_id` smallint(5) unsigned NOT NULL,
+    `config_key` VARCHAR(60) NOT NULL,
+    `config_value` VARCHAR(250) NOT NULL,
+    `config_format` enum('string','number','array','boolean') DEFAULT 'string' NOT NULL,
+    `version` INTEGER DEFAULT 0,
+    PRIMARY KEY (`config_id`),
+    INDEX `fk_config_1_idx` (`config_category_id`),
+    CONSTRAINT `fk_config_1`
+        FOREIGN KEY (`config_category_id`)
+        REFERENCES `config_category` (`config_category_id`)
+        ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
+-- config_category
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `config_category`;
+
+CREATE TABLE `config_category`
+(
+    `config_category_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+    `config_category_is_visible` tinyint(1) unsigned NOT NULL,
+    PRIMARY KEY (`config_category_id`)
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
 -- delivery
 -- ---------------------------------------------------------------------
 
@@ -518,19 +553,14 @@ DROP TABLE IF EXISTS `resource`;
 CREATE TABLE `resource`
 (
     `resource_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-    `resource_type_id` int(10) unsigned NOT NULL,
+    `resource_type` enum('category','news','product','promotion','provider','user','periodic_plan') NOT NULL,
     `social_views` int(10) unsigned DEFAULT 0 NOT NULL,
     `social_likes` int(10) unsigned DEFAULT 0 NOT NULL,
     `social_dislikes` int(10) unsigned DEFAULT 0 NOT NULL,
     `social_comments` int(10) unsigned DEFAULT 0 NOT NULL,
     `social_favourites` int(10) unsigned DEFAULT 0 NOT NULL,
     `social_recommendations` int(10) unsigned DEFAULT 0 NOT NULL,
-    PRIMARY KEY (`resource_id`),
-    INDEX `fk_resource_1_idx` (`resource_type_id`),
-    CONSTRAINT `fk_resource_1`
-        FOREIGN KEY (`resource_type_id`)
-        REFERENCES `resource_type` (`resource_type_id`)
-        ON UPDATE CASCADE
+    PRIMARY KEY (`resource_id`)
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
@@ -556,20 +586,6 @@ CREATE TABLE `resource_file`
         FOREIGN KEY (`file_id`)
         REFERENCES `file` (`file_id`)
         ON UPDATE CASCADE
-) ENGINE=InnoDB;
-
--- ---------------------------------------------------------------------
--- resource_type
--- ---------------------------------------------------------------------
-
-DROP TABLE IF EXISTS `resource_type`;
-
-CREATE TABLE `resource_type`
-(
-    `resource_type_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-    `resource_type_code` VARCHAR(45) NOT NULL,
-    PRIMARY KEY (`resource_type_id`),
-    UNIQUE INDEX `resource_type_code_UNIQUE` (`resource_type_code`)
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
@@ -721,21 +737,23 @@ CREATE TABLE `user`
 (
     `user_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
     `resource_id` int(10) unsigned NOT NULL,
-    `user_name` VARCHAR(60) NOT NULL,
+    `user_name` VARCHAR(60),
     `user_surname` VARCHAR(60),
-    `user_login` VARCHAR(60) NOT NULL,
-    `user_pass` VARCHAR(60) NOT NULL,
-    `user_pass_is_temp` VARCHAR(45) NOT NULL,
+    `user_login` VARCHAR(60),
+    `user_pass` VARCHAR(60),
+    `user_pass_is_temp` VARCHAR(45),
     `remember_token` VARCHAR(60),
     `user_email` VARCHAR(100),
     `user_phone` VARCHAR(45),
     `user_address` VARCHAR(250),
     `role_id` tinyint(3) unsigned NOT NULL,
-    `user_is_active` TINYINT(1) NOT NULL,
+    `user_is_validated` TINYINT(1) DEFAULT 0 NOT NULL,
+    `user_is_active` TINYINT(1) DEFAULT 1 NOT NULL,
     `user_pic` int(10) unsigned,
     `created_at` DATETIME,
     `updated_at` DATETIME,
     PRIMARY KEY (`user_id`),
+    UNIQUE INDEX `user_UNIQUE_1` (`user_login`),
     INDEX `fk_user_1_idx` (`user_pic`),
     INDEX `fk_user_2_idx` (`role_id`),
     INDEX `fk_user_3_idx` (`resource_id`),
@@ -863,6 +881,44 @@ CREATE TABLE `wishlist_product`
         FOREIGN KEY (`product_id`)
         REFERENCES `product` (`product_id`)
         ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
+-- config_i18n
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `config_i18n`;
+
+CREATE TABLE `config_i18n`
+(
+    `config_id` int(10) unsigned NOT NULL,
+    `locale` VARCHAR(5) DEFAULT 'en_US' NOT NULL,
+    `config_name` VARCHAR(60) NOT NULL,
+    `config_description` VARCHAR(250) NOT NULL,
+    PRIMARY KEY (`config_id`,`locale`),
+    CONSTRAINT `config_i18n_fk_cc79ea`
+        FOREIGN KEY (`config_id`)
+        REFERENCES `config` (`config_id`)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
+-- config_category_i18n
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `config_category_i18n`;
+
+CREATE TABLE `config_category_i18n`
+(
+    `config_category_id` smallint(5) unsigned NOT NULL,
+    `locale` VARCHAR(5) DEFAULT 'en_US' NOT NULL,
+    `config_category_name` VARCHAR(60) NOT NULL,
+    `config_category_description` VARCHAR(250) NOT NULL,
+    PRIMARY KEY (`config_category_id`,`locale`),
+    CONSTRAINT `config_category_i18n_fk_ffd537`
+        FOREIGN KEY (`config_category_id`)
+        REFERENCES `config_category` (`config_category_id`)
+        ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
@@ -1006,6 +1062,27 @@ CREATE TABLE `variation_type_i18n`
     CONSTRAINT `variation_type_i18n_fk_c844fd`
         FOREIGN KEY (`variation_type_id`)
         REFERENCES `variation_type` (`variation_type_id`)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
+-- config_version
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `config_version`;
+
+CREATE TABLE `config_version`
+(
+    `config_id` int(10) unsigned NOT NULL,
+    `config_category_id` smallint(5) unsigned NOT NULL,
+    `config_key` VARCHAR(60) NOT NULL,
+    `config_value` VARCHAR(250) NOT NULL,
+    `config_format` enum('string','number','array','boolean') DEFAULT 'string' NOT NULL,
+    `version` INTEGER DEFAULT 0 NOT NULL,
+    PRIMARY KEY (`config_id`,`version`),
+    CONSTRAINT `config_version_fk_cc79ea`
+        FOREIGN KEY (`config_id`)
+        REFERENCES `config` (`config_id`)
         ON DELETE CASCADE
 ) ENGINE=InnoDB;
 

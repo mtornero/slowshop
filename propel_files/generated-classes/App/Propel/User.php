@@ -27,4 +27,5 @@ class User extends BaseUser implements AuthenticatableContract, CanResetPassword
     {
         return $this->user_id;
     }
+    
 }

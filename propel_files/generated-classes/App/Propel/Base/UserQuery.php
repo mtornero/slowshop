@@ -32,6 +32,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery orderByUserPhone($order = Criteria::ASC) Order by the user_phone column
  * @method     ChildUserQuery orderByUserAddress($order = Criteria::ASC) Order by the user_address column
  * @method     ChildUserQuery orderByRoleId($order = Criteria::ASC) Order by the role_id column
+ * @method     ChildUserQuery orderByUserIsValidated($order = Criteria::ASC) Order by the user_is_validated column
  * @method     ChildUserQuery orderByUserIsActive($order = Criteria::ASC) Order by the user_is_active column
  * @method     ChildUserQuery orderByUserPic($order = Criteria::ASC) Order by the user_pic column
  * @method     ChildUserQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
@@ -49,6 +50,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery groupByUserPhone() Group by the user_phone column
  * @method     ChildUserQuery groupByUserAddress() Group by the user_address column
  * @method     ChildUserQuery groupByRoleId() Group by the role_id column
+ * @method     ChildUserQuery groupByUserIsValidated() Group by the user_is_validated column
  * @method     ChildUserQuery groupByUserIsActive() Group by the user_is_active column
  * @method     ChildUserQuery groupByUserPic() Group by the user_pic column
  * @method     ChildUserQuery groupByCreatedAt() Group by the created_at column
@@ -189,6 +191,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUser findOneByUserPhone(string $user_phone) Return the first ChildUser filtered by the user_phone column
  * @method     ChildUser findOneByUserAddress(string $user_address) Return the first ChildUser filtered by the user_address column
  * @method     ChildUser findOneByRoleId(int $role_id) Return the first ChildUser filtered by the role_id column
+ * @method     ChildUser findOneByUserIsValidated(boolean $user_is_validated) Return the first ChildUser filtered by the user_is_validated column
  * @method     ChildUser findOneByUserIsActive(boolean $user_is_active) Return the first ChildUser filtered by the user_is_active column
  * @method     ChildUser findOneByUserPic(int $user_pic) Return the first ChildUser filtered by the user_pic column
  * @method     ChildUser findOneByCreatedAt(string $created_at) Return the first ChildUser filtered by the created_at column
@@ -209,6 +212,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUser requireOneByUserPhone(string $user_phone) Return the first ChildUser filtered by the user_phone column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByUserAddress(string $user_address) Return the first ChildUser filtered by the user_address column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByRoleId(int $role_id) Return the first ChildUser filtered by the role_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requireOneByUserIsValidated(boolean $user_is_validated) Return the first ChildUser filtered by the user_is_validated column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByUserIsActive(boolean $user_is_active) Return the first ChildUser filtered by the user_is_active column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByUserPic(int $user_pic) Return the first ChildUser filtered by the user_pic column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByCreatedAt(string $created_at) Return the first ChildUser filtered by the created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -227,6 +231,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUser[]|ObjectCollection findByUserPhone(string $user_phone) Return ChildUser objects filtered by the user_phone column
  * @method     ChildUser[]|ObjectCollection findByUserAddress(string $user_address) Return ChildUser objects filtered by the user_address column
  * @method     ChildUser[]|ObjectCollection findByRoleId(int $role_id) Return ChildUser objects filtered by the role_id column
+ * @method     ChildUser[]|ObjectCollection findByUserIsValidated(boolean $user_is_validated) Return ChildUser objects filtered by the user_is_validated column
  * @method     ChildUser[]|ObjectCollection findByUserIsActive(boolean $user_is_active) Return ChildUser objects filtered by the user_is_active column
  * @method     ChildUser[]|ObjectCollection findByUserPic(int $user_pic) Return ChildUser objects filtered by the user_pic column
  * @method     ChildUser[]|ObjectCollection findByCreatedAt(string $created_at) Return ChildUser objects filtered by the created_at column
@@ -240,7 +245,7 @@ abstract class UserQuery extends ModelCriteria
     // delegate behavior
 
     protected $delegatedFields = [
-        'ResourceTypeId' => 'Resource',
+        'ResourceType' => 'Resource',
         'SocialViews' => 'Resource',
         'SocialLikes' => 'Resource',
         'SocialDislikes' => 'Resource',
@@ -336,7 +341,7 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT user_id, resource_id, user_name, user_surname, user_login, user_pass, user_pass_is_temp, remember_token, user_email, user_phone, user_address, role_id, user_is_active, user_pic, created_at, updated_at FROM user WHERE user_id = :p0';
+        $sql = 'SELECT user_id, resource_id, user_name, user_surname, user_login, user_pass, user_pass_is_temp, remember_token, user_email, user_phone, user_address, role_id, user_is_validated, user_is_active, user_pic, created_at, updated_at FROM user WHERE user_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -812,6 +817,33 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
         }
 
         return $this->addUsingAlias(UserTableMap::COL_ROLE_ID, $roleId, $comparison);
+    }
+
+    /**
+     * Filter the query on the user_is_validated column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByUserIsValidated(true); // WHERE user_is_validated = true
+     * $query->filterByUserIsValidated('yes'); // WHERE user_is_validated = true
+     * </code>
+     *
+     * @param     boolean|string $userIsValidated The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByUserIsValidated($userIsValidated = null, $comparison = null)
+    {
+        if (is_string($userIsValidated)) {
+            $userIsValidated = in_array(strtolower($userIsValidated), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
+
+        return $this->addUsingAlias(UserTableMap::COL_USER_IS_VALIDATED, $userIsValidated, $comparison);
     }
 
     /**
@@ -1864,13 +1896,13 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
 
     // delegate behavior
     /**
-    * Filter the query by resource_type_id column
+    * Filter the query by resource_type column
     *
     * Example usage:
     * <code>
-        * $query->filterByResourceTypeId(1234); // WHERE resource_type_id = 1234
-        * $query->filterByResourceTypeId(array(12, 34)); // WHERE resource_type_id IN (12, 34)
-        * $query->filterByResourceTypeId(array('min' => 12)); // WHERE resource_type_id > 12
+        * $query->filterByResourceType(1234); // WHERE resource_type = 1234
+        * $query->filterByResourceType(array(12, 34)); // WHERE resource_type IN (12, 34)
+        * $query->filterByResourceType(array('min' => 12)); // WHERE resource_type > 12
         * </code>
     *
     * @param     mixed $value The value to use as filter.
@@ -1881,9 +1913,9 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
     *
     * @return $this|ChildUserQuery The current query, for fluid interface
     */
-    public function filterByResourceTypeId($value = null, $comparison = null)
+    public function filterByResourceType($value = null, $comparison = null)
     {
-        return $this->useResourceQuery()->filterByResourceTypeId($value, $comparison)->endUse();
+        return $this->useResourceQuery()->filterByResourceType($value, $comparison)->endUse();
     }
 
     /**
@@ -1900,9 +1932,9 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
     *
     * @return $this|ModelCriteria The current object, for fluid interface
     */
-    public function orderByResourceTypeId($order = Criteria::ASC)
+    public function orderByResourceType($order = Criteria::ASC)
     {
-        return $this->useResourceQuery()->orderByResourceTypeId($order)->endUse();
+        return $this->useResourceQuery()->orderByResourceType($order)->endUse();
     }
     /**
     * Filter the query by social_views column
