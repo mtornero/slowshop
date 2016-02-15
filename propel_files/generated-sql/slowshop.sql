@@ -266,6 +266,22 @@ CREATE TABLE `order_product`
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
+-- password_reset
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `password_reset`;
+
+CREATE TABLE `password_reset`
+(
+    `password_reset_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+    `email` VARCHAR(100) NOT NULL,
+    `token` VARCHAR(60) NOT NULL,
+    `created_at` DATETIME,
+    `updated_at` DATETIME,
+    PRIMARY KEY (`password_reset_id`)
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
 -- periodic_plan
 -- ---------------------------------------------------------------------
 

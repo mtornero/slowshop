@@ -21,11 +21,11 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
  */
 class User extends BaseUser implements AuthenticatableContract, CanResetPasswordContract
 {
-    use Authenticatable, CanResetPassword;
-    
-    public function getAuthIdentifier()
-    {
-        return $this->user_id;
-    }
+    // use Authenticatable, CanResetPassword;
+//     
+    // public function getAuthIdentifier()
+    // {
+        // return $this->user_id;
+    // }
     
 }
